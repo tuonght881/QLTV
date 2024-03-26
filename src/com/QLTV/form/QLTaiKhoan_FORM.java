@@ -52,11 +52,13 @@ public class QLTaiKhoan_FORM extends javax.swing.JFrame {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     TaiKhoanDAO tkDAO = new TaiKhoanDAO();
     int index = -1;
-
+    SystemProperties pro = new SystemProperties();
     /**
      * Creates new form tesst
      */
     public QLTaiKhoan_FORM() {
+                pro.loadFromFile();
+                init();
         initComponents();
         applyTableStyle(tbl_tk);
         loaddataTaiKhoan();
@@ -73,7 +75,30 @@ public class QLTaiKhoan_FORM extends javax.swing.JFrame {
             }
         });
     }
-
+    private void init() {
+        try {
+            //FlatRobotoFont.install();
+            FlatLaf.registerCustomDefaultsSource("tableview");
+            //UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
+            System.out.println(pro.isDarkMode());
+            if (pro.isDarkMode() == true) {
+            EventQueue.invokeLater(() -> {
+                //FlatAnimatedLafChange.showSnapshot();
+                FlatDarculaLaf.setup();
+                FlatLaf.updateUI();
+                //FlatAnimatedLafChange.hideSnapshotWithAnimation();
+            });
+            } else {
+            EventQueue.invokeLater(() -> {
+                //FlatAnimatedLafChange.showSnapshot();
+                FlatIntelliJLaf.setup();
+                FlatLaf.updateUI();
+                //FlatAnimatedLafChange.hideSnapshotWithAnimation();
+            });
+            }
+        } catch (Exception e) {
+        }
+    }
     public void setFormTK(TaiKhoan tk) throws ParseException {
         txt_manv.setText(tk.getManv());
         txt_matkhau.setText(tk.getMatkhau());
@@ -439,7 +464,7 @@ public class QLTaiKhoan_FORM extends javax.swing.JFrame {
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         btn.setText("change");
         btn.addActionListener(new java.awt.event.ActionListener() {
@@ -868,16 +893,16 @@ public class QLTaiKhoan_FORM extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(QLTaiKhoan_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        FlatRobotoFont.install();
-        FlatLaf.registerCustomDefaultsSource("tableview");
-        UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-        SystemProperties pro = new SystemProperties();
-        pro.loadFromFile();
-        if (!pro.isDarkMode()) {
-            FlatIntelliJLaf.setup();
-        } else {
-            FlatMacDarkLaf.setup();
-        }
+//        FlatRobotoFont.install();
+//        FlatLaf.registerCustomDefaultsSource("tableview");
+//        UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
+//        SystemProperties pro = new SystemProperties();
+//        pro.loadFromFile();
+//        if (!pro.isDarkMode()) {
+//            FlatIntelliJLaf.setup();
+//        } else {
+//            FlatMacDarkLaf.setup();
+//        }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
