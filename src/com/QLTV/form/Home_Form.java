@@ -17,6 +17,7 @@ public class Home_Form extends Form {
      */
     public Home_Form() {
         initComponents();
+        //
     }
 
     /**
