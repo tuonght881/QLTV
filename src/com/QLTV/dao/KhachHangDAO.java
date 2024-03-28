@@ -17,7 +17,7 @@ import java.util.List;
  * @author Tuong
  */
 public class KhachHangDAO extends EntityDao<KhachHang, String> {
-
+    String findbysdt = "select * from KhachHang where sdt like ?";
     String selectAll = "select * from KhachHang order by idkhach desc";
     String insert = "insert into KhachHang values(?,?,?,?)";
     String update = "update KhachHang set hotenkhach = ?,sdt = ?,diemuytin = ? where idkhach=?";
@@ -80,5 +80,13 @@ public class KhachHangDAO extends EntityDao<KhachHang, String> {
     };
     public List<KhachHang> select_ten() {
         return select_by_sql(select_tenKH);
+    }
+    public KhachHang select_bysdt(String key) {
+        List<KhachHang> list = this.select_by_sql(findbysdt, key);
+        if(list.isEmpty()){
+            return null;
+        }else{
+            return list.get(0);
+        }
     }
 }
