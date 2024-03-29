@@ -13,15 +13,17 @@ public class DonThueChiTiet {
     String iddonthue;
     String idsach;
     int soluong;
+    Double tiendambao;
 
     public DonThueChiTiet() {
     }
 
-    public DonThueChiTiet(int iddonthuect, String iddonthue, String idsach, int soluong) {
+    public DonThueChiTiet(int iddonthuect, String iddonthue, String idsach, int soluong, Double tiendambao) {
         this.iddonthuect = iddonthuect;
         this.iddonthue = iddonthue;
         this.idsach = idsach;
         this.soluong = soluong;
+        this.tiendambao = tiendambao;
     }
 
     public int getIddonthuect() {
@@ -54,6 +56,14 @@ public class DonThueChiTiet {
 
     public void setSoluong(int soluong) {
         this.soluong = soluong;
+    }
+
+    public Double getTiendambao() {
+        return tiendambao;
+    }
+
+    public void setTiendambao(Double tiendambao) {
+        this.tiendambao = tiendambao;
     }
 
     

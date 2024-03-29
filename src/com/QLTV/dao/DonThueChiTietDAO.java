@@ -5,6 +5,7 @@
 package com.QLTV.dao;
 
 import com.QLTV.db.EntityDao;
+import com.QLTV.db.JDBC;
 import com.QLTV.entity.DonThueChiTiet;
 import java.util.List;
 
@@ -12,11 +13,14 @@ import java.util.List;
  *
  * @author Tuong
  */
-public class DonThueChiTietDAO extends EntityDao<DonThueChiTiet, String>{
+public class DonThueChiTietDAO extends EntityDao<DonThueChiTiet, String> {
+
+    String insert = "insert into DonThuect values(?,?,?,?)";
+    String delete = "delete donthuect where iddonthuect=?";
 
     @Override
     public void insert(DonThueChiTiet entity) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        JDBC.update(insert, entity.getIddonthue(), entity.getIdsach(), entity.getSoluong(), entity.getTiendambao());
     }
 
     @Override
@@ -26,7 +30,7 @@ public class DonThueChiTietDAO extends EntityDao<DonThueChiTiet, String>{
 
     @Override
     public void delete(String entity) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        JDBC.update(delete, entity);
     }
 
     @Override
@@ -43,5 +47,5 @@ public class DonThueChiTietDAO extends EntityDao<DonThueChiTiet, String>{
     protected List<DonThueChiTiet> select_by_sql(String sql, Object... args) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
 }

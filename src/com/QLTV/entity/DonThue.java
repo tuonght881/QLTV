@@ -19,7 +19,7 @@ public class DonThue {
     String ngaytradukien;
     String ngaytra;
     Double tienphat;
-    Double tiendambao;
+    Double tongtiendambao;
     Double khachdua;
     Double thoilai;
     Double thanhtien;
@@ -36,7 +36,7 @@ public class DonThue {
         this.ngaytradukien = ngaytradukien;
         this.ngaytra = ngaytra;
         this.tienphat = tienphat;
-        this.tiendambao = tiendambao;
+        this.tongtiendambao = tiendambao;
         this.khachdua = khachdua;
         this.thoilai = thoilai;
         this.thanhtien = thanhtien;
@@ -107,11 +107,11 @@ public class DonThue {
     }
 
     public Double getTiendambao() {
-        return tiendambao;
+        return tongtiendambao;
     }
 
     public void setTiendambao(Double tiendambao) {
-        this.tiendambao = tiendambao;
+        this.tongtiendambao = tiendambao;
     }
 
     public Double getKhachdua() {

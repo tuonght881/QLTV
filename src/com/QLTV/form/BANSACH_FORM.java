@@ -176,7 +176,6 @@ public class BANSACH_FORM extends javax.swing.JFrame {
     public void resetForm() {
         loadHoaDon();
         loaddataSach();
-        txt_idhoadon.setText("");
         txt_tongcong.setText("");
         txt_khachdua.setText("");
         txt_thoilai.setText("");

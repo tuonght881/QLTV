@@ -92,8 +92,9 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
     Double khachdua = 0.0;
     Double thoilai = 0.0;
     Double tienphat = 0.0;
-    Double tiendambao;
+    Double tongtiendambao = 0.0;
     Double tongtien = 0.0;
+    Double phantram = 0.0;
     int id;
 
     /**
@@ -135,13 +136,14 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
         DonThue dthueNew = new DonThue();
         dthueNew.setIddonthue(txt_iddonthue.getText());
         dthueNew.setManv(txt_manv.getText());
+        dthueNew.setIdkhach(txt_idkh.getText());
         dthueNew.setNgaytao(txt_ngaythuesach.getText());
         dthueNew.setNgaythue(txt_ngaythuesach.getText());
         dthueNew.setNgaytradukien(txt_ngaytradukien.getText());
         dthueNew.setNgaytra("");
         dthueNew.setTienphat(0.0);
-        dthueNew.setTiendambao(Double.valueOf(txt_tiendambao.getText()));
-        dthueNew.setThanhtien(tongcong);
+        dthueNew.setTiendambao(tongtiendambao);
+        dthueNew.setThanhtien(tongtien);
         dthueNew.setKhachdua(Double.valueOf(txt_khachdua.getText()));
         dthueNew.setThoilai(thoilai);
 
@@ -177,19 +179,23 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
         if (batloi_tk()) {
             try {
                 DonThue dthueNew = getDonThueNew();
+                //System.out.println(dthueNew.getIddonthue());
+                //System.out.println(dthueNew.getIdkhach());
                 dthueDAO.insert(dthueNew);
+                //System.out.println("tới đây rồi");
 
                 DonThueChiTiet dthueCT = new DonThueChiTiet();
                 dthueCT.setIddonthue(txt_iddonthue.getText());
-
+                //System.out.println("tới đây rồi 2");
                 for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
                     dthueCT.setIddonthue(dthueDAO.getIDdonthue());
                     String idsach = sachDAO.getMasach(tbl_thuesach.getValueAt(i, 0).toString());
                     dthueCT.setIdsach(idsach);
                     dthueCT.setSoluong(Integer.parseInt(tbl_thuesach.getValueAt(i, 2).toString()));
+                    dthueCT.setTiendambao(Double.parseDouble(tbl_thuesach.getValueAt(i, 6).toString()));
                     dthuectDAO.insert(dthueCT);
                 }
-
+                //System.out.println("tới đây rồi 3");
                 loaddataSach();
                 model_hd.setRowCount(0);
                 JOptionPane.showMessageDialog(this, "Thêm thành công");
@@ -203,9 +209,18 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
     public void resetForm() {
         loadDonThue();
         loaddataSach();
-        txt_iddonthue.setText("");
+        loadDonThue();
+        txt_idkh.setText("");
+        txt_tenkh.setText("");
+        txt_diemuytin.setText("");
+        txt_phantramdambao.setText("");
+        txt_sdtkhach.setText("");
+        txt_songaymuon.setText("");
+        txt_ngaytradukien.setText("");
+        txt_tiendambao.setText("");
         txt_tonggiathue.setText("");
         txt_khachdua.setText("");
+        txt_thanhtien.setText("");
         txt_thoilai.setText("");
         if (model_hd != null) {
             model_hd.setRowCount(0);
@@ -276,15 +291,26 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
     public boolean batloi_tk() {
         String khachdua = txt_khachdua.getText();
         String thoilai = txt_thoilai.getText();
+        String sdtk = txt_sdtkhach.getText();
+        String songaymuon = txt_songaymuon.getText();
 
         String loi = "";
-
+        if (tbl_thuesach.getRowCount() == 0) {
+            loi += "Chưa có quyển sách nào!\n";
+        }
+        if (sdtk.equalsIgnoreCase("")) {
+            loi += "Số điện thoại khách\n";
+        }
+        if (songaymuon.equalsIgnoreCase("")) {
+            loi += "Số ngày mượn\n";
+        }
         if (khachdua.equalsIgnoreCase("")) {
             loi += "Khách đưa\n";
         }
         if (thoilai.equalsIgnoreCase("")) {
             loi += "Thối lại\n";
         }
+
         if (!loi.equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(this, "--Vui lòng kiểm tra lại thông tin!!--\n" + loi, "Lỗi", JOptionPane.INFORMATION_MESSAGE);
             return false;
@@ -292,17 +318,11 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
         return true;
     }
 
-    void tinhtiendambao() {
-        Double phantram = 0.0;
-        Double tonggiathue = tongcong;
-        Double diemuytin = Double.valueOf(txt_diemuytin.getText());
-        if (diemuytin >= 100) {
-            tiendambao = 0.0;
-        } else {
-            phantram = ((100 - diemuytin));
-            tiendambao = ((100 - diemuytin) / 100) * tonggiathue;
+    void tinhTONGtiendambao() {
+        for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
+            tongtiendambao += Double.parseDouble(tbl_thuesach.getValueAt(i, 6).toString());
         }
-        txt_tiendambao.setText(currencyVN.format(tiendambao) + " (" + phantram + "%)");
+        txt_tiendambao.setText(currencyVN.format(tongtiendambao));
     }
 
     void tinhtien() {
@@ -326,10 +346,23 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
 
     public void timKH() {
         String sdt = txt_sdtkhach.getText();
-        KhachHang kh = khDAO.select_bysdt(sdt);
-        txt_idkh.setText(kh.getIdkhach());
-        txt_tenkh.setText(kh.getHotenkhach());
-        txt_diemuytin.setText(Integer.toString(kh.getDiemuytin()));
+        try {
+            KhachHang kh = khDAO.select_bysdt(sdt);
+            txt_idkh.setText(kh.getIdkhach());
+            txt_tenkh.setText(kh.getHotenkhach());
+            txt_diemuytin.setText(Integer.toString(kh.getDiemuytin()));
+            phantram = ((100 - Double.valueOf(kh.getDiemuytin())));
+            txt_phantramdambao.setText(D_format.format(phantram) + "%");
+        } catch (NullPointerException e) {
+            int choice = JOptionPane.showConfirmDialog(this,"Khách hàng không tồn tại!\n Thêm khách hàng mới?","Thông báo",JOptionPane.OK_CANCEL_OPTION);
+            QLKhachHang_FORM qlkh = new QLKhachHang_FORM();
+            if(choice ==JOptionPane.OK_OPTION){
+                qlkh.setVisible(true);
+                qlkh.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            }else{
+                return;
+            }
+        }
     }
 
     public void taoHoaDon(MouseEvent evt) throws NumberFormatException, HeadlessException {
@@ -344,7 +377,7 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
                 //JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
             }
             if (sl != null) {
-                Object[] row = new Object[6];
+                Object[] row = new Object[7];
                 model_hd = (DefaultTableModel) tbl_thuesach.getModel();
                 if (index != -1) {
                     String selectBook = model_sach.getValueAt(index, 0).toString();
@@ -356,6 +389,7 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
                         row[3] = D_format.format(thanhtien);
                         row[4] = 0.0;
                         row[5] = 0.0;
+                        row[6] = 0.0;
                         model_hd.addRow(row);
                         tinhtien();
                     } else {
@@ -376,6 +410,7 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
                             row[3] = D_format.format(thanhtien);
                             row[4] = 0.0;
                             row[5] = 0.0;
+                            row[6] = 0.0;
                             model_hd.addRow(row);
                             tinhtien();
                         } else {
@@ -508,8 +543,10 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
         txt_idkh = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         txt_tenkh = new javax.swing.JTextField();
-        jLabel13 = new javax.swing.JLabel();
+        lbl_diemuytin = new javax.swing.JLabel();
         txt_diemuytin = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        txt_phantramdambao = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbl_thuesach = new javax.swing.JTable();
         crazyPanel8 = new raven.crazypanel.CrazyPanel();
@@ -636,7 +673,7 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
         crazyPanel1.add(crazyPanel2);
 
         crazyPanel4.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
-            "background:$Table.background;[light]border:0,0,0,0,shade(@background,5%),,20;[dark]border:0,0,0,0,tint(@background,5%),,20",
+            "background:$Table.background;",
             null
         ));
         crazyPanel4.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
@@ -644,11 +681,15 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
             "[]push[]",
             "",
             new String[]{
-                "width 900",
+                "width 820",
                 ""
             }
         ));
 
+        crazyPanel6.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
+            "background:$Table.background;",
+            null
+        ));
         crazyPanel6.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
             "wrap 1",
             "[]",
@@ -668,7 +709,7 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Tên sách", "Tác giả", "Vị trí", "Số lượng", "Giá bán"
+                "Tên sách", "Tác giả", "Vị trí", "Số lượng", "Giá thuê 1 ngày"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -690,6 +731,21 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
 
         crazyPanel6.add(jScrollPane1);
 
+        crazyPanel7.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
+            "background:$Table.background;",
+            new String[]{
+                "background:@background",
+                "background:@background",
+                "background:@background",
+                "background:@background",
+                "background:@background",
+                "background:@background",
+                "background:@background",
+                "background:@background",
+                "background:@background",
+                "background:@background"
+            }
+        ));
         crazyPanel7.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
             "",
             "",
@@ -700,7 +756,7 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
                 "",
                 "",
                 "",
-                "width 200"
+                "width 150"
             }
         ));
 
@@ -726,20 +782,27 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
         crazyPanel7.add(txt_idkh);
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel6.setText("Họ tên khách");
+        jLabel6.setText("Khách hàng");
         crazyPanel7.add(jLabel6);
 
         txt_tenkh.setEditable(false);
         txt_tenkh.setEnabled(false);
         crazyPanel7.add(txt_tenkh);
 
-        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel13.setText("Điểm uy tín:");
-        crazyPanel7.add(jLabel13);
+        lbl_diemuytin.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        lbl_diemuytin.setText("Điểm uy tín");
+        crazyPanel7.add(lbl_diemuytin);
 
         txt_diemuytin.setEditable(false);
         txt_diemuytin.setEnabled(false);
         crazyPanel7.add(txt_diemuytin);
+
+        jLabel13.setText("Phí đảm bảo");
+        crazyPanel7.add(jLabel13);
+
+        txt_phantramdambao.setEditable(false);
+        txt_phantramdambao.setEnabled(false);
+        crazyPanel7.add(txt_phantramdambao);
 
         crazyPanel6.add(crazyPanel7);
 
@@ -748,11 +811,11 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Tên sách (1)", "Đơn giá (2)", "Số lượng (3)", "Giá x SL (4)", "Số ngày mượn (5)", "(4) x (5)"
+                "Tên sách (1)", "Đơn giá (2)", "Số lượng (3)", "Giá x SL (4)", "Số ngày mượn (5)", "Giá thuê(4) x (5)", "Tiền đảm bảo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, true
+                false, false, false, false, true, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -766,7 +829,7 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
         crazyPanel4.add(crazyPanel6);
 
         crazyPanel8.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
-            "background:$Table.background",
+            "background:$Table.background;",
             null
         ));
         crazyPanel8.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
@@ -882,7 +945,7 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
         crazyPanel3.add(txt_tonggiathue);
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel8.setText("Tiền đảm bảo");
+        jLabel8.setText("Tổng tiền đảm bảo");
         crazyPanel3.add(jLabel8);
 
         txt_tiendambao.setEditable(false);
@@ -892,6 +955,9 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel15.setText("Thành tiền:");
         crazyPanel3.add(jLabel15);
+
+        txt_thanhtien.setEditable(false);
+        txt_thanhtien.setEnabled(false);
         crazyPanel3.add(txt_thanhtien);
         crazyPanel3.add(jSeparator5);
         crazyPanel3.add(jSeparator6);
@@ -965,14 +1031,13 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(66, 66, 66)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btn)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1112, Short.MAX_VALUE)
-                        .addGap(65, 65, 65))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1027,7 +1092,7 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("")) {
             khachdua = Double.parseDouble(txt_khachdua.getText());
             if (khachdua >= tongcong) {
-                thoilai = khachdua - tongcong;
+                thoilai = khachdua - tongtien;
                 txt_thoilai.setText(currencyVN.format(thoilai));
             } else {
                 JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
@@ -1048,6 +1113,7 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
     private void txt_sdtkhachKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sdtkhachKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_sdtkhach.getText().equalsIgnoreCase("")) {
             timKH();
+
         }
     }//GEN-LAST:event_txt_sdtkhachKeyPressed
 
@@ -1058,6 +1124,9 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
     private void txt_songaymuonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_songaymuonKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_songaymuon.getText().equalsIgnoreCase("")) {
             try {
+                Double diemuytin = Double.valueOf(txt_diemuytin.getText());
+                //phantram = ((100 - diemuytin));
+                //tbl_thuesach.getColumnModel().getColumn(6).setHeaderValue("Tiền đảm bảo ("+phantram+"%)");
                 tinhsongaymuon();
                 double ngaymuon = Double.parseDouble(txt_songaymuon.getText());
                 for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
@@ -1066,13 +1135,18 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
                 for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
                     Double tien = Double.parseDouble(tbl_thuesach.getValueAt(i, 3).toString());
                     tbl_thuesach.setValueAt(D_format.format(ngaymuon * tien), i, 5);
+
+                    Double giathue = Double.parseDouble(tbl_thuesach.getValueAt(i, 5).toString());
+                    tbl_thuesach.setValueAt(D_format.format(giathue * (phantram / 100)), i, 6);
                 }
                 tinhtien();
-                tinhtiendambao();
-                        tongtien = tongcong + tiendambao;
-                        txt_thanhtien.setText(currencyVN.format(tongtien));
+                tinhTONGtiendambao();
+                tongtien = tongcong + tongtiendambao;
+                txt_thanhtien.setText(currencyVN.format(tongtien));
             } catch (ParseException ex) {
                 Logger.getLogger(THUESACH2_FORM.class.getName()).log(Level.SEVERE, null, ex);
+            }catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(this, "Chưa có thông tin của khách hàng!");
             }
         }
     }//GEN-LAST:event_txt_songaymuonKeyPressed
@@ -1159,6 +1233,7 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JLabel lbl_diemuytin;
     private javax.swing.JTable tbl_sach;
     private javax.swing.JTable tbl_thuesach;
     private javax.swing.JTextField txt_diemuytin;
@@ -1168,6 +1243,7 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
     private javax.swing.JTextField txt_manv;
     private javax.swing.JTextField txt_ngaythuesach;
     private javax.swing.JTextField txt_ngaytradukien;
+    private javax.swing.JTextField txt_phantramdambao;
     private javax.swing.JTextField txt_sdtkhach;
     private javax.swing.JTextField txt_songaymuon;
     private javax.swing.JTextField txt_tenkh;

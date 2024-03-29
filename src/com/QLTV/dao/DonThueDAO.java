@@ -17,22 +17,26 @@ import java.util.List;
  */
 public class DonThueDAO extends EntityDao<DonThue, String> {
 
-    String madonthue = "select top 1 * from donthue order by idhoadon desc";
-    String selectAll = "select * from HoaDon";
+    String madonthue = "select top 1 * from donthue order by iddonthue desc";
+    String selectAll = "select * from donthue";
+    String insert = "insert into DonThue values(?,?,?,?,?,?,?,?,?,?,?,?)";
+    String update = "UPDATE donthue SET idkhach = ?, manv = ?, ngaytao = ?, ngaythue = ?, ngaytradukien = ?, ngaytra = ?,tienphat = ?,tongtiendambao =?, khachdua=?,thoilai=?,thanhtien = ? WHERE iddonthue = ?";
+    String delete = "delete donthue where iddonthue=?";
+    String select_by_ID = "select * from DonThue where iddonthue=?";
 
     @Override
     public void insert(DonThue entity) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        JDBC.update(insert, entity.getIddonthue(), entity.getIdkhach(), entity.getManv(), entity.getNgaytao(), entity.getNgaythue(), entity.getNgaytradukien(), entity.getNgaytra(), entity.getTienphat(), entity.getTiendambao(), entity.getKhachdua(), entity.getThoilai(), entity.getThanhtien());
     }
 
     @Override
     public void update(DonThue entity) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        JDBC.update(update, entity.getIdkhach(), entity.getManv(), entity.getNgaytao(), entity.getNgaythue(), entity.getNgaytradukien(), entity.getNgaytra(), entity.getTienphat(), entity.getTiendambao(), entity.getKhachdua(), entity.getThoilai(), entity.getThanhtien(), entity.getIddonthue());
     }
 
     @Override
     public void delete(String entity) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        JDBC.update(delete, entity);
     }
 
     @Override
@@ -42,7 +46,12 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
 
     @Override
     public DonThue select_byID(String key) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<DonThue> list = this.select_by_sql(select_by_ID, key);
+        if (list.isEmpty()) {
+            return null;
+        } else {
+            return list.get(0);
+        }
     }
 
     @Override
@@ -60,7 +69,7 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
                 dthue.setNgaytradukien(r.getString("ngaytradukien"));
                 dthue.setNgaytra(r.getString("ngaytra"));
                 dthue.setTienphat(r.getDouble("tienphat"));
-                dthue.setTiendambao(r.getDouble("tiendambao"));
+                dthue.setTiendambao(r.getDouble("tongtiendambao"));
                 dthue.setKhachdua(r.getDouble("thoilai"));
                 dthue.setThoilai(r.getDouble("thoilai"));
                 dthue.setThanhtien(r.getDouble("thanhtien"));
@@ -78,7 +87,7 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
         String mahoadon = "";
         try {
             while (rs.next()) {
-                mahoadon = rs.getString("idhoadon");
+                mahoadon = rs.getString("iddonthue");
             }
             rs.getStatement().getConnection().close();
             return mahoadon;
