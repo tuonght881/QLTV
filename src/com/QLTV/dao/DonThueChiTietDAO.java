@@ -7,7 +7,9 @@ package com.QLTV.dao;
 import com.QLTV.db.EntityDao;
 import com.QLTV.db.JDBC;
 import com.QLTV.entity.DonThueChiTiet;
+import java.util.ArrayList;
 import java.util.List;
+import java.sql.ResultSet;
 
 /**
  *
@@ -17,7 +19,8 @@ public class DonThueChiTietDAO extends EntityDao<DonThueChiTiet, String> {
 
     String insert = "insert into DonThuect values(?,?,?,?)";
     String delete = "delete donthuect where iddonthuect=?";
-
+    String select_by_ID = "select * from donthuect where iddonthuect = ?";
+    String select_by_hoadon = "select * from DonThueCT where iddonthue = ?";
     @Override
     public void insert(DonThueChiTiet entity) {
         JDBC.update(insert, entity.getIddonthue(), entity.getIdsach(), entity.getSoluong(), entity.getTiendambao());
@@ -40,12 +43,35 @@ public class DonThueChiTietDAO extends EntityDao<DonThueChiTiet, String> {
 
     @Override
     public DonThueChiTiet select_byID(String key) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                List<DonThueChiTiet> list = this.select_by_sql(select_by_ID, key);
+        if (list.isEmpty()) {
+            return null;
+        } else {
+            return list.get(0);
+        }
     }
 
     @Override
     protected List<DonThueChiTiet> select_by_sql(String sql, Object... args) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                List<DonThueChiTiet> list = new ArrayList<>();
+        try {
+            ResultSet r = JDBC.query(sql,args);
+            while(r.next()){
+                DonThueChiTiet hd =  new DonThueChiTiet();
+                hd.setIddonthuect(r.getInt("iddonthuect"));
+                hd.setIddonthue(r.getString("iddonthue"));
+                hd.setIdsach(r.getString("idsach"));
+                hd.setSoluong(r.getInt("soluong"));
+                hd.setTiendambao(r.getDouble("tiendambao"));
+                list.add(hd);
+            }
+            r.getStatement().getConnection().close();
+            
+        } catch (Exception e) {
+        }
+        return list;
     }
-
+    public List<DonThueChiTiet> select_by_HD(String key) {
+        return select_by_sql(select_by_hoadon, key);
+    }
 }

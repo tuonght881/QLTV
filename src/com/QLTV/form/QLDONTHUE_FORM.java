@@ -14,6 +14,7 @@ import com.QLTV.dao.TacGiaDAO;
 import com.QLTV.dao.TheLoaiDAO;
 import com.QLTV.dao.ViTriDAO;
 import com.QLTV.entity.DonThue;
+import com.QLTV.entity.DonThueChiTiet;
 import com.QLTV.entity.HoaDon;
 import com.QLTV.entity.HoaDonChiTiet;
 import com.QLTV.entity.KhachHang;
@@ -75,6 +76,7 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
     int index = -1;
     DefaultTableModel model_donthue, model_donthuect;
     Double tienphat = 0.0;
+
     /**
      * Creates new form tesst
      */
@@ -125,51 +127,55 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         txt_thoilai.setText(thoilai);
         txt_tongtien.setText(thanhtien);
     }
-    
-    void tinhtienphat() throws ParseException{
+
+    void tinhtienphat() throws ParseException {
         Date ngaytra = sdf.parse(txt_ngaytra.getText());
         Date ngaytradukien = sdf.parse(txt_ngaytradukien.getText());
-        
+
         long miliS = ngaytra.getTime() - ngaytradukien.getTime();
-            // Tính toán số ngày
-            long diffInDays = miliS / (1000 * 60 * 60 * 24);
+        // Tính toán số ngày
+        long diffInDays = miliS / (1000 * 60 * 60 * 24);
 
-            // Tính toán số giờ còn lại sau khi tính số ngày
-            long remainingMillis = miliS % (1000 * 60 * 60 * 24);
-            long diffInHours = remainingMillis / (1000 * 60 * 60);
+        // Tính toán số giờ còn lại sau khi tính số ngày
+        long remainingMillis = miliS % (1000 * 60 * 60 * 24);
+        long diffInHours = remainingMillis / (1000 * 60 * 60);
 
-            // Tính toán số phút còn lại sau khi tính số ngày và số giờ
-            remainingMillis = remainingMillis % (1000 * 60 * 60);
-            long diffInMinutes = remainingMillis / (1000 * 60);
-            // Tính giá tiền
-            long totalPrice = (diffInDays * 15000) + (diffInHours * 500);
-            System.out.println(diffInDays + " ngay " + diffInHours + " gio " + diffInMinutes + " phut");
-            System.out.println("Giá tiền: " + totalPrice);
+        // Tính toán số phút còn lại sau khi tính số ngày và số giờ
+        remainingMillis = remainingMillis % (1000 * 60 * 60);
+        long diffInMinutes = remainingMillis / (1000 * 60);
+        // Tính giá tiền
+        long totalPrice = (diffInDays * 15000) + (diffInHours * 500);
+        if (totalPrice <= 0) {
+            lbl_ngaytre.setText("");
+            txt_tienphat.setText("0");
+        } else {
+            lbl_ngaytre.setText("Trễ " + diffInDays + " ngày " + diffInHours + " giờ " + diffInMinutes + " phút");
+            txt_tienphat.setText(Long.toString(totalPrice));
+        }
+        System.out.println(diffInDays + " ngay " + diffInHours + " gio " + diffInMinutes + " phut");
+        System.out.println("Giá tiền: " + totalPrice);
     }
-    
+
     public void setFormHDCT(HoaDonChiTiet hdct) throws ParseException {
         txt_iddonthue2.setText(hdct.getIdhoadon());
         Sach sach = sachDAO.select_byID(hdct.getIdsach());
         String tensach = sach.getTensach();
     }
 
-    public HoaDon getFormHD() throws ParseException {
-        HoaDon hdNEW = new HoaDon();
-        hdNEW.setIdhoadon(txt_iddonthue2.getText());
-        hdNEW.setManv(txt_manv.getText());
-        hdNEW.setNgaytao(txt_ngaythue.getText());
-        hdNEW.setKhachdua(Double.parseDouble(txt_ngaytradukien.getText()));
-        hdNEW.setThoilai(Double.parseDouble(txt_ngaytra.getText()));
-        hdNEW.setThanhtien(Double.parseDouble(txt_thanhtien.getText()));
-
-        return hdNEW;
-    }
-
-    public HoaDonChiTiet getFormHDCT() throws ParseException {
-        HoaDonChiTiet hdctNEW = new HoaDonChiTiet();
-        hdctNEW.setIdhoadon(txt_iddonthue2.getText());
-
-        return hdctNEW;
+    public DonThue getFormDonThue() throws ParseException {
+        DonThue dthueNew = new DonThue();
+        dthueNew.setIddonthue(txt_iddonthue2.getText());
+        dthueNew.setIdkhach(txt_idKhach.getText());
+        dthueNew.setManv(txt_manv.getText());
+        dthueNew.setNgaytao(txt_ngaythue.getText());
+        dthueNew.setNgaytradukien(txt_ngaytradukien.getText());
+        dthueNew.setNgaytra(txt_ngaytra.getText());
+        dthueNew.setTienphat(Double.parseDouble(txt_tienphat.getText()));
+        dthueNew.setTiendambao(Double.parseDouble(txt_tiendambao.getText()));
+        dthueNew.setKhachdua(Double.parseDouble(txt_ngaytradukien.getText()));
+        dthueNew.setThoilai(Double.parseDouble(txt_ngaytra.getText()));
+        dthueNew.setThanhtien(Double.parseDouble(txt_tongtien.getText()));
+        return dthueNew;
     }
 
     public void fillFormDonThue() throws ParseException {
@@ -200,56 +206,26 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         }
     }
 
-    public void themHD() {
-        if (batloi_tk()) {
-            try {
-                HoaDon hdNew = getFormHD();
-                hdDAO.insert(hdNew);
-                loaddataDonThue();
-                JOptionPane.showMessageDialog(this, "Thêm thành công");
-                resetForm();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Thêm thất bại!\n" + e.getMessage());
-            }
-        }
-    }
-
-    public void suaHD() {
-        if (batloi_tk()) {
-            try {
-                HoaDon HDnew = getFormHD();
-                hdDAO.update(HDnew);
-                loaddataDonThue();
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công");
-                resetForm();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Cập nhật thất bại!\n" + e.getMessage());
-            }
-        }
-    }
-
-    public void suaHDCT() {
-        if (batloi_tk()) {
-            try {
-                HoaDonChiTiet HDCTnew = getFormHDCT();
-                hdctDAO.update(HDCTnew);
-                loaddataDonThue();
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công");
-                resetForm();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Cập nhật thất bại!\n" + e.getMessage());
-            }
-        }
-    }
-
-    public void xoaHD() {
+    public void suaDonThue() {
         try {
-            String idhoadon = txt_iddonthue2.getText();
-            List<HoaDonChiTiet> list = hdctDAO.select_by_HD(idhoadon);
-            for (HoaDonChiTiet hdct : list) {
-                hdctDAO.delete_int(hdct.getIdhoadonct());
+            DonThue dthueNew = getFormDonThue();
+            dthueDAO.update(dthueNew);
+            loaddataDonThue();
+            JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+            resetForm();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Cập nhật thất bại!\n" + e.getMessage());
+        }
+    }
+
+    public void xoaDonThue() {
+        try {
+            String iddonthue = txt_iddonthue2.getText();
+            List<DonThueChiTiet> list = dthuectDAO.select_by_HD(iddonthue);
+            for (DonThueChiTiet dthuect : list) {
+                hdctDAO.delete_int(dthuect.getIddonthuect());
             }
-            hdDAO.delete(idhoadon);
+            dthueDAO.delete(iddonthue);
             loaddataDonThue();
             JOptionPane.showMessageDialog(this, "Xoá thành công");
             resetForm();
@@ -265,11 +241,17 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         btn_xoa.setEnabled(false);
 
         txt_iddonthue2.setText("");
+        txt_idKhach.setText("");
+        txt_tenkhach.setText("");
+        txt_tiendambao.setText("");
+        txt_tienphat.setText("");
+        txt_khachdua.setText("");
+        txt_thoilai.setText("");
         txt_ngaythue.setText("");
         txt_ngaytradukien.setText("");
         txt_manv.setText("");
         txt_ngaytra.setText("");
-        txt_thanhtien.setText("");
+        txt_tongtien.setText("");
     }
 
     public void resetHDCT() {
@@ -299,17 +281,17 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         }
     }
 
-    public void loadDataHDCT(String idhoadon) {
+    public void loadDataDonThueCT(String iddonthue) {
         model_donthuect = (DefaultTableModel) tbl_donthueCT.getModel();
-        model_donthuect.setColumnIdentifiers(new Object[]{"ID Hoá đơn CT", "Tên sách", "Số lượng", "Giá bán", "Thành tiền"});
+        model_donthuect.setColumnIdentifiers(new Object[]{"ID Đơn thuê CT", "Tên sách", "Số lượng", "Giá thuê", "Thành tiền"});
         model_donthuect.setRowCount(0);
         try {
-            List<HoaDonChiTiet> list = hdctDAO.select_by_HD(idhoadon);
-            for (HoaDonChiTiet hdct : list) {
-                String tensach = sachDAO.getTenSach(hdct.getIdsach());
-                String giaban = sachDAO.getGiaBan(hdct.getIdsach());
-                Double thanhtien = hdct.getSoluong() * Double.parseDouble(giaban);
-                Object[] row = {hdct.getIdhoadonct(), tensach, hdct.getSoluong(), giaban, thanhtien};
+            List<DonThueChiTiet> list = dthuectDAO.select_by_HD(iddonthue);
+            for (DonThueChiTiet dthueCT : list) {
+                String tensach = sachDAO.getTenSach(dthueCT.getIdsach());
+                String giaban = sachDAO.getGiaBan(dthueCT.getIdsach());
+                Double thanhtien = dthueCT.getSoluong() * Double.parseDouble(giaban);
+                Object[] row = {dthueCT.getIddonthuect(), tensach, dthueCT.getSoluong(), giaban, thanhtien};
                 model_donthuect.addRow(row);
             }
             if (model_donthuect.getRowCount() == 0) {
@@ -342,37 +324,16 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
     }
 
     public boolean batloi_tk() {
-        String idsach = txt_iddonthue2.getText();
-        String theloai = txt_ngaythue.getText();
-        String tensach = txt_manv.getText();
-        String tacgia = txt_ngaytradukien.getText();
-        String sl = txt_thanhtien.getText();
-        String vitri = txt_ngaytra.getText();
+        String ngaytra = txt_tienphat.getText();
+        String tienphat = txt_ngaytra.getText();
 
         String loi = "";
 
-        if (idsach.equalsIgnoreCase("")) {
-            loi += "ID sách\n";
+        if (tienphat.equalsIgnoreCase("")) {
+            loi += "Tiền phạt\n";
         }
-//        else {
-//            if (idsach.length() != 5) {
-//                loi += "ID tài khoản phải có 5 ký tự\n";
-//            }
-//        }
-        if (theloai.equalsIgnoreCase("")) {
-            loi += "Thể loại\n";
-        }
-        if (tensach.equalsIgnoreCase("")) {
-            loi += "Tên sách\n";
-        }
-        if (tacgia.equalsIgnoreCase("")) {
-            loi += "Tác giả\n";
-        }
-        if (vitri.equalsIgnoreCase("")) {
-            loi += "Vị trí\n";
-        }
-        if (sl.equalsIgnoreCase("")) {
-            loi += "Số lượng\n";
+        if (ngaytra.equalsIgnoreCase("")) {
+            loi += "Ngày trả\n";
         }
         if (!loi.equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(this, "--Vui lòng kiểm tra lại thông tin!!--\n" + loi, "Lỗi", JOptionPane.INFORMATION_MESSAGE);
@@ -463,6 +424,8 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         HdctPanel = new raven.crazypanel.CrazyPanel();
         crazyPanel6 = new raven.crazypanel.CrazyPanel();
         jLabel6 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tbl_donthueCT = new javax.swing.JTable();
         crazyPanel7 = new raven.crazypanel.CrazyPanel();
         jLabel7 = new javax.swing.JLabel();
         txt_iddonthue2 = new javax.swing.JTextField();
@@ -484,8 +447,10 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         txt_tenkhach = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         txt_tiendambao = new javax.swing.JTextField();
+        btn_resettiendambao = new javax.swing.JButton();
         jLabel15 = new javax.swing.JLabel();
         txt_tienphat = new javax.swing.JTextField();
+        lbl_ngaytre = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
         crazyPanel9 = new raven.crazypanel.CrazyPanel();
         jLabel18 = new javax.swing.JLabel();
@@ -497,8 +462,7 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         crazyPanel5 = new raven.crazypanel.CrazyPanel();
         btn_xoa = new javax.swing.JButton();
         btn_reset = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tbl_donthueCT = new javax.swing.JTable();
+        btn_capnhat = new javax.swing.JButton();
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -675,6 +639,33 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         crazyPanel6.add(jLabel6);
 
         HdctPanel.add(crazyPanel6);
+
+        tbl_donthueCT.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "null"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbl_donthueCT.setEditingColumn(0);
+        tbl_donthueCT.setEditingRow(0);
+        tbl_donthueCT.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_donthueCTMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tbl_donthueCT);
+
+        HdctPanel.add(jScrollPane2);
 
         crazyPanel7.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
             "background:$Table.background",
@@ -867,7 +858,7 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
             }
         ));
         crazyPanel8.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
-            "wrap 6",
+            "wrap 8",
             "[][][][][][]",
             "[][][]",
             new String[]{
@@ -875,18 +866,7 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
                 "width 200",
                 "width 80",
                 "width 200",
-                "width 80",
-                "width 200",
-                "width 80",
-                "width 200",
-                "width 80",
-                "width 200",
-                "width 80",
-                "width 200",
-                "width 80",
-                "width 200",
-                "width 80",
-                "width 200",
+                "width 20",
                 "width 80",
                 "width 200"
             }
@@ -909,6 +889,14 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         txt_tiendambao.setEnabled(false);
         crazyPanel8.add(txt_tiendambao);
 
+        btn_resettiendambao.setText("...");
+        btn_resettiendambao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_resettiendambaoActionPerformed(evt);
+            }
+        });
+        crazyPanel8.add(btn_resettiendambao);
+
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel15.setText("Tiền phạt");
         crazyPanel8.add(jLabel15);
@@ -922,6 +910,7 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
             }
         });
         crazyPanel8.add(txt_tienphat);
+        crazyPanel8.add(lbl_ngaytre);
 
         HdctPanel.add(crazyPanel8);
 
@@ -979,16 +968,25 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel18.setText("Khách đưa");
         crazyPanel9.add(jLabel18);
+
+        txt_khachdua.setEditable(false);
+        txt_khachdua.setEnabled(false);
         crazyPanel9.add(txt_khachdua);
 
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel19.setText("Thối lại");
         crazyPanel9.add(jLabel19);
+
+        txt_thoilai.setEditable(false);
+        txt_thoilai.setEnabled(false);
         crazyPanel9.add(txt_thoilai);
 
         jLabel20.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel20.setText("Thành tiền");
         crazyPanel9.add(jLabel20);
+
+        txt_tongtien.setEditable(false);
+        txt_tongtien.setEnabled(false);
         crazyPanel9.add(txt_tongtien);
 
         HdctPanel.add(crazyPanel9);
@@ -1030,34 +1028,15 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         });
         crazyPanel5.add(btn_reset);
 
+        btn_capnhat.setText("Cập nhật");
+        btn_capnhat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_capnhatActionPerformed(evt);
+            }
+        });
+        crazyPanel5.add(btn_capnhat);
+
         HdctPanel.add(crazyPanel5);
-
-        tbl_donthueCT.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "null"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tbl_donthueCT.setEditingColumn(0);
-        tbl_donthueCT.setEditingRow(0);
-        tbl_donthueCT.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbl_donthueCTMouseClicked(evt);
-            }
-        });
-        jScrollPane2.setViewportView(tbl_donthueCT);
-
-        HdctPanel.add(jScrollPane2);
 
         TAB.addTab("Hoá đơn chi tiết", HdctPanel);
 
@@ -1116,7 +1095,7 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
             System.out.println("Người dùng đã chọn YES");
-            xoaHD();
+            xoaDonThue();
         } else if (choice == JOptionPane.NO_OPTION) {
             return;
         } else {
@@ -1131,7 +1110,7 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
             try {
                 fillFormDonThue();
                 String idhoadon = txt_iddonthue2.getText();
-                loadDataHDCT(idhoadon);
+                loadDataDonThueCT(idhoadon);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
             }
@@ -1174,6 +1153,35 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
     private void txt_ngaytraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_ngaytraMouseClicked
         showPopup();
     }//GEN-LAST:event_txt_ngaytraMouseClicked
+
+    private void btn_capnhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_capnhatActionPerformed
+        if (batloi_tk()) {
+            if (txt_tiendambao.getText().equalsIgnoreCase("0")) {
+                suaDonThue();
+            } else {
+                int choice = JOptionPane.showConfirmDialog(null, "Bạn đã hoàn phí đảm bảo cho khách chưa?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+                if (choice == JOptionPane.YES_OPTION) {
+                    System.out.println("Người dùng đã chọn YES");
+                    return;
+                } else if (choice == JOptionPane.NO_OPTION) {
+                    return;
+                } else {
+                    return;
+                }
+            }
+        }
+    }//GEN-LAST:event_btn_capnhatActionPerformed
+
+    private void btn_resettiendambaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resettiendambaoActionPerformed
+        int choice = JOptionPane.showConfirmDialog(null, "Xác nhận hoàn phí đảm bảo cho khách?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+            txt_tiendambao.setText("0");
+        } else if (choice == JOptionPane.NO_OPTION) {
+            return;
+        } else {
+            return;
+        }
+    }//GEN-LAST:event_btn_resettiendambaoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1225,8 +1233,10 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
     private javax.swing.JPopupMenu POPUP;
     private javax.swing.JTabbedPane TAB;
     private javax.swing.JButton btn;
+    private javax.swing.JButton btn_capnhat;
     private javax.swing.JButton btn_reset;
     private javax.swing.JButton btn_reset1;
+    private javax.swing.JButton btn_resettiendambao;
     private javax.swing.JButton btn_xoa;
     private raven.calendar.Calendar calendar1;
     private raven.crazypanel.CrazyPanel crazyPanel2;
@@ -1258,6 +1268,7 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JLabel lbl_ngaytre;
     private javax.swing.JTable tbl_donthue;
     private javax.swing.JTable tbl_donthueCT;
     private javax.swing.JTextField txt_idKhach;
