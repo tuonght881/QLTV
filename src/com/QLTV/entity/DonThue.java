@@ -18,11 +18,28 @@ public class DonThue {
     String ngaythue;
     String ngaytradukien;
     String ngaytra;
+    Double tienphat;
+    Double tongtiendambao;
     Double khachdua;
     Double thoilai;
     Double thanhtien;
 
     public DonThue() {
+    }
+
+    public DonThue(String iddonthue, String idkhach, String manv, String ngaytao, String ngaythue, String ngaytradukien, String ngaytra, Double tienphat, Double tiendambao, Double khachdua, Double thoilai, Double thanhtien) {
+        this.iddonthue = iddonthue;
+        this.idkhach = idkhach;
+        this.manv = manv;
+        this.ngaytao = ngaytao;
+        this.ngaythue = ngaythue;
+        this.ngaytradukien = ngaytradukien;
+        this.ngaytra = ngaytra;
+        this.tienphat = tienphat;
+        this.tongtiendambao = tiendambao;
+        this.khachdua = khachdua;
+        this.thoilai = thoilai;
+        this.thanhtien = thanhtien;
     }
 
     public String getIddonthue() {
@@ -81,6 +98,22 @@ public class DonThue {
         this.ngaytra = ngaytra;
     }
 
+    public Double getTienphat() {
+        return tienphat;
+    }
+
+    public void setTienphat(Double tienphat) {
+        this.tienphat = tienphat;
+    }
+
+    public Double getTiendambao() {
+        return tongtiendambao;
+    }
+
+    public void setTiendambao(Double tiendambao) {
+        this.tongtiendambao = tiendambao;
+    }
+
     public Double getKhachdua() {
         return khachdua;
     }
@@ -102,19 +135,6 @@ public class DonThue {
     }
 
     public void setThanhtien(Double thanhtien) {
-        this.thanhtien = thanhtien;
-    }
-
-    public DonThue(String iddonthue, String idkhach, String manv, String ngaytao, String ngaythue, String ngaytradukien, String ngaytra, Double khachdua, Double thoilai, Double thanhtien) {
-        this.iddonthue = iddonthue;
-        this.idkhach = idkhach;
-        this.manv = manv;
-        this.ngaytao = ngaytao;
-        this.ngaythue = ngaythue;
-        this.ngaytradukien = ngaytradukien;
-        this.ngaytra = ngaytra;
-        this.khachdua = khachdua;
-        this.thoilai = thoilai;
         this.thanhtien = thanhtien;
     }
 

@@ -4,6 +4,8 @@
  */
 package com.QLTV.form;
 
+import com.QLTV.dao.DonThueChiTietDAO;
+import com.QLTV.dao.DonThueDAO;
 import com.QLTV.dao.HoaDonChiTietDAO;
 import com.QLTV.dao.HoaDonDAO;
 import com.QLTV.dao.KhachHangDAO;
@@ -11,8 +13,11 @@ import com.QLTV.dao.SachDAO;
 import com.QLTV.dao.TacGiaDAO;
 import com.QLTV.dao.TheLoaiDAO;
 import com.QLTV.dao.ViTriDAO;
+import com.QLTV.entity.DonThue;
+import com.QLTV.entity.DonThueChiTiet;
 import com.QLTV.entity.HoaDon;
 import com.QLTV.entity.HoaDonChiTiet;
+import com.QLTV.entity.KhachHang;
 import com.QLTV.entity.Sach;
 import com.QLTV.entity.TacGia;
 import com.QLTV.entity.TheLoai;
@@ -38,9 +43,12 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -53,12 +61,15 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import raven.calendar.model.ModelDate;
+import raven.calendar.utils.CalendarSelectedListener;
 
 /**
  *
  * @author Tuong
  */
-public class BANSACH_FORM extends javax.swing.JFrame {
+public class THUESACH2_FORM extends javax.swing.JFrame {
+
     Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -68,8 +79,8 @@ public class BANSACH_FORM extends javax.swing.JFrame {
     TacGiaDAO tgDAO = new TacGiaDAO();
     ViTriDAO vtDAO = new ViTriDAO();
     KhachHangDAO khDAO = new KhachHangDAO();
-    HoaDonDAO hdDAO = new HoaDonDAO();
-    HoaDonChiTietDAO hdctDAO = new HoaDonChiTietDAO();
+    DonThueDAO dthueDAO = new DonThueDAO();
+    DonThueChiTietDAO dthuectDAO = new DonThueChiTietDAO();
 
     Locale localeVN = new Locale("vi", "VN");
     NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
@@ -80,26 +91,39 @@ public class BANSACH_FORM extends javax.swing.JFrame {
     Double tongcong = 0.0;
     Double khachdua = 0.0;
     Double thoilai = 0.0;
-
+    Double tienphat = 0.0;
+    Double tongtiendambao = 0.0;
+    Double tongtien = 0.0;
+    Double phantram = 0.0;
     int id;
 
     /**
      * Creates new form tesst
      */
-    public BANSACH_FORM() {
+    public THUESACH2_FORM() {
         initComponents();
-        applyTableStyle(tbl_sach);
-        applyTableStyle(tbl_hoadon);
+        //applyTableStyle(tbl_sach);
+        //applyTableStyle(tbl_hoadon);
         //txt_manv.setText(XAuth.user.getManv());
+        POPUP.add(jPanel1);
+        calendar1.addCalendarSelectedListener(new CalendarSelectedListener() {
+            @Override
+            public void selected(MouseEvent evt, ModelDate date) {
+                ngay = date.toDate();
+                String ngayF = sdf.format(ngay);
+                txt_ngaytradukien.setText(ngayF.toString());
+                System.out.println("=>" + ngayF);
+            }
+        });
         loaddataSach();
-        loadHoaDon();
+        loadDonThue();
         xuongdong();
         ActionListener act = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Date date = new Date();
                 String time = sdf.format(date);
-                txt_ngaybansach.setText(time);
+                txt_ngaythuesach.setText(time);
             }
         };
         timer = new Timer(1000, act);
@@ -108,16 +132,22 @@ public class BANSACH_FORM extends javax.swing.JFrame {
 
     }
 
-    public HoaDon getHoaDonNew() throws ParseException {
-        HoaDon hdNEW = new HoaDon();
-        hdNEW.setIdhoadon(txt_idhoadon.getText());
-        hdNEW.setManv(txt_manv.getText());
-        hdNEW.setNgaytao(txt_ngaybansach.getText());
-        hdNEW.setThanhtien(tongcong);
-        hdNEW.setKhachdua(Double.valueOf(txt_khachdua.getText()));
-        hdNEW.setThoilai(thoilai);
+    public DonThue getDonThueNew() throws ParseException {
+        DonThue dthueNew = new DonThue();
+        dthueNew.setIddonthue(txt_iddonthue.getText());
+        dthueNew.setManv(txt_manv.getText());
+        dthueNew.setIdkhach(txt_idkh.getText());
+        dthueNew.setNgaytao(txt_ngaythuesach.getText());
+        dthueNew.setNgaythue(txt_ngaythuesach.getText());
+        dthueNew.setNgaytradukien(txt_ngaytradukien.getText());
+        dthueNew.setNgaytra("");
+        dthueNew.setTienphat(0.0);
+        dthueNew.setTiendambao(tongtiendambao);
+        dthueNew.setThanhtien(tongtien);
+        dthueNew.setKhachdua(Double.valueOf(txt_khachdua.getText()));
+        dthueNew.setThoilai(thoilai);
 
-        return hdNEW;
+        return dthueNew;
     }
 
     public void xuongdong() {
@@ -134,35 +164,38 @@ public class BANSACH_FORM extends javax.swing.JFrame {
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setVerticalAlignment(SwingConstants.CENTER);
         // Áp dụng renderer cho các cột còn lại
-        for (int i = 1; i < tbl_hoadon.getColumnCount(); i++) {
-            tbl_hoadon.getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
+        for (int i = 1; i < tbl_thuesach.getColumnCount(); i++) {
+            tbl_thuesach.getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
         }
 
-
-        tbl_hoadon.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tbl_thuesach.getColumnModel().getColumn(0).setPreferredWidth(100);
         tbl_sach.getColumnModel().getColumn(0).setPreferredWidth(300);
-        tbl_hoadon.getColumnModel().getColumn(0).setCellRenderer(new MultiLineTableCellRenderer());
+        tbl_thuesach.getColumnModel().getColumn(0).setCellRenderer(new MultiLineTableCellRenderer());
         tbl_sach.getColumnModel().getColumn(0).setCellRenderer(new MultiLineTableCellRenderer());
         tbl_sach.getColumnModel().getColumn(1).setCellRenderer(new MultiLineTableCellRenderer());
     }
 
-    public void ThemHoaDon() {
+    public void ThemDonThue() {
         if (batloi_tk()) {
             try {
-                HoaDon hdNew = getHoaDonNew();
-                hdDAO.insert(hdNew);
+                DonThue dthueNew = getDonThueNew();
+                //System.out.println(dthueNew.getIddonthue());
+                //System.out.println(dthueNew.getIdkhach());
+                dthueDAO.insert(dthueNew);
+                //System.out.println("tới đây rồi");
 
-                HoaDonChiTiet hdctNew = new HoaDonChiTiet();
-                hdctNew.setIdhoadon(txt_idhoadon.getText());
-
-                for (int i = 0; i < tbl_hoadon.getRowCount(); i++) {
-                    hdctNew.setIdhoadon(hdDAO.getmaHD());
-                    String idsach = sachDAO.getMasach(tbl_hoadon.getValueAt(i, 0).toString());
-                    hdctNew.setIdsach(idsach);
-                    hdctNew.setSoluong(Integer.parseInt(tbl_hoadon.getValueAt(i, 2).toString()));
-                    hdctDAO.insert(hdctNew);
+                DonThueChiTiet dthueCT = new DonThueChiTiet();
+                dthueCT.setIddonthue(txt_iddonthue.getText());
+                //System.out.println("tới đây rồi 2");
+                for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
+                    dthueCT.setIddonthue(dthueDAO.getIDdonthue());
+                    String idsach = sachDAO.getMasach(tbl_thuesach.getValueAt(i, 0).toString());
+                    dthueCT.setIdsach(idsach);
+                    dthueCT.setSoluong(Integer.parseInt(tbl_thuesach.getValueAt(i, 2).toString()));
+                    dthueCT.setTiendambao(Double.parseDouble(tbl_thuesach.getValueAt(i, 6).toString()));
+                    dthuectDAO.insert(dthueCT);
                 }
-
+                //System.out.println("tới đây rồi 3");
                 loaddataSach();
                 model_hd.setRowCount(0);
                 JOptionPane.showMessageDialog(this, "Thêm thành công");
@@ -174,10 +207,20 @@ public class BANSACH_FORM extends javax.swing.JFrame {
     }
 
     public void resetForm() {
-        loadHoaDon();
+        loadDonThue();
         loaddataSach();
-        txt_tongcong.setText("");
+        loadDonThue();
+        txt_idkh.setText("");
+        txt_tenkh.setText("");
+        txt_diemuytin.setText("");
+        txt_phantramdambao.setText("");
+        txt_sdtkhach.setText("");
+        txt_songaymuon.setText("");
+        txt_ngaytradukien.setText("");
+        txt_tiendambao.setText("");
+        txt_tonggiathue.setText("");
         txt_khachdua.setText("");
+        txt_thanhtien.setText("");
         txt_thoilai.setText("");
         if (model_hd != null) {
             model_hd.setRowCount(0);
@@ -185,14 +228,14 @@ public class BANSACH_FORM extends javax.swing.JFrame {
         xuongdong();
     }
 
-    public void loadHoaDon() {
+    public void loadDonThue() {
         try {
-            List<HoaDon> list = hdDAO.selectAll();
-            for (HoaDon hd : list) {
-                id = Integer.parseInt(hd.getIdhoadon());
+            List<DonThue> list = dthueDAO.selectAll();
+            for (DonThue dt : list) {
+                id = Integer.parseInt(dt.getIddonthue());
             }
             int id2 = id + 1;
-            txt_idhoadon.setText(Integer.toString(id2));
+            txt_iddonthue.setText(Integer.toString(id2));
         } catch (Exception e) {
         }
     }
@@ -202,7 +245,7 @@ public class BANSACH_FORM extends javax.swing.JFrame {
         //txt_ngaybansach.setText(dateFormat.format(ngay));
         //txt_manv.setText(XAuth.user.getHoten());
         model_sach = (DefaultTableModel) tbl_sach.getModel();
-        model_sach.setColumnIdentifiers(new Object[]{"Tên sách", "Tác giả", "Vị trí", "Số lượng", "Giá bán"});
+        model_sach.setColumnIdentifiers(new Object[]{"Tên sách", "Tác giả", "Vị trí", "Số lượng", "Giá thuê 1 ngày"});
         model_sach.setRowCount(0);
         try {
             List<Sach> list = sachDAO.selectAll();
@@ -210,7 +253,7 @@ public class BANSACH_FORM extends javax.swing.JFrame {
                 TheLoai tl = tlDAO.select_byID(sach.getIdtheloai().toString());
                 TacGia tg = tgDAO.select_byID(sach.getIdtacgia());
                 ViTri vt = vtDAO.select_byID(sach.getIdvitri());
-                Object[] row = {sach.getTensach(), tg.getTentg(), vt.getTenvt(), sach.getSl(), D_format.format(sach.getGiaban())};
+                Object[] row = {sach.getTensach(), tg.getTentg(), vt.getTenvt(), sach.getSl(), D_format.format(sach.getGiathue1ngay())};
                 model_sach.addRow(row);
             }
             if (model_sach.getRowCount() == 0) {
@@ -225,7 +268,7 @@ public class BANSACH_FORM extends javax.swing.JFrame {
     public void timkiem() {
         String tukhoa = txt_timkiem.getText();
         model_sach = (DefaultTableModel) tbl_sach.getModel();
-        model_sach.setColumnIdentifiers(new Object[]{"Tên sách", "Tác giả", "Vị trí", "Số lượng", "Giá bán"});
+        model_sach.setColumnIdentifiers(new Object[]{"Tên sách", "Tác giả", "Vị trí", "Số lượng", "Giá thuê 1 ngày"});
         model_sach.setRowCount(0);
         try {
             List<Sach> list = sachDAO.timkiemSach(tukhoa);
@@ -233,7 +276,7 @@ public class BANSACH_FORM extends javax.swing.JFrame {
                 TheLoai tl = tlDAO.select_byID(sach.getIdtheloai().toString());
                 TacGia tg = tgDAO.select_byID(sach.getIdtacgia());
                 ViTri vt = vtDAO.select_byID(sach.getIdvitri());
-                Object[] row = {sach.getTensach(), tg.getTentg(), vt.getTenvt(), sach.getSl(), D_format.format(sach.getGiaban())};
+                Object[] row = {sach.getTensach(), tg.getTentg(), vt.getTenvt(), sach.getSl(), D_format.format(sach.getGiathue1ngay())};
                 model_sach.addRow(row);
             }
             if (model_sach.getRowCount() == 0) {
@@ -248,15 +291,26 @@ public class BANSACH_FORM extends javax.swing.JFrame {
     public boolean batloi_tk() {
         String khachdua = txt_khachdua.getText();
         String thoilai = txt_thoilai.getText();
+        String sdtk = txt_sdtkhach.getText();
+        String songaymuon = txt_songaymuon.getText();
 
         String loi = "";
-
+        if (tbl_thuesach.getRowCount() == 0) {
+            loi += "Chưa có quyển sách nào!\n";
+        }
+        if (sdtk.equalsIgnoreCase("")) {
+            loi += "Số điện thoại khách\n";
+        }
+        if (songaymuon.equalsIgnoreCase("")) {
+            loi += "Số ngày mượn\n";
+        }
         if (khachdua.equalsIgnoreCase("")) {
             loi += "Khách đưa\n";
         }
         if (thoilai.equalsIgnoreCase("")) {
             loi += "Thối lại\n";
         }
+
         if (!loi.equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(this, "--Vui lòng kiểm tra lại thông tin!!--\n" + loi, "Lỗi", JOptionPane.INFORMATION_MESSAGE);
             return false;
@@ -264,13 +318,51 @@ public class BANSACH_FORM extends javax.swing.JFrame {
         return true;
     }
 
+    void tinhTONGtiendambao() {
+        for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
+            tongtiendambao += Double.parseDouble(tbl_thuesach.getValueAt(i, 6).toString());
+        }
+        txt_tiendambao.setText(currencyVN.format(tongtiendambao));
+    }
+
     void tinhtien() {
         tongcong = 0.0;
-        for (int i = 0; i < tbl_hoadon.getRowCount(); i++) {
-            tongcong += Double.parseDouble(tbl_hoadon.getValueAt(i, 3).toString());
+        for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
+            tongcong += Double.parseDouble(tbl_thuesach.getValueAt(i, 5).toString());
         }
+        //tinhtiendambao();
+        txt_tonggiathue.setText(currencyVN.format(tongcong));
+    }
 
-        txt_tongcong.setText(currencyVN.format(tongcong));
+    void tinhsongaymuon() throws ParseException {
+        Date ngaymuon = sdf.parse(txt_ngaythuesach.getText());
+        int songaymuon = Integer.parseInt(txt_songaymuon.getText());
+        Calendar calendarNgayMuon = Calendar.getInstance();
+        calendarNgayMuon.setTime(ngaymuon);
+        calendarNgayMuon.add(Calendar.DAY_OF_MONTH, songaymuon);
+        Date newNgayMuon = calendarNgayMuon.getTime();
+        txt_ngaytradukien.setText(sdf.format(newNgayMuon));
+    }
+
+    public void timKH() {
+        String sdt = txt_sdtkhach.getText();
+        try {
+            KhachHang kh = khDAO.select_bysdt(sdt);
+            txt_idkh.setText(kh.getIdkhach());
+            txt_tenkh.setText(kh.getHotenkhach());
+            txt_diemuytin.setText(Integer.toString(kh.getDiemuytin()));
+            phantram = ((100 - Double.valueOf(kh.getDiemuytin())));
+            txt_phantramdambao.setText(D_format.format(phantram) + "%");
+        } catch (NullPointerException e) {
+            int choice = JOptionPane.showConfirmDialog(this,"Khách hàng không tồn tại!\n Thêm khách hàng mới?","Thông báo",JOptionPane.OK_CANCEL_OPTION);
+            QLKhachHang_FORM qlkh = new QLKhachHang_FORM();
+            if(choice ==JOptionPane.OK_OPTION){
+                qlkh.setVisible(true);
+                qlkh.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            }else{
+                return;
+            }
+        }
     }
 
     public void taoHoaDon(MouseEvent evt) throws NumberFormatException, HeadlessException {
@@ -285,21 +377,24 @@ public class BANSACH_FORM extends javax.swing.JFrame {
                 //JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
             }
             if (sl != null) {
-                Object[] row = new Object[4];
-                model_hd = (DefaultTableModel) tbl_hoadon.getModel();
+                Object[] row = new Object[7];
+                model_hd = (DefaultTableModel) tbl_thuesach.getModel();
                 if (index != -1) {
                     String selectBook = model_sach.getValueAt(index, 0).toString();
-                    if (tbl_hoadon.getRowCount() <= 0) {
+                    if (tbl_thuesach.getRowCount() <= 0) {
                         row[0] = selectBook;
                         row[1] = model_sach.getValueAt(index, 4).toString();//lấy giá của sách
                         row[2] = sl;
                         Double thanhtien = (Double.parseDouble(sl) * Double.parseDouble(row[1].toString()));
                         row[3] = D_format.format(thanhtien);
+                        row[4] = 0.0;
+                        row[5] = 0.0;
+                        row[6] = 0.0;
                         model_hd.addRow(row);
                         tinhtien();
                     } else {
                         int hang = -1;
-                        for (int i = 0; i < tbl_hoadon.getRowCount(); i++) {
+                        for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
                             if (selectBook.equalsIgnoreCase(model_hd.getValueAt(i, 0).toString())) {
                                 hang = i;
                                 break;
@@ -313,22 +408,31 @@ public class BANSACH_FORM extends javax.swing.JFrame {
                             row[2] = sl;
                             Double thanhtien = (Double.parseDouble(sl) * Double.parseDouble(row[1].toString()));
                             row[3] = D_format.format(thanhtien);
+                            row[4] = 0.0;
+                            row[5] = 0.0;
+                            row[6] = 0.0;
                             model_hd.addRow(row);
                             tinhtien();
                         } else {
                             row[0] = selectBook;
                             row[1] = model_sach.getValueAt(index, 4).toString(); //row 1 là giá sách
-                            int sl2 = Integer.parseInt(tbl_hoadon.getValueAt(hang, 2).toString()) + Integer.parseInt(sl);
-                            tbl_hoadon.setValueAt(sl2, hang, 2);
+                            int sl2 = Integer.parseInt(tbl_thuesach.getValueAt(hang, 2).toString()) + Integer.parseInt(sl);
+                            tbl_thuesach.setValueAt(sl2, hang, 2);
                             Double thanhtien = (Double.parseDouble(sl) * Double.parseDouble(row[1].toString()));
-                            Double thanhtien2 = Double.parseDouble(tbl_hoadon.getValueAt(hang, 3).toString()) + thanhtien;
-                            tbl_hoadon.setValueAt(D_format.format(thanhtien2), hang, 3);
+                            Double thanhtien2 = Double.parseDouble(tbl_thuesach.getValueAt(hang, 3).toString()) + thanhtien;
+                            tbl_thuesach.setValueAt(D_format.format(thanhtien2), hang, 3);
                             tinhtien();
                         }
                     }
                 }
             }
         }
+    }
+
+    private void showPopup() {
+        //int x = txt_ngaysinh.getLocationOnScreen().x;
+        //int y = txt_ngaysinh.getLocationOnScreen().y + txt_ngaysinh.getHeight();
+        POPUP.show(txt_ngaytradukien, 0, txt_ngaytradukien.getHeight());
     }
     // Renderer để tự động xuống hàng trong các ô của bảng
 
@@ -416,27 +520,55 @@ public class BANSACH_FORM extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        POPUP = new javax.swing.JPopupMenu();
+        jPanel1 = new javax.swing.JPanel();
+        calendar1 = new raven.calendar.Calendar();
         btn = new javax.swing.JButton();
         crazyPanel1 = new raven.crazypanel.CrazyPanel();
         crazyPanel2 = new raven.crazypanel.CrazyPanel();
         txt_timkiem = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        txt_ngaybansach = new javax.swing.JTextField();
+        txt_ngaythuesach = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         txt_manv = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         crazyPanel4 = new raven.crazypanel.CrazyPanel();
+        crazyPanel6 = new raven.crazypanel.CrazyPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_sach = new javax.swing.JTable();
-        crazyPanel8 = new raven.crazypanel.CrazyPanel();
-        crazyPanel6 = new raven.crazypanel.CrazyPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tbl_hoadon = new javax.swing.JTable();
-        crazyPanel3 = new raven.crazypanel.CrazyPanel();
+        crazyPanel7 = new raven.crazypanel.CrazyPanel();
         jLabel2 = new javax.swing.JLabel();
-        txt_idhoadon = new javax.swing.JTextField();
+        txt_iddonthue = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        txt_idkh = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        txt_tenkh = new javax.swing.JTextField();
+        lbl_diemuytin = new javax.swing.JLabel();
+        txt_diemuytin = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        txt_phantramdambao = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tbl_thuesach = new javax.swing.JTable();
+        crazyPanel8 = new raven.crazypanel.CrazyPanel();
+        crazyPanel3 = new raven.crazypanel.CrazyPanel();
+        jLabel5 = new javax.swing.JLabel();
+        txt_sdtkhach = new javax.swing.JTextField();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel14 = new javax.swing.JLabel();
+        txt_songaymuon = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        txt_ngaytradukien = new javax.swing.JTextField();
+        jSeparator3 = new javax.swing.JSeparator();
+        jSeparator4 = new javax.swing.JSeparator();
         jLabel9 = new javax.swing.JLabel();
-        txt_tongcong = new javax.swing.JTextField();
+        txt_tonggiathue = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        txt_tiendambao = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        txt_thanhtien = new javax.swing.JTextField();
+        jSeparator5 = new javax.swing.JSeparator();
+        jSeparator6 = new javax.swing.JSeparator();
         jLabel11 = new javax.swing.JLabel();
         txt_khachdua = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
@@ -444,6 +576,33 @@ public class BANSACH_FORM extends javax.swing.JFrame {
         crazyPanel5 = new raven.crazypanel.CrazyPanel();
         btn_reset = new javax.swing.JButton();
         btn_them = new javax.swing.JButton();
+
+        calendar1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                calendar1MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(calendar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(calendar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -497,8 +656,8 @@ public class BANSACH_FORM extends javax.swing.JFrame {
         jLabel3.setText("Ngày:");
         crazyPanel2.add(jLabel3);
 
-        txt_ngaybansach.setEnabled(false);
-        crazyPanel2.add(txt_ngaybansach);
+        txt_ngaythuesach.setEnabled(false);
+        crazyPanel2.add(txt_ngaythuesach);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel1.setText("ID Nhân viên");
@@ -508,13 +667,13 @@ public class BANSACH_FORM extends javax.swing.JFrame {
         crazyPanel2.add(txt_manv);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel4.setText("BÁN SÁCH");
+        jLabel4.setText("THUÊ SÁCH");
         crazyPanel2.add(jLabel4);
 
         crazyPanel1.add(crazyPanel2);
 
         crazyPanel4.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
-            "background:$Table.background;[light]border:0,0,0,0,shade(@background,5%),,20;[dark]border:0,0,0,0,tint(@background,5%),,20",
+            "background:$Table.background;",
             null
         ));
         crazyPanel4.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
@@ -522,8 +681,23 @@ public class BANSACH_FORM extends javax.swing.JFrame {
             "[]push[]",
             "",
             new String[]{
+                "width 820",
+                ""
+            }
+        ));
+
+        crazyPanel6.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
+            "background:$Table.background;",
+            null
+        ));
+        crazyPanel6.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
+            "wrap 1",
+            "[]",
+            "[][]",
+            new String[]{
                 "width 800",
-                "width 600"
+                "",
+                "width 800"
             }
         ));
 
@@ -535,7 +709,7 @@ public class BANSACH_FORM extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Tên sách", "Tác giả", "Vị trí", "Số lượng", "Giá bán"
+                "Tên sách", "Tác giả", "Vị trí", "Số lượng", "Giá thuê 1 ngày"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -555,40 +729,117 @@ public class BANSACH_FORM extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tbl_sach);
 
-        crazyPanel4.add(jScrollPane1);
+        crazyPanel6.add(jScrollPane1);
 
-        crazyPanel8.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
-            "background:$Table.background",
-            null
+        crazyPanel7.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
+            "background:$Table.background;",
+            new String[]{
+                "background:@background",
+                "background:@background",
+                "background:@background",
+                "background:@background",
+                "background:@background",
+                "background:@background",
+                "background:@background",
+                "background:@background",
+                "background:@background",
+                "background:@background"
+            }
         ));
-        crazyPanel8.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
-            "wrap 1",
-            "[]",
-            "[][][]",
-            null
+        crazyPanel7.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
+            "",
+            "",
+            "",
+            new String[]{
+                "",
+                "",
+                "",
+                "",
+                "",
+                "width 150"
+            }
         ));
 
-        tbl_hoadon.setModel(new javax.swing.table.DefaultTableModel(
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel2.setText("ID Đơn thuê");
+        crazyPanel7.add(jLabel2);
+
+        txt_iddonthue.setEditable(false);
+        txt_iddonthue.setToolTipText("");
+        txt_iddonthue.setEnabled(false);
+        txt_iddonthue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_iddonthueActionPerformed(evt);
+            }
+        });
+        crazyPanel7.add(txt_iddonthue);
+
+        jLabel12.setText("ID khách");
+        crazyPanel7.add(jLabel12);
+
+        txt_idkh.setEditable(false);
+        txt_idkh.setEnabled(false);
+        crazyPanel7.add(txt_idkh);
+
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel6.setText("Khách hàng");
+        crazyPanel7.add(jLabel6);
+
+        txt_tenkh.setEditable(false);
+        txt_tenkh.setEnabled(false);
+        crazyPanel7.add(txt_tenkh);
+
+        lbl_diemuytin.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        lbl_diemuytin.setText("Điểm uy tín");
+        crazyPanel7.add(lbl_diemuytin);
+
+        txt_diemuytin.setEditable(false);
+        txt_diemuytin.setEnabled(false);
+        crazyPanel7.add(txt_diemuytin);
+
+        jLabel13.setText("Phí đảm bảo");
+        crazyPanel7.add(jLabel13);
+
+        txt_phantramdambao.setEditable(false);
+        txt_phantramdambao.setEnabled(false);
+        crazyPanel7.add(txt_phantramdambao);
+
+        crazyPanel6.add(crazyPanel7);
+
+        tbl_thuesach.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Tên sách", "Đơn giá", "Số lượng", "Thành tiền"
+                "Tên sách (1)", "Đơn giá (2)", "Số lượng (3)", "Giá x SL (4)", "Số ngày mượn (5)", "Giá thuê(4) x (5)", "Tiền đảm bảo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, true, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(tbl_hoadon);
+        jScrollPane2.setViewportView(tbl_thuesach);
 
         crazyPanel6.add(jScrollPane2);
 
-        crazyPanel8.add(crazyPanel6);
+        crazyPanel4.add(crazyPanel6);
+
+        crazyPanel8.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
+            "background:$Table.background;",
+            null
+        ));
+        crazyPanel8.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
+            "wrap 1",
+            "[]",
+            "[][][]",
+            new String[]{
+                ""
+            }
+        ));
 
         crazyPanel3.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
             "background:$Table.background",
@@ -596,64 +847,120 @@ public class BANSACH_FORM extends javax.swing.JFrame {
                 "background:lighten(@background,8%)",
                 "background:@background",
                 "background:lighten(@background,8%)",
-                "background:@background",
                 "background:lighten(@background,8%)",
                 "background:@background",
                 "background:@background",
                 "background:@background",
-                "background:lighten(@background,8%)",
                 "background:@background",
                 "background:lighten(@background,8%)",
                 "background:@background",
                 "background:lighten(@background,8%)",
                 "background:@background",
                 "background:lighten(@background,8%)",
+                "background:@background",
+                "background:lighten(@background,8%)",
+                "background:@background",
+                "background:lighten(@background,8%)",
+                "background:@background",
+                "background:@background",
                 "background:@background"
             }
         ));
         crazyPanel3.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
             "wrap 2",
             "[][]",
-            "[][][]",
+            "[][][][][][][][][][]",
             new String[]{
                 "width 80",
-                "width 200",
+                "width 240",
                 "width 80",
-                "width 200",
+                "width 240",
                 "width 80",
-                "width 200",
+                "width 240",
                 "width 80",
-                "width 200",
+                "width 240",
                 "width 80",
-                "width 200",
+                "width 240",
                 "width 80",
-                "width 200",
+                "width 240",
                 "width 80",
-                "width 200",
+                "width 240",
                 "width 80",
-                "width 200",
+                "width 240",
                 "width 80",
-                "width 200"
+                "width 240",
+                "width 80",
+                "width 240",
+                "width 80",
+                "width 240"
             }
         ));
         crazyPanel3.setName(""); // NOI18N
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel2.setText("ID hoá đơn");
-        crazyPanel3.add(jLabel2);
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel5.setText("SDT khách");
+        crazyPanel3.add(jLabel5);
 
-        txt_idhoadon.setEditable(false);
-        txt_idhoadon.setToolTipText("");
-        txt_idhoadon.setEnabled(false);
-        crazyPanel3.add(txt_idhoadon);
+        txt_sdtkhach.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_sdtkhachKeyPressed(evt);
+            }
+        });
+        crazyPanel3.add(txt_sdtkhach);
+        crazyPanel3.add(jSeparator1);
+        crazyPanel3.add(jSeparator2);
+
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel14.setText("Số ngày mượn");
+        crazyPanel3.add(jLabel14);
+
+        txt_songaymuon.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_songaymuonKeyPressed(evt);
+            }
+        });
+        crazyPanel3.add(txt_songaymuon);
+
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel7.setText("Ngày trả dự kiến");
+        crazyPanel3.add(jLabel7);
+
+        txt_ngaytradukien.setEditable(false);
+        txt_ngaytradukien.setEnabled(false);
+        txt_ngaytradukien.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txt_ngaytradukienMouseClicked(evt);
+            }
+        });
+        crazyPanel3.add(txt_ngaytradukien);
+        crazyPanel3.add(jSeparator3);
+        crazyPanel3.add(jSeparator4);
 
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel9.setText("Tổng");
+        jLabel9.setText("Tổng giá thuê");
         crazyPanel3.add(jLabel9);
 
-        txt_tongcong.setEditable(false);
-        txt_tongcong.setEnabled(false);
-        crazyPanel3.add(txt_tongcong);
+        txt_tonggiathue.setEditable(false);
+        txt_tonggiathue.setEnabled(false);
+        crazyPanel3.add(txt_tonggiathue);
+
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel8.setText("Tổng tiền đảm bảo");
+        crazyPanel3.add(jLabel8);
+
+        txt_tiendambao.setEditable(false);
+        txt_tiendambao.setEnabled(false);
+        crazyPanel3.add(txt_tiendambao);
+
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel15.setText("Thành tiền:");
+        crazyPanel3.add(jLabel15);
+
+        txt_thanhtien.setEditable(false);
+        txt_thanhtien.setEnabled(false);
+        crazyPanel3.add(txt_thanhtien);
+        crazyPanel3.add(jSeparator5);
+        crazyPanel3.add(jSeparator6);
 
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel11.setText("Khách đưa");
@@ -724,14 +1031,13 @@ public class BANSACH_FORM extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(66, 66, 66)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btn)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1112, Short.MAX_VALUE)
-                        .addGap(65, 65, 65))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -767,7 +1073,7 @@ public class BANSACH_FORM extends javax.swing.JFrame {
     }//GEN-LAST:event_btnActionPerformed
 
     private void btn_themActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themActionPerformed
-        ThemHoaDon();
+        ThemDonThue();
     }//GEN-LAST:event_btn_themActionPerformed
 
     private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
@@ -786,13 +1092,64 @@ public class BANSACH_FORM extends javax.swing.JFrame {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("")) {
             khachdua = Double.parseDouble(txt_khachdua.getText());
             if (khachdua >= tongcong) {
-                thoilai = khachdua - tongcong;
+                thoilai = khachdua - tongtien;
                 txt_thoilai.setText(currencyVN.format(thoilai));
             } else {
                 JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
             }
         }
     }//GEN-LAST:event_txt_khachduaKeyPressed
+
+    private void calendar1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_calendar1MousePressed
+        if (evt.getClickCount() == 2) {
+            POPUP.setVisible(false);
+        }
+    }//GEN-LAST:event_calendar1MousePressed
+
+    private void txt_iddonthueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_iddonthueActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_iddonthueActionPerformed
+
+    private void txt_sdtkhachKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sdtkhachKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_sdtkhach.getText().equalsIgnoreCase("")) {
+            timKH();
+
+        }
+    }//GEN-LAST:event_txt_sdtkhachKeyPressed
+
+    private void txt_ngaytradukienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_ngaytradukienMouseClicked
+        showPopup();
+    }//GEN-LAST:event_txt_ngaytradukienMouseClicked
+
+    private void txt_songaymuonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_songaymuonKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_songaymuon.getText().equalsIgnoreCase("")) {
+            try {
+                Double diemuytin = Double.valueOf(txt_diemuytin.getText());
+                //phantram = ((100 - diemuytin));
+                //tbl_thuesach.getColumnModel().getColumn(6).setHeaderValue("Tiền đảm bảo ("+phantram+"%)");
+                tinhsongaymuon();
+                double ngaymuon = Double.parseDouble(txt_songaymuon.getText());
+                for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
+                    tbl_thuesach.setValueAt(txt_songaymuon.getText(), i, 4);
+                }
+                for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
+                    Double tien = Double.parseDouble(tbl_thuesach.getValueAt(i, 3).toString());
+                    tbl_thuesach.setValueAt(D_format.format(ngaymuon * tien), i, 5);
+
+                    Double giathue = Double.parseDouble(tbl_thuesach.getValueAt(i, 5).toString());
+                    tbl_thuesach.setValueAt(D_format.format(giathue * (phantram / 100)), i, 6);
+                }
+                tinhtien();
+                tinhTONGtiendambao();
+                tongtien = tongcong + tongtiendambao;
+                txt_thanhtien.setText(currencyVN.format(tongtien));
+            } catch (ParseException ex) {
+                Logger.getLogger(THUESACH2_FORM.class.getName()).log(Level.SEVERE, null, ex);
+            }catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(this, "Chưa có thông tin của khách hàng!");
+            }
+        }
+    }//GEN-LAST:event_txt_songaymuonKeyPressed
 
     /**
      * @param args the command line arguments
@@ -811,13 +1168,13 @@ public class BANSACH_FORM extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(BANSACH_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(THUESACH2_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(BANSACH_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(THUESACH2_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(BANSACH_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(THUESACH2_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(BANSACH_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(THUESACH2_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         FlatRobotoFont.install();
@@ -833,39 +1190,67 @@ public class BANSACH_FORM extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new BANSACH_FORM().setVisible(true);
+                new THUESACH2_FORM().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPopupMenu POPUP;
     private javax.swing.JButton btn;
     private javax.swing.JButton btn_reset;
     private javax.swing.JButton btn_them;
+    private raven.calendar.Calendar calendar1;
     private raven.crazypanel.CrazyPanel crazyPanel1;
     private raven.crazypanel.CrazyPanel crazyPanel2;
     private raven.crazypanel.CrazyPanel crazyPanel3;
     private raven.crazypanel.CrazyPanel crazyPanel4;
     private raven.crazypanel.CrazyPanel crazyPanel5;
     private raven.crazypanel.CrazyPanel crazyPanel6;
+    private raven.crazypanel.CrazyPanel crazyPanel7;
     private raven.crazypanel.CrazyPanel crazyPanel8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable tbl_hoadon;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JLabel lbl_diemuytin;
     private javax.swing.JTable tbl_sach;
-    private javax.swing.JTextField txt_idhoadon;
+    private javax.swing.JTable tbl_thuesach;
+    private javax.swing.JTextField txt_diemuytin;
+    private javax.swing.JTextField txt_iddonthue;
+    private javax.swing.JTextField txt_idkh;
     private javax.swing.JTextField txt_khachdua;
     private javax.swing.JTextField txt_manv;
-    private javax.swing.JTextField txt_ngaybansach;
+    private javax.swing.JTextField txt_ngaythuesach;
+    private javax.swing.JTextField txt_ngaytradukien;
+    private javax.swing.JTextField txt_phantramdambao;
+    private javax.swing.JTextField txt_sdtkhach;
+    private javax.swing.JTextField txt_songaymuon;
+    private javax.swing.JTextField txt_tenkh;
+    private javax.swing.JTextField txt_thanhtien;
     private javax.swing.JTextField txt_thoilai;
+    private javax.swing.JTextField txt_tiendambao;
     private javax.swing.JTextField txt_timkiem;
-    private javax.swing.JTextField txt_tongcong;
+    private javax.swing.JTextField txt_tonggiathue;
     // End of variables declaration//GEN-END:variables
 }

@@ -6,19 +6,18 @@ import java.awt.Cursor;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -26,7 +25,9 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 public class PasswordField extends JPasswordField {
-    ImageIcon capsLockIcon = new ImageIcon("src\\com\\raven\\icon\\letterw.png");
+    ImageIcon caps = new ImageIcon("src\\com\\raven\\icon\\letterw.png");
+    Image capslocks = caps.getImage().getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
+    ImageIcon capsLockIcon = new ImageIcon(capslocks);
     private String hint = "";
     private final Animator animator;
     private float animate;
@@ -92,8 +93,12 @@ public class PasswordField extends JPasswordField {
             }
         });
         // Tạo nút toggle và đặt vị trí
-        String eyehide = "src\\com\\raven\\icon\\hidew.png";
-        String eyeshow = "src\\com\\raven\\icon\\vieww.png";
+        String eyehiden = "src\\com\\raven\\icon\\hiddenw.png";
+        String eyeshoww = "src\\com\\raven\\icon\\vieww.png";
+        ImageIcon hideIcon = new ImageIcon(eyehiden);
+        ImageIcon showIcon = new ImageIcon(eyeshoww);
+        Image eyehide = hideIcon.getImage().getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
+        Image eyeshow = showIcon.getImage().getScaledInstance(25, 25, java.awt.Image.SCALE_SMOOTH);
         ImageIcon hide = new ImageIcon(eyehide);
         ImageIcon Eshow = new ImageIcon(eyeshow);
         toggleButton = new JButton();
@@ -151,7 +156,7 @@ public class PasswordField extends JPasswordField {
             if (Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK)) {
                         // Lấy kích thước của icon Caps Lock
             int iconWidth = 60;
-            int iconHeight = 20;
+            int iconHeight = 25;
 
             // Tính toán vị trí để vẽ icon Caps Lock
             int xCapsLock = getWidth() - iconWidth;

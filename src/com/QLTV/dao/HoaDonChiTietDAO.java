@@ -21,7 +21,7 @@ public class HoaDonChiTietDAO extends EntityDao<HoaDonChiTiet, String> {
     String select_by_hoadon = "select * from HoaDonChiTiet where idhoadon = ?";
     String insert = "insert into HoaDonChiTiet values(?,?,?)";
     String select_by_ID = "select * from HoaDonChiTiet where idhoadonct = ?";
-String delete = "delete HoaDonChiTiet where idhoadonct=?";
+    String delete = "delete HoaDonChiTiet where idhoadonct=?";
     @Override
     public void insert(HoaDonChiTiet entity) {
         JDBC.update(insert, entity.getIdhoadon(), entity.getIdsach(), entity.getSoluong());

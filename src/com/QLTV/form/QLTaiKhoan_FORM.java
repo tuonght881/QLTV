@@ -58,7 +58,7 @@ public class QLTaiKhoan_FORM extends javax.swing.JFrame {
      */
     public QLTaiKhoan_FORM() {
                 pro.loadFromFile();
-                init();
+                //init();
         initComponents();
         applyTableStyle(tbl_tk);
         loaddataTaiKhoan();
@@ -71,6 +71,7 @@ public class QLTaiKhoan_FORM extends javax.swing.JFrame {
                 ngay = date.toDate();
                 String ngayF = sdf.format(ngay);
                 txt_ngaysinh.setText(ngayF.toString());
+                POPUP.setVisible(false);
                 System.out.println("=>" + ngayF);
             }
         });
@@ -893,16 +894,16 @@ public class QLTaiKhoan_FORM extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(QLTaiKhoan_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-//        FlatRobotoFont.install();
-//        FlatLaf.registerCustomDefaultsSource("tableview");
-//        UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-//        SystemProperties pro = new SystemProperties();
-//        pro.loadFromFile();
-//        if (!pro.isDarkMode()) {
-//            FlatIntelliJLaf.setup();
-//        } else {
-//            FlatMacDarkLaf.setup();
-//        }
+        FlatRobotoFont.install();
+        FlatLaf.registerCustomDefaultsSource("tableview");
+        UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
+        SystemProperties pro = new SystemProperties();
+        pro.loadFromFile();
+        if (!pro.isDarkMode()) {
+            FlatIntelliJLaf.setup();
+        } else {
+            FlatMacDarkLaf.setup();
+        }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
