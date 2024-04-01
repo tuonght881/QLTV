@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package com.QLTV.form;
 
@@ -20,36 +20,24 @@ import com.QLTV.entity.HoaDonChiTiet;
 import com.QLTV.entity.KhachHang;
 import com.QLTV.entity.Sach;
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLaf;
-import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
-import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
-import com.formdev.flatlaf.themes.FlatMacDarkLaf;
-import com.raven.properties.SystemProperties;
 import java.awt.Component;
-import java.awt.EventQueue;
-import java.awt.Font;
 import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import java.text.DecimalFormat;
-import java.time.temporal.ChronoUnit;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.TableColumn;
 import raven.calendar.model.ModelDate;
 import raven.calendar.utils.CalendarSelectedListener;
@@ -58,8 +46,7 @@ import raven.calendar.utils.CalendarSelectedListener;
  *
  * @author Tuong
  */
-public class QLDONTHUE_FORM extends javax.swing.JFrame {
-
+public class DON_THUE extends javax.swing.JPanel {
     Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -76,11 +63,10 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
     int index = -1;
     DefaultTableModel model_donthue, model_donthuect;
     Double tienphat = 0.0;
-
     /**
-     * Creates new form tesst
+     * Creates new form DON_THUE
      */
-    public QLDONTHUE_FORM() {
+    public DON_THUE() {
         initComponents();
         applyTableStyle(tbl_donthue);
         applyTableStyle(tbl_donthueCT);
@@ -104,8 +90,7 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
             }
         });
     }
-
-    private void showPopup() {
+private void showPopup() {
         //int x = txt_ngaysinh.getLocationOnScreen().x;
         //int y = txt_ngaysinh.getLocationOnScreen().y + txt_ngaysinh.getHeight();
         POPUP.show(txt_ngaytra, 0, txt_ngaytra.getHeight());
@@ -397,7 +382,6 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
             }
         };
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -410,7 +394,6 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         POPUP = new javax.swing.JPopupMenu();
         jPanel1 = new javax.swing.JPanel();
         calendar1 = new raven.calendar.Calendar();
-        btn = new javax.swing.JButton();
         TAB = new javax.swing.JTabbedPane();
         HoadonPanel = new raven.crazypanel.CrazyPanel();
         crazyPanel2 = new raven.crazypanel.CrazyPanel();
@@ -489,15 +472,6 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
                     .addComponent(calendar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        btn.setText("change");
-        btn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnActionPerformed(evt);
-            }
-        });
 
         HoadonPanel.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
             "background:$Table.background;[light]border:0,0,0,0,shade(@background,5%),,20;[dark]border:0,0,0,0,tint(@background,5%),,20",
@@ -1037,68 +1011,37 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
 
         TAB.addTab("Hoá đơn chi tiết", HdctPanel);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGap(0, 1153, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
                     .addComponent(TAB, javax.swing.GroupLayout.DEFAULT_SIZE, 1141, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btn)))
-                .addContainerGap())
+                    .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(TAB, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGap(0, 604, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(TAB, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
-
-        pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActionPerformed
-
-        if (!FlatLaf.isLafDark()) {
-            EventQueue.invokeLater(() -> {
-                FlatAnimatedLafChange.showSnapshot();
-                FlatDarculaLaf.setup();
-                FlatLaf.updateUI();
-                FlatAnimatedLafChange.hideSnapshotWithAnimation();
-            });
-        } else {
-            EventQueue.invokeLater(() -> {
-                FlatAnimatedLafChange.showSnapshot();
-                FlatIntelliJLaf.setup();
-                FlatLaf.updateUI();
-                FlatAnimatedLafChange.hideSnapshotWithAnimation();
-            });
+    private void calendar1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_calendar1MousePressed
+        if (evt.getClickCount() == 2) {
+            POPUP.setVisible(false);
         }
-    }//GEN-LAST:event_btnActionPerformed
+    }//GEN-LAST:event_calendar1MousePressed
 
-    private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
-        resetForm();
-        resetHDCT();
-    }//GEN-LAST:event_btn_resetActionPerformed
-
-    private void btn_xoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_xoaActionPerformed
-        int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-        if (choice == JOptionPane.YES_OPTION) {
-            System.out.println("Người dùng đã chọn YES");
-            xoaDonThue();
-        } else if (choice == JOptionPane.NO_OPTION) {
-            return;
-        } else {
-            return;
-        }
-    }//GEN-LAST:event_btn_xoaActionPerformed
+    private void txt_timkiemHDCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_timkiemHDCaretUpdate
+        timkiemHD();
+    }//GEN-LAST:event_txt_timkiemHDCaretUpdate
 
     private void tbl_donthueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_donthueMouseClicked
         if (evt.getClickCount() == 2) {
@@ -1114,42 +1057,60 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tbl_donthueMouseClicked
 
-    private void txt_timkiemHDCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_timkiemHDCaretUpdate
-        timkiemHD();
-    }//GEN-LAST:event_txt_timkiemHDCaretUpdate
+    private void btn_reset1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reset1ActionPerformed
+        loaddataDonThue();
+    }//GEN-LAST:event_btn_reset1ActionPerformed
 
     private void tbl_donthueCTMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_donthueCTMouseClicked
-//        if (evt.getClickCount() == 2) {
-//            index = tbl_hoadonCT.getSelectedRow();
-//            try {
-//                fillFormHDCT();
-//            } catch (Exception e) {
-//                JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
-//            }
-//        }
+        //        if (evt.getClickCount() == 2) {
+            //            index = tbl_hoadonCT.getSelectedRow();
+            //            try {
+                //                fillFormHDCT();
+                //            } catch (Exception e) {
+                //                JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
+                //            }
+            //        }
     }//GEN-LAST:event_tbl_donthueCTMouseClicked
-
-    private void calendar1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_calendar1MousePressed
-        if (evt.getClickCount() == 2) {
-            POPUP.setVisible(false);
-        }
-    }//GEN-LAST:event_calendar1MousePressed
 
     private void txt_ngaythueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_ngaythueMouseClicked
         showPopup();
     }//GEN-LAST:event_txt_ngaythueMouseClicked
 
-    private void btn_reset1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reset1ActionPerformed
-        loaddataDonThue();
-    }//GEN-LAST:event_btn_reset1ActionPerformed
+    private void txt_ngaytraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_ngaytraMouseClicked
+        showPopup();
+    }//GEN-LAST:event_txt_ngaytraMouseClicked
+
+    private void btn_resettiendambaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resettiendambaoActionPerformed
+        int choice = JOptionPane.showConfirmDialog(null, "Xác nhận hoàn phí đảm bảo cho khách?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+            txt_tiendambao.setText("0");
+        } else if (choice == JOptionPane.NO_OPTION) {
+            return;
+        } else {
+            return;
+        }
+    }//GEN-LAST:event_btn_resettiendambaoActionPerformed
 
     private void txt_tienphatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_tienphatMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_tienphatMouseClicked
 
-    private void txt_ngaytraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_ngaytraMouseClicked
-        showPopup();
-    }//GEN-LAST:event_txt_ngaytraMouseClicked
+    private void btn_xoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_xoaActionPerformed
+        int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+            System.out.println("Người dùng đã chọn YES");
+            xoaDonThue();
+        } else if (choice == JOptionPane.NO_OPTION) {
+            return;
+        } else {
+            return;
+        }
+    }//GEN-LAST:event_btn_xoaActionPerformed
+
+    private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
+        resetForm();
+        resetHDCT();
+    }//GEN-LAST:event_btn_resetActionPerformed
 
     private void btn_capnhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_capnhatActionPerformed
         if (batloi_tk()) {
@@ -1169,67 +1130,12 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_capnhatActionPerformed
 
-    private void btn_resettiendambaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resettiendambaoActionPerformed
-        int choice = JOptionPane.showConfirmDialog(null, "Xác nhận hoàn phí đảm bảo cho khách?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-        if (choice == JOptionPane.YES_OPTION) {
-            txt_tiendambao.setText("0");
-        } else if (choice == JOptionPane.NO_OPTION) {
-            return;
-        } else {
-            return;
-        }
-    }//GEN-LAST:event_btn_resettiendambaoActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(QLDONTHUE_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(QLDONTHUE_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(QLDONTHUE_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(QLDONTHUE_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        FlatRobotoFont.install();
-        FlatLaf.registerCustomDefaultsSource("tableview");
-        UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-        SystemProperties pro = new SystemProperties();
-        pro.loadFromFile();
-        if (!pro.isDarkMode()) {
-            FlatIntelliJLaf.setup();
-        } else {
-            FlatMacDarkLaf.setup();
-        }
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new QLDONTHUE_FORM().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private raven.crazypanel.CrazyPanel HdctPanel;
     private raven.crazypanel.CrazyPanel HoadonPanel;
     private javax.swing.JPopupMenu POPUP;
     private javax.swing.JTabbedPane TAB;
-    private javax.swing.JButton btn;
     private javax.swing.JButton btn_capnhat;
     private javax.swing.JButton btn_reset;
     private javax.swing.JButton btn_reset1;

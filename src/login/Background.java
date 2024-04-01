@@ -46,7 +46,7 @@ public class Background extends JComponent {
     private Component blur;
 
     public Background() {
-        image = new ImageIcon(getClass().getResource("/login/img_1.jpg"));
+        image = new ImageIcon(getClass().getResource("/login/img.jpg"));
     }
 
     private void createImage() {
@@ -96,7 +96,7 @@ public class Background extends JComponent {
             BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = img.createGraphics();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.fill(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20));
+            g2.fill(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 0, 0));
             g2.setComposite(AlphaComposite.SrcIn);
             g2.drawImage(bufferedImage, 0, 0, null);
             g2.dispose();

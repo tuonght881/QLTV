@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package com.QLTV.form;
 
@@ -10,13 +10,11 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
-import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
-import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 import com.raven.properties.SystemProperties;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
-import java.awt.Font;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -24,23 +22,23 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-public class QLTheLoai_FORM extends javax.swing.JFrame {
+/**
+ *
+ * @author Tuong
+ */
+public class QLTL extends javax.swing.JPanel {
 
     TheLoaiDAO tlDAO = new TheLoaiDAO();
     int index = -1;
     SystemProperties pro = new SystemProperties();
-
-    /**
-     * Creates new form tesst
-     */
-    public QLTheLoai_FORM() {
+    public QLTL() {
+        initComponents();
         pro.loadFromFile();
-        init();
+        //init();
         initComponents();
         applyTableStyle(tbl_theloai);
         loaddataTheLoai();
@@ -48,7 +46,7 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
         btn_xoa.setEnabled(false);
     }
 
-    private void init() {
+private void init() {
         try {
             //FlatRobotoFont.install();
             FlatLaf.registerCustomDefaultsSource("tableview");
@@ -281,7 +279,6 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
             }
         };
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -310,9 +307,6 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         rdo_hd = new javax.swing.JRadioButton();
         rdo_nhd = new javax.swing.JRadioButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setBackground(new java.awt.Color(0, 0, 0));
 
         crazyPanel1.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
             "background:$Table.background;[light]border:0,0,0,0,shade(@background,5%),,20;[dark]border:0,0,0,0,tint(@background,5%),,20",
@@ -472,42 +466,27 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
 
         crazyPanel1.add(crazyPanel3);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(75, 75, 75)
-                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
-                .addGap(76, 76, 76))
+                .addContainerGap()
+                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 718, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(35, 35, 35))
+                .addContainerGap()
+                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+                .addContainerGap())
         );
-
-        pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
-        resetForm();
-    }//GEN-LAST:event_btn_resetActionPerformed
-
-    private void btn_xoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_xoaActionPerformed
-        xoaTG();
-    }//GEN-LAST:event_btn_xoaActionPerformed
-
-    private void btn_suaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_suaActionPerformed
-        suaTG();
-    }//GEN-LAST:event_btn_suaActionPerformed
-
-    private void btn_themActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themActionPerformed
-        themTG();
-    }//GEN-LAST:event_btn_themActionPerformed
+    private void txt_timkiemCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_timkiemCaretUpdate
+        timkiem();
+    }//GEN-LAST:event_txt_timkiemCaretUpdate
 
     private void tbl_theloaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_theloaiMouseClicked
         if (evt.getClickCount() == 2) {
@@ -516,58 +495,22 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tbl_theloaiMouseClicked
 
-    private void txt_timkiemCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_timkiemCaretUpdate
-        timkiem();
-    }//GEN-LAST:event_txt_timkiemCaretUpdate
+    private void btn_themActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themActionPerformed
+        themTG();
+    }//GEN-LAST:event_btn_themActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(QLTheLoai_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(QLTheLoai_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(QLTheLoai_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(QLTheLoai_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        try {
-            FlatRobotoFont.install();
-            FlatLaf.registerCustomDefaultsSource("tableview");
-            UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-            SystemProperties pro = new SystemProperties();
-            pro.loadFromFile();
-            if (!pro.isDarkMode()) {
-                System.out.println("có chạy");
-                FlatIntelliJLaf.setup();
-            } else {
-                System.out.println("có chạy22");
-                FlatMacDarkLaf.setup();
-            }
-        } catch (Exception e) {
-        }
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new QLTheLoai_FORM().setVisible(true);
-            }
-        });
-    }
+    private void btn_suaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_suaActionPerformed
+        suaTG();
+    }//GEN-LAST:event_btn_suaActionPerformed
+
+    private void btn_xoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_xoaActionPerformed
+        xoaTG();
+    }//GEN-LAST:event_btn_xoaActionPerformed
+
+    private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
+        resetForm();
+    }//GEN-LAST:event_btn_resetActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_reset;
