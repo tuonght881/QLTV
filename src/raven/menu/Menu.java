@@ -36,7 +36,7 @@ public class Menu extends JPanel {
         //{"Charts", "Apex", "Flot", "Peity", "Sparkline"},
         //{"Icons", "Feather Icons", "Flag Icons", "Mdi Icons"},
         //{"Special Pages", "Blank page", "Faq", "Invoice", "Profile", "Pricing", "Timeline"},
-        {"Logout"}
+        {"Đăng xuất"}
     };
 
     public boolean isMenuFull() {
