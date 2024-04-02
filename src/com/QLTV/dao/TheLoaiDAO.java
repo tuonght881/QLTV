@@ -16,7 +16,7 @@ import java.util.List;
  * @author Tuong
  */
 public class TheLoaiDAO extends EntityDao<TheLoai, String> {
-
+    String selectal ="select * from TheLoai";
     String selectAll = "select * from TheLoai order by trangthaitl desc";
     String insert = "insert into TheLoai values(?,?,?)";
     String select_by_ID = "select * from TheLoai where idtheloai=?";
@@ -24,7 +24,7 @@ public class TheLoaiDAO extends EntityDao<TheLoai, String> {
     String update = "update TheLoai set tentheloai = ?,trangthaitl = ? where idtheloai=?";
     String delete = "delete TheLoai where idtheloai=?";
     String timkiem = "select * from TheLoai where idtheloai like ? or tentheloai like ? order by trangthaitl desc";
-
+    String selectbytrangthaiOn="select * from TheLoai where trangthaitl = 1";
     @Override
     public void insert(TheLoai entity) {
         JDBC.update(insert, entity.getIdtheloai(),entity.getTentheloai(),entity.getTrangthaitl());
@@ -44,7 +44,12 @@ public class TheLoaiDAO extends EntityDao<TheLoai, String> {
     public List<TheLoai> selectAll() {
         return select_by_sql(selectAll);
     }
-
+    public List<TheLoai> select_ALL() {
+        return select_by_sql(selectal);
+    }
+    public List<TheLoai> selectTH_ON_TL() {
+        return select_by_sql(selectbytrangthaiOn);
+    }
     @Override
     public TheLoai select_byID(String key) {
         List<TheLoai> list = this.select_by_sql(select_by_ID, key);

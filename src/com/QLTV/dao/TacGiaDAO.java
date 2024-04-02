@@ -25,7 +25,7 @@ public class TacGiaDAO extends EntityDao<TacGia, String> {
     String select_by_ID = "select * from TacGia where idtg=?";
     String select_by_tacgia ="select * from TacGia where tentg=?";
     String timkiem = "select * from tacgia where idtg like ? or tentg like ? order by trangthaitg desc";
-    
+    String select_tG_hd = "select * from TacGia where trangthaitg = 1 ";
     @Override
     public void insert(TacGia entity) {
         JDBC.update(insert, entity.getIdtg(),entity.getTentg(),entity.getTrangthaitg());
@@ -44,7 +44,9 @@ public class TacGiaDAO extends EntityDao<TacGia, String> {
     public List<TacGia> selectAll() {
         return select_by_sql(selectAll);
     }
-
+    public List<TacGia> selecttg_hd() {
+        return select_by_sql(select_tG_hd);
+    }
     @Override
     public TacGia select_byID(String key) {
         List<TacGia> list = this.select_by_sql(select_by_ID, key);

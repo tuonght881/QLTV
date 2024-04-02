@@ -6,6 +6,7 @@ package com.QLTV.form;
 
 import com.QLTV.dao.TacGiaDAO;
 import com.QLTV.entity.TacGia;
+import com.QLTV.utils.XAuth;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
@@ -37,16 +38,44 @@ public class QLTG_FORM extends javax.swing.JFrame {
 
     TacGiaDAO tgDAO = new TacGiaDAO();
     int index = -1;
+    int id;
 
     /**
      * Creates new form tesst
      */
     public QLTG_FORM() {
         initComponents();
-        applyTableStyle(tbl_tacgia);
         loaddataTacGia();
+        loadIDTG();
         btn_sua.setEnabled(false);
         btn_xoa.setEnabled(false);
+        if (XAuth.isManager() == true) {
+            btn_sua.setVisible(true);
+            btn_sua.setVisible(true);
+            btn_xoa.setVisible(true);
+            btn_xoa.setVisible(true);
+        } else {
+            btn_sua.setVisible(false);
+            btn_sua.setVisible(false);
+            btn_xoa.setVisible(false);
+            btn_xoa.setVisible(false);
+        }
+    }
+
+    public void loadIDTG() {
+        try {
+            String idkh = "";
+            List<TacGia> list = tgDAO.selectAll();
+            for (TacGia kh : list) {
+                idkh = kh.getIdtg();
+            }
+            int number = Integer.parseInt(idkh.substring(2));
+            number++;
+            String newText = "TG" + String.format("%03d", number);
+            txt_idtacgia.setText(newText);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setFormTG(TacGia tg) {
@@ -116,19 +145,35 @@ public class QLTG_FORM extends javax.swing.JFrame {
     }
 
     public void xoaTG() {
+        String entity = txt_idtacgia.getText();
         try {
-            String entity = txt_idtacgia.getText();
             tgDAO.delete(entity);
             loaddataTacGia();
             JOptionPane.showMessageDialog(this, "Xoá thành công");
             resetForm();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Xoá thất bại");
+            // Bắt các loại ngoại lệ, bao gồm SQLServerException
+            if (e.getMessage().contains("conflicted with the REFERENCE constraint")) {
+                // Xử lý lỗi về ràng buộc tham chiếu ở đây
+                int choice = JOptionPane.showConfirmDialog(this, "Xóa thất bại do tác giả này đã tồn tại sách.\nHành động xoá này chỉ thay đổi trạng thái của tác giả.", "Thông báo", JOptionPane.OK_CANCEL_OPTION);
+                if (choice == JOptionPane.OK_OPTION) {
+                    TacGia tg = tgDAO.select_byID(entity);
+                    tg.setTrangthaitg(false);
+                    tgDAO.update(tg);
+                    loaddataTacGia();
+                    resetForm();
+                }
+            } else {
+                // Xử lý các loại lỗi khác
+                JOptionPane.showMessageDialog(this, "Xóa thất bại.\n" + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
     public void resetForm() {
         loaddataTacGia();
+        loadIDTG();
         txt_idtacgia.setEnabled(true);
         txt_idtacgia.setEditable(true);
         txt_idtacgia.setText("");
@@ -205,59 +250,6 @@ public class QLTG_FORM extends javax.swing.JFrame {
         return true;
     }
 
-    private void applyTableStyle(JTable table) {
-        //btn_them.setIcon(new FlatSVGIcon("/asda/asdasd", 0.35f));
-        //txt_timkiem.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_ICON, new FlatSVGIcon(""),0.35f);
-        //changeScrollStyle
-        JScrollPane scroll = (JScrollPane) table.getParent().getParent();
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-        scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
-                + "background:$Table.background;"
-                + "track:$Table.background;"
-                + "trackArc:999");
-        table.getTableHeader().putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        table.putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        //Table Alignment
-        table.getTableHeader().setDefaultRenderer(getAlignmentCellRender(table.getTableHeader().getDefaultRenderer(), true));
-        table.setDefaultRenderer(Object.class, getAlignmentCellRender(table.getDefaultRenderer(Object.class), false));
-    }
-
-    private TableCellRenderer getAlignmentCellRender(TableCellRenderer oldRender, boolean header) {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component com = oldRender.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (com instanceof JLabel) {
-                    JLabel label = (JLabel) com;
-                    if (column == 0 || column == 4) {
-                        label.setHorizontalAlignment(SwingConstants.CENTER);
-                    } else if (column == 2 || column == 3) {
-                        label.setHorizontalAlignment(SwingConstants.TRAILING);
-                    } else {
-                        label.setHorizontalAlignment(SwingConstants.LEADING);
-                    }
-                    if (header == false) {
-                        if (column == 4) {
-                            if (Double.parseDouble(value.toString()) > 0) {
-                                com.setForeground(new Color(17, 182, 60));
-                                label.setText("+" + value);
-                            } else {
-                                com.setForeground(new Color(202, 48, 48));
-                            }
-                        } else {
-                            if (isSelected) {
-                                com.setForeground(table.getSelectionForeground());
-                            } else {
-                                com.setForeground(table.getForeground());
-                            }
-                        }
-                    }
-                }
-                return com;
-            }
-        };
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -268,7 +260,6 @@ public class QLTG_FORM extends javax.swing.JFrame {
     private void initComponents() {
 
         hd_tg = new javax.swing.ButtonGroup();
-        btn = new javax.swing.JButton();
         crazyPanel1 = new raven.crazypanel.CrazyPanel();
         crazyPanel2 = new raven.crazypanel.CrazyPanel();
         txt_timkiem = new javax.swing.JTextField();
@@ -278,8 +269,8 @@ public class QLTG_FORM extends javax.swing.JFrame {
         crazyPanel3 = new raven.crazypanel.CrazyPanel();
         jLabel1 = new javax.swing.JLabel();
         txt_idtacgia = new javax.swing.JTextField();
-        btn_them = new javax.swing.JButton();
         btn_sua = new javax.swing.JButton();
+        btn_them = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         txt_tentacgia = new javax.swing.JTextField();
         btn_xoa = new javax.swing.JButton();
@@ -289,13 +280,6 @@ public class QLTG_FORM extends javax.swing.JFrame {
         rdo_nhd = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        btn.setText("change");
-        btn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnActionPerformed(evt);
-            }
-        });
 
         crazyPanel1.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
             "background:$Table.background;[light]border:0,0,0,0,shade(@background,5%),,20;[dark]border:0,0,0,0,tint(@background,5%),,20",
@@ -329,6 +313,11 @@ public class QLTG_FORM extends javax.swing.JFrame {
         txt_timkiem.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 txt_timkiemCaretUpdate(evt);
+            }
+        });
+        txt_timkiem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txt_timkiemMouseExited(evt);
             }
         });
         crazyPanel2.add(txt_timkiem);
@@ -401,16 +390,10 @@ public class QLTG_FORM extends javax.swing.JFrame {
         jLabel1.setText("ID Tác giả");
         crazyPanel3.add(jLabel1);
 
+        txt_idtacgia.setEditable(false);
         txt_idtacgia.setToolTipText("");
+        txt_idtacgia.setEnabled(false);
         crazyPanel3.add(txt_idtacgia);
-
-        btn_them.setText("Thêm");
-        btn_them.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_themActionPerformed(evt);
-            }
-        });
-        crazyPanel3.add(btn_them);
 
         btn_sua.setText("Cập nhật");
         btn_sua.addActionListener(new java.awt.event.ActionListener() {
@@ -419,6 +402,14 @@ public class QLTG_FORM extends javax.swing.JFrame {
             }
         });
         crazyPanel3.add(btn_sua);
+
+        btn_them.setText("Thêm");
+        btn_them.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_themActionPerformed(evt);
+            }
+        });
+        crazyPanel3.add(btn_them);
 
         jLabel2.setText("Tên tác giả");
         crazyPanel3.add(jLabel2);
@@ -460,54 +451,40 @@ public class QLTG_FORM extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(66, 66, 66)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btn)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 637, Short.MAX_VALUE)
-                        .addGap(65, 65, 65))))
+                .addContainerGap()
+                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 718, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
-                .addGap(12, 12, 12))
+                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActionPerformed
-        if (!FlatLaf.isLafDark()) {
-            EventQueue.invokeLater(() -> {
-                FlatAnimatedLafChange.showSnapshot();
-                FlatDarculaLaf.setup();
-                FlatLaf.updateUI();
-                FlatAnimatedLafChange.hideSnapshotWithAnimation();
-            });
-        } else {
-            EventQueue.invokeLater(() -> {
-                FlatAnimatedLafChange.showSnapshot();
-                FlatIntelliJLaf.setup();
-                FlatLaf.updateUI();
-                FlatAnimatedLafChange.hideSnapshotWithAnimation();
-            });
+    private void txt_timkiemCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_timkiemCaretUpdate
+        timkiem();
+    }//GEN-LAST:event_txt_timkiemCaretUpdate
+
+    private void txt_timkiemMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_timkiemMouseExited
+        loaddataTacGia();
+    }//GEN-LAST:event_txt_timkiemMouseExited
+
+    private void tbl_tacgiaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_tacgiaMouseClicked
+        if (evt.getClickCount() == 2) {
+            index = tbl_tacgia.getSelectedRow();
+            fillFormTG();
         }
-    }//GEN-LAST:event_btnActionPerformed
+    }//GEN-LAST:event_tbl_tacgiaMouseClicked
 
     private void btn_themActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themActionPerformed
         themTG();
     }//GEN-LAST:event_btn_themActionPerformed
-
-    private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
-        resetForm();
-    }//GEN-LAST:event_btn_resetActionPerformed
 
     private void btn_suaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_suaActionPerformed
         suaTG();
@@ -517,16 +494,9 @@ public class QLTG_FORM extends javax.swing.JFrame {
         xoaTG();
     }//GEN-LAST:event_btn_xoaActionPerformed
 
-    private void tbl_tacgiaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_tacgiaMouseClicked
-        if (evt.getClickCount() == 2) {
-            index = tbl_tacgia.getSelectedRow();
-            fillFormTG();
-        }
-    }//GEN-LAST:event_tbl_tacgiaMouseClicked
-
-    private void txt_timkiemCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_timkiemCaretUpdate
-        timkiem();
-    }//GEN-LAST:event_txt_timkiemCaretUpdate
+    private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
+        resetForm();
+    }//GEN-LAST:event_btn_resetActionPerformed
 
     /**
      * @param args the command line arguments
@@ -567,7 +537,6 @@ public class QLTG_FORM extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn;
     private javax.swing.JButton btn_reset;
     private javax.swing.JButton btn_sua;
     private javax.swing.JButton btn_them;

@@ -16,6 +16,10 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import com.QLTV.main.Application;
+import com.QLTV.utils.XAuth;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import raven.menu.Menu;
 import raven.menu.MenuAction;
 
@@ -61,43 +65,88 @@ public class MainForm extends JLayeredPane {
         if (menuButton == null) {
             menuButton = new JButton();
         }
-        String icon = (getComponentOrientation().isLeftToRight()) ? "menu_right.svg":"menu_left.svg";
+        String icon = (getComponentOrientation().isLeftToRight()) ? "menu_right.svg" : "menu_left.svg";
         menuButton.setIcon(new FlatSVGIcon("raven/icon/svg/" + icon, 0.8f));
     }
 
     private void initMenuEvent() {
-        menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
-            Application.mainForm.showForm(new BAN_SACH());
-            if (index == 0) {
-                Application.showForm(new BAN_SACH());
-            }else if(index == 1) {
-                Application.showForm(new THUE_SACH());
-            }else if(index == 2) {
-                Application.showForm(new QLHD());
-            }else if(index == 3) {
-                Application.showForm(new DON_THUE());
-            } else if (index == 4) {
-                if (subIndex == 1) {
-                    Application.showForm(new QLTK());
-                } else if (subIndex == 2) {
-                    Application.showForm(new QLDG());
-                } else if (subIndex == 3) {
-                    Application.showForm(new QLS());
-                } else if (subIndex == 4) {
-                    Application.showForm(new QLTG());
-                } else if (subIndex == 5) {
-                    Application.showForm(new QLTL());
-                } else if (subIndex == 6) {
-                    Application.showForm(new QLVT());
+        if (XAuth.user.getVaitro() == true) {
+            menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
+                Application.mainForm.showForm(new BAN_SACH());
+                if (index == 0) {
+                    Application.showForm(new BAN_SACH());
+                } else if (index == 1) {
+                    Application.showForm(new THUE_SACH());
+                } else if (index == 2) {
+                    Application.showForm(new QLHD());
+                } else if (index == 3) {
+                    Application.showForm(new DON_THUE());
+                } else if (index == 4) {
+                    if (subIndex == 1) {
+                        Application.showForm(new QLTK());
+                    } else if (subIndex == 2) {
+                        Application.showForm(new QLDG());
+                    } else if (subIndex == 3) {
+                        Application.showForm(new QLS());
+                    } else if (subIndex == 4) {
+                        Application.showForm(new QLTG());
+                    } else if (subIndex == 5) {
+                        Application.showForm(new QLTL());
+                    } else if (subIndex == 6) {
+                        Application.showForm(new QLVT());
+                    } else {
+                        action.cancel();
+                    }
+                } else if (index == 5) {
+                    try {
+                        Application.showForm(new TTTK());
+                    } catch (ParseException ex) {
+                        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else if (index == 6) {
+                    Application.logout();
                 } else {
                     action.cancel();
                 }
-            } else if (index == 5) {
-                Application.logout();
-            } else {
-                action.cancel();
-            }
-        });
+            });
+        } else {
+            menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
+                Application.mainForm.showForm(new BAN_SACH());
+                if (index == 0) {
+                    Application.showForm(new BAN_SACH());
+                } else if (index == 1) {
+                    Application.showForm(new THUE_SACH());
+                } else if (index == 2) {
+                    Application.showForm(new QLHD());
+                } else if (index == 3) {
+                    Application.showForm(new DON_THUE());
+                } else if (index == 4) {
+                    if (subIndex == 1) {
+                        Application.showForm(new QLDG());
+                    } else if (subIndex == 2) {
+                        Application.showForm(new QLS());
+                    } else if (subIndex == 3) {
+                        Application.showForm(new QLTG());
+                    } else if (subIndex == 4) {
+                        Application.showForm(new QLTL());
+                    } else if (subIndex == 5) {
+                        Application.showForm(new QLVT());
+                    } else {
+                        action.cancel();
+                    }
+                } else if (index == 5) {
+                    try {
+                        Application.showForm(new TTTK());
+                    } catch (ParseException ex) {
+                        Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else if (index == 6) {
+                    Application.logout();
+                } else {
+                    action.cancel();
+                }
+            });
+        }
     }
 
     private void setMenuFull(boolean full) {

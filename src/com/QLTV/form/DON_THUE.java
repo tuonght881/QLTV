@@ -19,14 +19,17 @@ import com.QLTV.entity.HoaDon;
 import com.QLTV.entity.HoaDonChiTiet;
 import com.QLTV.entity.KhachHang;
 import com.QLTV.entity.Sach;
+import com.QLTV.utils.XAuth;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -47,6 +50,7 @@ import raven.calendar.utils.CalendarSelectedListener;
  * @author Tuong
  */
 public class DON_THUE extends javax.swing.JPanel {
+
     Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -63,13 +67,13 @@ public class DON_THUE extends javax.swing.JPanel {
     int index = -1;
     DefaultTableModel model_donthue, model_donthuect;
     Double tienphat = 0.0;
+    Locale localeVN = new Locale("vi", "VN");
+    NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
     /**
      * Creates new form DON_THUE
      */
     public DON_THUE() {
         initComponents();
-        applyTableStyle(tbl_donthue);
-        applyTableStyle(tbl_donthueCT);
         loaddataDonThue();
         btn_xoa.setEnabled(false);
         TAB.setEnabledAt(1, false);
@@ -89,8 +93,14 @@ public class DON_THUE extends javax.swing.JPanel {
                 }
             }
         });
+        if(XAuth.isManager()==true){
+            btn_xoa.setVisible(true);
+        }else{
+            btn_xoa.setVisible(false);
+        }
     }
-private void showPopup() {
+
+    private void showPopup() {
         //int x = txt_ngaysinh.getLocationOnScreen().x;
         //int y = txt_ngaysinh.getLocationOnScreen().y + txt_ngaysinh.getHeight();
         POPUP.show(txt_ngaytra, 0, txt_ngaytra.getHeight());
@@ -104,7 +114,9 @@ private void showPopup() {
         txt_ngaythue.setText(dthue.getNgaytao());
         txt_ngaytradukien.setText(dthue.getNgaytradukien());
         txt_tenkhach.setText(kh.getHotenkhach());
-        txt_tiendambao.setText(Double.toString(dthue.getTiendambao()));
+        txt_tiendambao.setText(Double.toString(dthue.getTongtiendambao()));
+        txt_ngaytra.setText(dthue.getNgaytra());
+        txt_tienphat.setText(Double.toString(dthue.getTienphat()));
         String khachdua = D_format.format(dthue.getKhachdua());
         String thoilai = D_format.format(dthue.getThoilai());
         String thanhtien = D_format.format(dthue.getThanhtien());
@@ -149,17 +161,20 @@ private void showPopup() {
 
     public DonThue getFormDonThue() throws ParseException {
         DonThue dthueNew = new DonThue();
-        dthueNew.setIddonthue(txt_iddonthue2.getText());
-        dthueNew.setIdkhach(txt_idKhach.getText());
-        dthueNew.setManv(txt_manv.getText());
-        dthueNew.setNgaytao(txt_ngaythue.getText());
-        dthueNew.setNgaytradukien(txt_ngaytradukien.getText());
+//        dthueNew.setIddonthue(txt_iddonthue2.getText());
+//        dthueNew.setIdkhach(txt_idKhach.getText());
+//        dthueNew.setManv(txt_manv.getText());
+//        dthueNew.setNgaytao(txt_ngaythue.getText());
+//        dthueNew.setNgaythue(txt_ngaythue.getText());
+//        dthueNew.setNgaytradukien(txt_ngaytradukien.getText());
+
         dthueNew.setNgaytra(txt_ngaytra.getText());
         dthueNew.setTienphat(Double.parseDouble(txt_tienphat.getText()));
-        dthueNew.setTiendambao(Double.parseDouble(txt_tiendambao.getText()));
-        dthueNew.setKhachdua(Double.parseDouble(txt_ngaytradukien.getText()));
-        dthueNew.setThoilai(Double.parseDouble(txt_ngaytra.getText()));
-        dthueNew.setThanhtien(Double.parseDouble(txt_tongtien.getText()));
+
+//        dthueNew.setTongtiendambao(Double.parseDouble(txt_tiendambao.getText()));
+//        dthueNew.setKhachdua(Double.parseDouble(txt_ngaytradukien.getText()));
+//        dthueNew.setThoilai(Double.parseDouble(txt_ngaytra.getText()));
+//        dthueNew.setThanhtien(Double.valueOf(txt_tongtien.getText()));
         return dthueNew;
     }
 
@@ -193,8 +208,30 @@ private void showPopup() {
 
     public void suaDonThue() {
         try {
+            KhachHang kh = khDAO.select_byID(txt_idKhach.getText());
+            int uytin = kh.getDiemuytin();
+            Double tien = Double.parseDouble(txt_tienphat.getText());
             DonThue dthueNew = getFormDonThue();
             dthueDAO.update(dthueNew);
+            if (tien > 0) {
+                uytin = uytin - 15;
+                kh.setDiemuytin(uytin);
+                khDAO.update(kh);
+            } else {
+                uytin = uytin + 5;
+                kh.setDiemuytin(uytin);
+                khDAO.update(kh);
+            }
+            for (int i = 0; i < model_donthuect.getRowCount(); i++) {
+                String tensach = tbl_donthueCT.getValueAt(i, 1).toString();
+                String mas = sachDAO.getMasach(tensach);
+                Sach s = sachDAO.select_byID(mas);
+                int sls = s.getSl();
+                int slsm = sls + (Integer.parseInt(tbl_donthueCT.getValueAt(i, 2).toString()));
+                s.setSl(slsm);
+                sachDAO.update(s);
+            }
+            TAB.setSelectedIndex(0);
             loaddataDonThue();
             JOptionPane.showMessageDialog(this, "Cập nhật thành công");
             resetForm();
@@ -208,12 +245,13 @@ private void showPopup() {
             String iddonthue = txt_iddonthue2.getText();
             List<DonThueChiTiet> list = dthuectDAO.select_by_HD(iddonthue);
             for (DonThueChiTiet dthuect : list) {
-                hdctDAO.delete_int(dthuect.getIddonthuect());
+                dthuectDAO.delete(Integer.toString(dthuect.getIddonthuect()));
             }
             dthueDAO.delete(iddonthue);
             loaddataDonThue();
             JOptionPane.showMessageDialog(this, "Xoá thành công");
             resetForm();
+            TAB.setSelectedIndex(0);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Xoá thất bại\n" + e.getMessage());
         }
@@ -221,6 +259,7 @@ private void showPopup() {
 
     public void resetForm() {
         loaddataDonThue();
+        model_donthuect.setRowCount(0);
         txt_iddonthue2.setEnabled(true);
         txt_iddonthue2.setEditable(true);
         btn_xoa.setEnabled(false);
@@ -382,6 +421,7 @@ private void showPopup() {
             }
         };
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -443,7 +483,6 @@ private void showPopup() {
         txt_tongtien = new javax.swing.JTextField();
         crazyPanel5 = new raven.crazypanel.CrazyPanel();
         btn_xoa = new javax.swing.JButton();
-        btn_reset = new javax.swing.JButton();
         btn_capnhat = new javax.swing.JButton();
 
         calendar1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -506,6 +545,11 @@ private void showPopup() {
         txt_timkiemHD.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 txt_timkiemHDCaretUpdate(evt);
+            }
+        });
+        txt_timkiemHD.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txt_timkiemHDMouseExited(evt);
             }
         });
         crazyPanel2.add(txt_timkiemHD);
@@ -774,11 +818,6 @@ private void showPopup() {
         txt_ngaythue.setEditable(false);
         txt_ngaythue.setToolTipText("");
         txt_ngaythue.setEnabled(false);
-        txt_ngaythue.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txt_ngaythueMouseClicked(evt);
-            }
-        });
         crazyPanel3.add(txt_ngaythue);
 
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -973,7 +1012,7 @@ private void showPopup() {
         ));
         crazyPanel5.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
             "",
-            "[][]push[][]",
+            "[]push[][]",
             "",
             new String[]{
                 "width 100",
@@ -990,14 +1029,6 @@ private void showPopup() {
             }
         });
         crazyPanel5.add(btn_xoa);
-
-        btn_reset.setText("Làm mới");
-        btn_reset.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_resetActionPerformed(evt);
-            }
-        });
-        crazyPanel5.add(btn_reset);
 
         btn_capnhat.setText("Cập nhật");
         btn_capnhat.addActionListener(new java.awt.event.ActionListener() {
@@ -1045,6 +1076,9 @@ private void showPopup() {
 
     private void tbl_donthueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_donthueMouseClicked
         if (evt.getClickCount() == 2) {
+            txt_ngaytra.setText("");
+            txt_tienphat.setText("");
+            lbl_ngaytre.setText("");
             TAB.setSelectedIndex(1);
             index = tbl_donthue.getSelectedRow();
             try {
@@ -1063,18 +1097,14 @@ private void showPopup() {
 
     private void tbl_donthueCTMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_donthueCTMouseClicked
         //        if (evt.getClickCount() == 2) {
-            //            index = tbl_hoadonCT.getSelectedRow();
-            //            try {
-                //                fillFormHDCT();
-                //            } catch (Exception e) {
-                //                JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
-                //            }
-            //        }
+        //            index = tbl_hoadonCT.getSelectedRow();
+        //            try {
+        //                fillFormHDCT();
+        //            } catch (Exception e) {
+        //                JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
+        //            }
+        //        }
     }//GEN-LAST:event_tbl_donthueCTMouseClicked
-
-    private void txt_ngaythueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_ngaythueMouseClicked
-        showPopup();
-    }//GEN-LAST:event_txt_ngaythueMouseClicked
 
     private void txt_ngaytraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_ngaytraMouseClicked
         showPopup();
@@ -1107,14 +1137,10 @@ private void showPopup() {
         }
     }//GEN-LAST:event_btn_xoaActionPerformed
 
-    private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
-        resetForm();
-        resetHDCT();
-    }//GEN-LAST:event_btn_resetActionPerformed
-
     private void btn_capnhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_capnhatActionPerformed
         if (batloi_tk()) {
-            if (txt_tiendambao.getText().equalsIgnoreCase("0")) {
+            Double tiendb = Double.parseDouble(txt_tiendambao.getText());
+            if (tiendb == 0) {
                 suaDonThue();
             } else {
                 int choice = JOptionPane.showConfirmDialog(null, "Bạn đã hoàn phí đảm bảo cho khách chưa?", "Xác nhận", JOptionPane.YES_NO_OPTION);
@@ -1130,6 +1156,10 @@ private void showPopup() {
         }
     }//GEN-LAST:event_btn_capnhatActionPerformed
 
+    private void txt_timkiemHDMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_timkiemHDMouseExited
+        loaddataDonThue();
+    }//GEN-LAST:event_txt_timkiemHDMouseExited
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private raven.crazypanel.CrazyPanel HdctPanel;
@@ -1137,7 +1167,6 @@ private void showPopup() {
     private javax.swing.JPopupMenu POPUP;
     private javax.swing.JTabbedPane TAB;
     private javax.swing.JButton btn_capnhat;
-    private javax.swing.JButton btn_reset;
     private javax.swing.JButton btn_reset1;
     private javax.swing.JButton btn_resettiendambao;
     private javax.swing.JButton btn_xoa;

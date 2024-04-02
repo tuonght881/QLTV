@@ -38,7 +38,7 @@ import raven.calendar.utils.CalendarSelectedListener;
  *
  * @author Tuong
  */
-public class QLTK extends javax.swing.JPanel {
+public class TTTK extends javax.swing.JPanel {
 
     Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -50,12 +50,14 @@ public class QLTK extends javax.swing.JPanel {
     /**
      * Creates new form QLTK
      */
-    public QLTK() {
+    public TTTK() throws ParseException {
+        pro.loadFromFile();
+        //init();
         initComponents();
         loaddataTaiKhoan();
         loadMaNV();
         btn_sua.setEnabled(false);
-        btn_xoa.setEnabled(false);
+        //btn_xoa.setEnabled(false);
         POPUP.add(jPanel1);
         calendar1.addCalendarSelectedListener(new CalendarSelectedListener() {
             @Override
@@ -67,6 +69,7 @@ public class QLTK extends javax.swing.JPanel {
                 System.out.println("=>" + ngayF);
             }
         });
+        fillFormTK();
     }
 
     private void init() {
@@ -97,16 +100,7 @@ public class QLTK extends javax.swing.JPanel {
     public void setFormTK(TaiKhoan tk) throws ParseException {
         txt_manv.setText(tk.getManv());
         txt_matkhau.setText(tk.getMatkhau());
-        if (tk.getVaitro() == true) {
-            rdo_ql.setSelected(true);
-        } else {
-            rdo_nhanvien.setSelected(true);
-        }
-        if (tk.getTrangthai() == true) {
-            rdo_hd.setSelected(true);
-        } else {
-            rdo_nhd.setSelected(true);
-        }
+
         txt_hoten.setText(tk.getHoten());
         if (tk.getGioitinh() == true) {
             rdo_nam.setSelected(true);
@@ -123,16 +117,6 @@ public class QLTK extends javax.swing.JPanel {
 
         tkNew.setManv(txt_manv.getText());
         tkNew.setMatkhau(txt_matkhau.getText());
-        if (rdo_ql.isSelected()) {
-            tkNew.setVaitro(true);
-        } else {
-            tkNew.setVaitro(false);
-        }
-        if (rdo_hd.isSelected()) {
-            tkNew.setTrangthai(true);
-        } else {
-            tkNew.setTrangthai(false);
-        }
         tkNew.setHoten(txt_hoten.getText());
         if (rdo_nam.isSelected()) {
             tkNew.setGioitinh(true);
@@ -148,11 +132,11 @@ public class QLTK extends javax.swing.JPanel {
     public void fillFormTK() throws ParseException {
         txt_manv.setEnabled(false);
         txt_manv.setEditable(false);
-        btn_them.setEnabled(false);
+        //btn_them.setEnabled(false);
         btn_sua.setEnabled(true);
-        btn_xoa.setEnabled(true);
+        //btn_xoa.setEnabled(true);
 
-        String ma = (String) tbl_tk.getValueAt(index, 0);
+        String ma = (String) tbl_tk.getValueAt(0, 0);
         TaiKhoan tk = tkDAO.select_byID(ma);
         if (tk == null) {
             JOptionPane.showMessageDialog(this, "Không có dữ liệu", "Lỗi", JOptionPane.INFORMATION_MESSAGE);
@@ -190,34 +174,14 @@ public class QLTK extends javax.swing.JPanel {
     }
 
     public void xoaTK() {
-        String us = XAuth.user.getManv();
-        String entity = txt_manv.getText();
-        if (us.equalsIgnoreCase(entity)) {
-            JOptionPane.showMessageDialog(this, "Bạn không thể xoá chính bạn!", "Thông báo", JOptionPane.OK_OPTION);
-        } else {
-            try {
-                tkDAO.delete(entity);
-                loaddataTaiKhoan();
-                JOptionPane.showMessageDialog(this, "Xoá thành công");
-                resetForm();
-            } catch (Exception e) {
-            // Bắt các loại ngoại lệ, bao gồm SQLServerException
-            if (e.getMessage().contains("conflicted with the REFERENCE constraint")) {
-                // Xử lý lỗi về ràng buộc tham chiếu ở đây
-                int choice = JOptionPane.showConfirmDialog(this, "Xóa thất bại do tài khoản này đã tạo hoá đơn.\nHành động xoá này chỉ thay đổi trạng thái của tài khoản.","Thông báo",JOptionPane.OK_CANCEL_OPTION);
-                if(choice == JOptionPane.OK_OPTION){
-                    TaiKhoan tk = tkDAO.select_byID(entity);
-                    tk.setTrangthai(false);
-                    tkDAO.update(tk);
-                    loaddataTaiKhoan();
-                    resetForm();
-                }
-            } else {
-                // Xử lý các loại lỗi khác
-                JOptionPane.showMessageDialog(this, "Xóa thất bại.\n" + e.getMessage());
-                e.printStackTrace();
-            }
-        }
+        try {
+            String entity = txt_manv.getText();
+            tkDAO.delete(entity);
+            loaddataTaiKhoan();
+            JOptionPane.showMessageDialog(this, "Xoá thành công");
+            resetForm();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Xoá thất bại\n" + e.getMessage());
         }
     }
 
@@ -226,9 +190,9 @@ public class QLTK extends javax.swing.JPanel {
         loadMaNV();
         txt_manv.setEnabled(false);
         txt_manv.setEditable(false);
-        btn_them.setEnabled(true);
+        //btn_them.setEnabled(true);
         btn_sua.setEnabled(false);
-        btn_xoa.setEnabled(false);
+        //btn_xoa.setEnabled(false);
         txt_matkhau.setText("");
         txt_sdt.setText("");
         txt_hoten.setText("");
@@ -240,19 +204,14 @@ public class QLTK extends javax.swing.JPanel {
     }
 
     public void loaddataTaiKhoan() {
+        String manv = XAuth.user.getManv();
         DefaultTableModel modelTK = (DefaultTableModel) tbl_tk.getModel();
         modelTK.setColumnIdentifiers(new Object[]{"Mã NV", "Họ tên", "Vai trò", "Trạng thái", "Giới tính", "SĐT", "Ngày sinh", "Địa chỉ"});
         modelTK.setRowCount(0);
         try {
-            List<TaiKhoan> list = tkDAO.selectAll();
-            for (TaiKhoan tk : list) {
-                Object[] row = {tk.getManv(), tk.getHoten(), tk.getVaitro() ? "Quản lý" : "Nhân Viên", tk.getTrangthai() ? "Hoạt động" : "Ngưng hoạt động", tk.getGioitinh() ? "Nam" : "Nữ", tk.getSdt(), tk.getNgaysinh(), tk.getDiachi()};
-                modelTK.addRow(row);
-            }
-            if (modelTK.getRowCount() == 0) {
-                Object[] row = {"", "Không có dữ liệu"};
-                modelTK.addRow(row);
-            }
+            TaiKhoan tk = tkDAO.select_byID(manv);
+            Object[] row = {tk.getManv(), tk.getHoten(), tk.getVaitro() ? "Quản lý" : "Nhân Viên", tk.getTrangthai() ? "Hoạt động" : "Ngưng hoạt động", tk.getGioitinh() ? "Nam" : "Nữ", tk.getSdt(), tk.getNgaysinh(), tk.getDiachi()};
+            modelTK.addRow(row);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -274,26 +233,6 @@ public class QLTK extends javax.swing.JPanel {
         }
     }
 
-    public void timkiem() {
-        String tukhoa = txt_timkiem.getText();
-        DefaultTableModel modelTK = (DefaultTableModel) tbl_tk.getModel();
-        modelTK.setColumnIdentifiers(new Object[]{"Mã NV", "Họ tên", "Vai trò", "Trạng thái", "Giới tính", "SĐT", "Ngày sinh", "Địa chỉ"});
-        modelTK.setRowCount(0);
-        try {
-            List<TaiKhoan> list = tkDAO.timkiemTK(tukhoa);
-            for (TaiKhoan tk : list) {
-                Object[] row = {tk.getManv(), tk.getHoten(), tk.getVaitro() ? "Quản lý" : "Nhân Viên", tk.getTrangthai() ? "Hoạt động" : "Ngưng hoạt động", tk.getGioitinh() ? "Nam" : "Nữ", tk.getSdt(), tk.getNgaysinh(), tk.getDiachi()};
-                modelTK.addRow(row);
-            }
-            if (modelTK.getRowCount() == 0) {
-                Object[] row = {"", "Không có dữ liệu"};
-                modelTK.addRow(row);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public boolean batloi_tk() {
         String manv = txt_manv.getText().trim();
         String matkhau = txt_matkhau.getText();
@@ -301,7 +240,7 @@ public class QLTK extends javax.swing.JPanel {
         String sdt = txt_sdt.getText().trim();
         String ngaysinh = txt_ngaysinh.getText();
         String diachi = txt_diachi.getText();
-        boolean OnlyLetters = hoten.matches("^[a-zA-Z]*$");
+        boolean OnlyLetters = hoten.matches("^[a-zA-Z]*$"); 
         String loi = "";
 
         if (manv.equalsIgnoreCase("")) {
@@ -319,8 +258,8 @@ public class QLTK extends javax.swing.JPanel {
         if (hoten.equalsIgnoreCase("")) {
             loi += "Họ tên\n";
         }
-        if (OnlyLetters == false) {
-            loi += "Họ tên không được nhập số\n";
+        if(OnlyLetters==false){
+            loi+="Họ tên không được nhập số\n";
         }
         if (matkhau.equalsIgnoreCase("")) {
             loi += "Mật khẩu\n";
@@ -355,18 +294,13 @@ public class QLTK extends javax.swing.JPanel {
         if (rdo_nam.isSelected() == false && rdo_nu.isSelected() == false) {
             loi += "Giới tính\n";
         }
-        if (rdo_ql.isSelected() == false && rdo_nhanvien.isSelected() == false) {
-            loi += "Vai trò\n";
-        }
-        if (rdo_hd.isSelected() == false && rdo_nhd.isSelected() == false) {
-            loi += "Trạng thái";
-        }
         if (!loi.equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(this, "--Vui lòng kiểm tra lại thông tin!!--\n" + loi, "Lỗi", JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
         return true;
     }
+
 
     private void showPopup() {
         //int x = txt_ngaysinh.getLocationOnScreen().x;
@@ -447,7 +381,7 @@ public class QLTK extends javax.swing.JPanel {
         calendar1 = new raven.calendar.Calendar();
         crazyPanel1 = new raven.crazypanel.CrazyPanel();
         crazyPanel2 = new raven.crazypanel.CrazyPanel();
-        txt_timkiem = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_tk = new javax.swing.JTable();
@@ -469,21 +403,10 @@ public class QLTK extends javax.swing.JPanel {
         crazyPanel9 = new raven.crazypanel.CrazyPanel();
         rdo_nam = new javax.swing.JRadioButton();
         rdo_nu = new javax.swing.JRadioButton();
-        jLabel7 = new javax.swing.JLabel();
-        crazyPanel6 = new raven.crazypanel.CrazyPanel();
-        rdo_ql = new javax.swing.JRadioButton();
-        rdo_nhanvien = new javax.swing.JRadioButton();
-        crazyPanel4 = new raven.crazypanel.CrazyPanel();
-        jLabel6 = new javax.swing.JLabel();
-        crazyPanel7 = new raven.crazypanel.CrazyPanel();
-        rdo_hd = new javax.swing.JRadioButton();
-        rdo_nhd = new javax.swing.JRadioButton();
         jSeparator1 = new javax.swing.JSeparator();
         crazyPanel5 = new raven.crazypanel.CrazyPanel();
-        btn_xoa = new javax.swing.JButton();
         btn_reset = new javax.swing.JButton();
         btn_sua = new javax.swing.JButton();
-        btn_them = new javax.swing.JButton();
 
         calendar1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -526,7 +449,7 @@ public class QLTK extends javax.swing.JPanel {
         crazyPanel2.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
             "background:$Table.background",
             new String[]{
-                "JTextField.placeholderText=Tìm kiếm;background:@background",
+                "background:lighten(@background,8%)",
                 "background:lighten(@background,8%)",
                 "background:lighten(@background,8%)",
                 "background:lighten(@background,8%)"
@@ -541,21 +464,21 @@ public class QLTK extends javax.swing.JPanel {
             }
         ));
 
-        txt_timkiem.setForeground(new java.awt.Color(153, 153, 153));
-        txt_timkiem.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                txt_timkiemCaretUpdate(evt);
-            }
-        });
-        txt_timkiem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                txt_timkiemMouseExited(evt);
-            }
-        });
-        crazyPanel2.add(txt_timkiem);
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 200, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 22, Short.MAX_VALUE)
+        );
+
+        crazyPanel2.add(jPanel2);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel4.setText("QUẢN LÝ TÀI KHOẢN");
+        jLabel4.setText("THÔNG TIN TÀI KHOẢN");
         crazyPanel2.add(jLabel4);
 
         crazyPanel1.add(crazyPanel2);
@@ -720,71 +643,7 @@ public class QLTK extends javax.swing.JPanel {
 
         crazyPanel8.add(crazyPanel9);
 
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel7.setText("Vai trò:");
-        crazyPanel8.add(jLabel7);
-
-        crazyPanel6.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
-            "background:$Table.background",
-            null
-        ));
-
-        btnG_vaitro.add(rdo_ql);
-        rdo_ql.setText("Quản lý");
-        rdo_ql.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdo_qlActionPerformed(evt);
-            }
-        });
-        crazyPanel6.add(rdo_ql);
-
-        btnG_vaitro.add(rdo_nhanvien);
-        rdo_nhanvien.setText("Nhân viên");
-        rdo_nhanvien.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdo_nhanvienActionPerformed(evt);
-            }
-        });
-        crazyPanel6.add(rdo_nhanvien);
-
-        crazyPanel8.add(crazyPanel6);
-
         crazyPanel1.add(crazyPanel8);
-
-        crazyPanel4.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
-            "background:$Table.background",
-            null
-        ));
-        crazyPanel4.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
-            "",
-            "",
-            "",
-            new String[]{
-                "width 80",
-                "width 200"
-            }
-        ));
-
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel6.setText("Trạng thái:");
-        crazyPanel4.add(jLabel6);
-
-        crazyPanel7.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
-            "background:$Table.background",
-            null
-        ));
-
-        btnG_trangthai.add(rdo_hd);
-        rdo_hd.setText("Hoạt động");
-        crazyPanel7.add(rdo_hd);
-
-        btnG_trangthai.add(rdo_nhd);
-        rdo_nhd.setText("Ngưng hoạt động");
-        crazyPanel7.add(rdo_nhd);
-
-        crazyPanel4.add(crazyPanel7);
-
-        crazyPanel1.add(crazyPanel4);
         crazyPanel1.add(jSeparator1);
 
         crazyPanel5.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
@@ -808,14 +667,6 @@ public class QLTK extends javax.swing.JPanel {
             }
         ));
 
-        btn_xoa.setText("Xoá");
-        btn_xoa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_xoaActionPerformed(evt);
-            }
-        });
-        crazyPanel5.add(btn_xoa);
-
         btn_reset.setText("Làm mới");
         btn_reset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -831,14 +682,6 @@ public class QLTK extends javax.swing.JPanel {
             }
         });
         crazyPanel5.add(btn_sua);
-
-        btn_them.setText("Thêm");
-        btn_them.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_themActionPerformed(evt);
-            }
-        });
-        crazyPanel5.add(btn_them);
 
         crazyPanel1.add(crazyPanel5);
 
@@ -866,10 +709,6 @@ public class QLTK extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_calendar1MousePressed
 
-    private void txt_timkiemCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_timkiemCaretUpdate
-        timkiem();
-    }//GEN-LAST:event_txt_timkiemCaretUpdate
-
     private void tbl_tkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_tkMouseClicked
         if (evt.getClickCount() == 2) {
             index = tbl_tk.getSelectedRow();
@@ -885,10 +724,6 @@ public class QLTK extends javax.swing.JPanel {
         showPopup();
     }//GEN-LAST:event_txt_ngaysinhMouseClicked
 
-    private void btn_xoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_xoaActionPerformed
-        xoaTK();
-    }//GEN-LAST:event_btn_xoaActionPerformed
-
     private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
         resetForm();
     }//GEN-LAST:event_btn_resetActionPerformed
@@ -896,26 +731,6 @@ public class QLTK extends javax.swing.JPanel {
     private void btn_suaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_suaActionPerformed
         suaTK();
     }//GEN-LAST:event_btn_suaActionPerformed
-
-    private void btn_themActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themActionPerformed
-        themTK();
-    }//GEN-LAST:event_btn_themActionPerformed
-
-    private void rdo_qlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdo_qlActionPerformed
-        String manv1 = txt_manv.getText();
-        if (manv1.length() >= 2 && manv1.length() <= 5) {
-            String ql = "QL" + manv1.substring(2);
-            txt_manv.setText(ql);
-        }
-    }//GEN-LAST:event_rdo_qlActionPerformed
-
-    private void rdo_nhanvienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdo_nhanvienActionPerformed
-        String manv1 = txt_manv.getText();
-        if (manv1.length() >= 2 && manv1.length() <= 5) {
-            String ql = "NV" + manv1.substring(2);
-            txt_manv.setText(ql);
-        }
-    }//GEN-LAST:event_rdo_nhanvienActionPerformed
 
     private void txt_matkhauMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_matkhauMouseEntered
         txt_matkhau.setEchoChar((char) 0);
@@ -925,10 +740,6 @@ public class QLTK extends javax.swing.JPanel {
         txt_matkhau.setEchoChar('\u2022');
     }//GEN-LAST:event_txt_matkhauMouseExited
 
-    private void txt_timkiemMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_timkiemMouseExited
-        loaddataTaiKhoan();
-    }//GEN-LAST:event_txt_timkiemMouseExited
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPopupMenu POPUP;
@@ -937,16 +748,11 @@ public class QLTK extends javax.swing.JPanel {
     private javax.swing.ButtonGroup btnG_vaitro;
     private javax.swing.JButton btn_reset;
     private javax.swing.JButton btn_sua;
-    private javax.swing.JButton btn_them;
-    private javax.swing.JButton btn_xoa;
     private raven.calendar.Calendar calendar1;
     private raven.crazypanel.CrazyPanel crazyPanel1;
     private raven.crazypanel.CrazyPanel crazyPanel2;
     private raven.crazypanel.CrazyPanel crazyPanel3;
-    private raven.crazypanel.CrazyPanel crazyPanel4;
     private raven.crazypanel.CrazyPanel crazyPanel5;
-    private raven.crazypanel.CrazyPanel crazyPanel6;
-    private raven.crazypanel.CrazyPanel crazyPanel7;
     private raven.crazypanel.CrazyPanel crazyPanel8;
     private raven.crazypanel.CrazyPanel crazyPanel9;
     private javax.swing.JLabel jLabel1;
@@ -955,19 +761,14 @@ public class QLTK extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JRadioButton rdo_hd;
     private javax.swing.JRadioButton rdo_nam;
-    private javax.swing.JRadioButton rdo_nhanvien;
-    private javax.swing.JRadioButton rdo_nhd;
     private javax.swing.JRadioButton rdo_nu;
-    private javax.swing.JRadioButton rdo_ql;
     private javax.swing.JTable tbl_tk;
     private javax.swing.JTextField txt_diachi;
     private javax.swing.JTextField txt_hoten;
@@ -975,6 +776,5 @@ public class QLTK extends javax.swing.JPanel {
     private javax.swing.JPasswordField txt_matkhau;
     private javax.swing.JTextField txt_ngaysinh;
     private javax.swing.JTextField txt_sdt;
-    private javax.swing.JTextField txt_timkiem;
     // End of variables declaration//GEN-END:variables
 }

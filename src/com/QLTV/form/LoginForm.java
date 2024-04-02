@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import com.QLTV.main.Application;
+import javax.swing.UIManager;
 
 /**
  *
@@ -22,6 +23,7 @@ TaiKhoanDAO tkDAO = new TaiKhoanDAO();
      * Creates new form LoginForm
      */
     public LoginForm() {
+        //UIManager.put("PasswordField.showCapsLock", false);
         initComponents();
         setBackground(new Color(0, 0, 0, 0));
     }

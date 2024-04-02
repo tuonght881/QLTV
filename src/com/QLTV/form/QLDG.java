@@ -6,6 +6,7 @@ package com.QLTV.form;
 
 import com.QLTV.dao.KhachHangDAO;
 import com.QLTV.entity.KhachHang;
+import com.QLTV.utils.XAuth;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Color;
 import java.awt.Component;
@@ -27,19 +28,35 @@ import javax.swing.table.TableCellRenderer;
  * @author Tuong
  */
 public class QLDG extends javax.swing.JPanel {
+
     KhachHangDAO khDAO = new KhachHangDAO();
     int index = -1;
+    int id;
+
     /**
      * Creates new form QLDG
      */
     public QLDG() {
         initComponents();
-        applyTableStyle(tbl_khachhang);
         loaddataKhachHang();
+        loadIDDG();
         btn_sua.setEnabled(false);
         btn_xoa.setEnabled(false);
+
+        if (XAuth.isManager() == true) {
+            btn_sua.setVisible(true);
+            btn_sua.setVisible(true);
+            btn_xoa.setVisible(true);
+            btn_xoa.setVisible(true);
+        } else {
+            btn_sua.setVisible(false);
+            btn_sua.setVisible(false);
+            btn_xoa.setVisible(false);
+            btn_xoa.setVisible(false);
+        }
     }
-public void setFormTG(KhachHang kh) {
+
+    public void setFormTG(KhachHang kh) {
         txt_idkhachhang.setText(kh.getIdkhach());
         txt_tenkhachhang.setText(kh.getHotenkhach());
         txt_sdt.setText(kh.getSdt());
@@ -57,6 +74,13 @@ public void setFormTG(KhachHang kh) {
     }
 
     public void fillFormTG() {
+        if (XAuth.isManager() == true) {
+            txt_diemuytin.setEditable(true);
+            txt_diemuytin.setEnabled(true);
+        } else {
+            txt_diemuytin.setEditable(false);
+            txt_diemuytin.setEnabled(false);
+        }
         txt_idkhachhang.setEnabled(false);
         txt_idkhachhang.setEditable(false);
         btn_them.setEnabled(false);
@@ -64,7 +88,7 @@ public void setFormTG(KhachHang kh) {
         btn_xoa.setEnabled(true);
         String idkh = (String) tbl_khachhang.getValueAt(index, 0);
         KhachHang kh = khDAO.select_byID(idkh);
-        if (kh==null) {
+        if (kh == null) {
             JOptionPane.showMessageDialog(this, "Không có dữ liệu", "Lỗi", JOptionPane.INFORMATION_MESSAGE);
         } else {
             setFormTG(kh);
@@ -107,17 +131,28 @@ public void setFormTG(KhachHang kh) {
             JOptionPane.showMessageDialog(this, "Xoá thành công");
             resetForm();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Xoá thất bại\n" + e.getMessage());
+            // Bắt các loại ngoại lệ, bao gồm SQLServerException
+            if (e.getMessage().contains("conflicted with the REFERENCE constraint")) {
+                // Xử lý lỗi về ràng buộc tham chiếu ở đây
+                JOptionPane.showMessageDialog(this, "Không thể xoá khách hàng, Vì KH này có dữ liệu trong hoá đơn", "Thông báo", JOptionPane.OK_OPTION);
+            } else {
+                // Xử lý các loại lỗi khác
+                JOptionPane.showMessageDialog(this, "Xóa thất bại.\n" + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
     public void resetForm() {
+        loadIDDG();
+        txt_diemuytin.setEditable(false);
+        txt_diemuytin.setEnabled(false);
         loaddataKhachHang();
         txt_idkhachhang.setEnabled(true);
         txt_idkhachhang.setEditable(true);
         txt_idkhachhang.setText("");
         txt_tenkhachhang.setText("");
-        txt_diemuytin.setText("");
+        txt_diemuytin.setText("90");
         txt_sdt.setText("");
         btn_them.setEnabled(true);
         btn_sua.setEnabled(false);
@@ -163,6 +198,22 @@ public void setFormTG(KhachHang kh) {
         }
     }
 
+    public void loadIDDG() {
+        try {
+            String idkh = "";
+            List<KhachHang> list = khDAO.selectAll();
+            for (KhachHang kh : list) {
+                idkh = kh.getIdkhach();
+            }
+            int number = Integer.parseInt(idkh.substring(2));
+            number++;
+            String newText = "KH" + String.format("%03d", number);
+            txt_idkhachhang.setText(newText);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean batloi_kh() {
         String idKhachhang = txt_idkhachhang.getText();
         String hotenkhachhang = txt_tenkhachhang.getText();
@@ -177,6 +228,11 @@ public void setFormTG(KhachHang kh) {
             if (idKhachhang.length() != 5) {
                 loi += "ID Khách hàng phải có 5 ký tự\n";
             }
+        }
+        Pattern patternMNV = Pattern.compile("^(KH)\\d{3}$");
+        Matcher regexMatcherMNV = patternMNV.matcher(idKhachhang);
+        if (!regexMatcherMNV.matches()) {
+            loi += "Định dạng ID khách hàng(VD: KH001)\n";
         }
         if (hotenkhachhang.equalsIgnoreCase("")) {
             loi += "Họ tên khách hàng\n";
@@ -206,59 +262,6 @@ public void setFormTG(KhachHang kh) {
         return true;
     }
 
-    private void applyTableStyle(JTable table) {
-        //btn_them.setIcon(new FlatSVGIcon("/asda/asdasd", 0.35f));
-        //txt_timkiem.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_ICON, new FlatSVGIcon(""),0.35f);
-        //changeScrollStyle
-        JScrollPane scroll = (JScrollPane) table.getParent().getParent();
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-        scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
-                + "background:$Table.background;"
-                + "track:$Table.background;"
-                + "trackArc:999");
-        table.getTableHeader().putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        table.putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        //Table Alignment
-        table.getTableHeader().setDefaultRenderer(getAlignmentCellRender(table.getTableHeader().getDefaultRenderer(), true));
-        table.setDefaultRenderer(Object.class, getAlignmentCellRender(table.getDefaultRenderer(Object.class), false));
-    }
-
-    private TableCellRenderer getAlignmentCellRender(TableCellRenderer oldRender, boolean header) {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component com = oldRender.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (com instanceof JLabel) {
-                    JLabel label = (JLabel) com;
-                    if (column == 0 || column == 4) {
-                        label.setHorizontalAlignment(SwingConstants.CENTER);
-                    } else if (column == 2 || column == 3) {
-                        label.setHorizontalAlignment(SwingConstants.TRAILING);
-                    } else {
-                        label.setHorizontalAlignment(SwingConstants.LEADING);
-                    }
-                    if (header == false) {
-                        if (column == 4) {
-                            if (Double.parseDouble(value.toString()) > 0) {
-                                com.setForeground(new Color(17, 182, 60));
-                                label.setText("+" + value);
-                            } else {
-                                com.setForeground(new Color(202, 48, 48));
-                            }
-                        } else {
-                            if (isSelected) {
-                                com.setForeground(table.getSelectionForeground());
-                            } else {
-                                com.setForeground(table.getForeground());
-                            }
-                        }
-                    }
-                }
-                return com;
-            }
-        };
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -277,8 +280,8 @@ public void setFormTG(KhachHang kh) {
         crazyPanel3 = new raven.crazypanel.CrazyPanel();
         jLabel1 = new javax.swing.JLabel();
         txt_idkhachhang = new javax.swing.JTextField();
-        btn_them = new javax.swing.JButton();
         btn_sua = new javax.swing.JButton();
+        btn_them = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         txt_tenkhachhang = new javax.swing.JTextField();
         btn_xoa = new javax.swing.JButton();
@@ -401,16 +404,10 @@ public void setFormTG(KhachHang kh) {
         jLabel1.setText("ID Khách hàng");
         crazyPanel3.add(jLabel1);
 
+        txt_idkhachhang.setEditable(false);
         txt_idkhachhang.setToolTipText("");
+        txt_idkhachhang.setEnabled(false);
         crazyPanel3.add(txt_idkhachhang);
-
-        btn_them.setText("Thêm");
-        btn_them.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_themActionPerformed(evt);
-            }
-        });
-        crazyPanel3.add(btn_them);
 
         btn_sua.setText("Cập nhật");
         btn_sua.addActionListener(new java.awt.event.ActionListener() {
@@ -419,6 +416,14 @@ public void setFormTG(KhachHang kh) {
             }
         });
         crazyPanel3.add(btn_sua);
+
+        btn_them.setText("Thêm");
+        btn_them.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_themActionPerformed(evt);
+            }
+        });
+        crazyPanel3.add(btn_them);
 
         jLabel2.setText("Họ tên khách hàng");
         crazyPanel3.add(jLabel2);
@@ -448,6 +453,10 @@ public void setFormTG(KhachHang kh) {
 
         jLabel5.setText("Điểm uy tín");
         crazyPanel3.add(jLabel5);
+
+        txt_diemuytin.setEditable(false);
+        txt_diemuytin.setText("90");
+        txt_diemuytin.setEnabled(false);
         crazyPanel3.add(txt_diemuytin);
 
         crazyPanel1.add(crazyPanel3);

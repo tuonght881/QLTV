@@ -112,6 +112,7 @@
               </Properties>
               <Events>
                 <EventHandler event="caretUpdate" listener="javax.swing.event.CaretListener" parameters="javax.swing.event.CaretEvent" handler="txt_timkiemCaretUpdate"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="txt_timkiemMouseExited"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
@@ -133,7 +134,9 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txt_manv">
               <Properties>
+                <Property name="editable" type="boolean" value="false"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
@@ -285,10 +288,49 @@
                             <Column editable="false" title="&#x110;&#x1a1;n gi&#xe1; (2)" type="java.lang.Object"/>
                             <Column editable="false" title="S&#x1ed1; l&#x1b0;&#x1ee3;ng (3)" type="java.lang.Object"/>
                             <Column editable="false" title="Gi&#xe1; x SL (4)" type="java.lang.Object"/>
-                            <Column editable="true" title="S&#x1ed1; ng&#xe0;y m&#x1b0;&#x1ee3;n (5)" type="java.lang.Object"/>
-                            <Column editable="true" title="Gi&#xe1; thu&#xea;(4) x (5)" type="java.lang.Object"/>
-                            <Column editable="true" title="Ti&#x1ec1;n &#x111;&#x1ea3;m b&#x1ea3;o" type="java.lang.Object"/>
+                            <Column editable="false" title="S&#x1ed1; ng&#xe0;y m&#x1b0;&#x1ee3;n (5)" type="java.lang.Object"/>
+                            <Column editable="false" title="Gi&#xe1; thu&#xea;(4) x (5)" type="java.lang.Object"/>
+                            <Column editable="false" title="Ti&#x1ec1;n &#x111;&#x1ea3;m b&#x1ea3;o" type="java.lang.Object"/>
                           </Table>
+                        </Property>
+                        <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                          <TableColumnModel selectionModel="0">
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                          </TableColumnModel>
                         </Property>
                         <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                           <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
@@ -328,6 +370,7 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="txt_sdtkhach">
                       <Events>
+                        <EventHandler event="caretUpdate" listener="javax.swing.event.CaretListener" parameters="javax.swing.event.CaretEvent" handler="txt_sdtkhachCaretUpdate"/>
                         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_sdtkhachKeyPressed"/>
                       </Events>
                     </Component>
@@ -343,6 +386,7 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="txt_songaymuon">
                       <Events>
+                        <EventHandler event="caretUpdate" listener="javax.swing.event.CaretListener" parameters="javax.swing.event.CaretEvent" handler="txt_songaymuonCaretUpdate"/>
                         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_songaymuonKeyPressed"/>
                       </Events>
                     </Component>
@@ -357,9 +401,6 @@
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="enabled" type="boolean" value="false"/>
                       </Properties>
-                      <Events>
-                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="txt_ngaytradukienMouseClicked"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JSeparator" name="jSeparator3">
                     </Component>
@@ -413,6 +454,7 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="txt_khachdua">
                       <Events>
+                        <EventHandler event="caretUpdate" listener="javax.swing.event.CaretListener" parameters="javax.swing.event.CaretEvent" handler="txt_khachduaCaretUpdate"/>
                         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_khachduaKeyPressed"/>
                       </Events>
                     </Component>
