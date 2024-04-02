@@ -7,7 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-//lưu cài đặt giao diện
+
 public class SystemProperties {
 
     public Color getColor() {
