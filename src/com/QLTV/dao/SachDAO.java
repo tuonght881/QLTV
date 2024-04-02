@@ -16,7 +16,9 @@ import java.sql.ResultSet;
  * @author Tuong
  */
 public class SachDAO extends EntityDao<Sach, String>{
-    String selectAll = "select * from Sach order by trangthaiSach desc";
+    String selectal = "select * from Sach";
+    String selectAll = "select * from Sach order by trangthaiSach desc, sl desc";
+    String selectOnStock = "select * from Sach where sl > 0 and trangthaiSach = 1";
     String insert = "insert into Sach values(?,?,?,?,?,?,?,?,?,?)";
     String select_by_ID = "select * from Sach where idsach=?";
     String update = "UPDATE sach SET tensach = ?, idtheloai = ?, idtacgia = ?, idvitri = ?, sl = ?, giaban = ?, giathue1ngay = ?, trangthaiSach = ?, anhsach = ? WHERE idsach = ?";
@@ -44,7 +46,12 @@ public class SachDAO extends EntityDao<Sach, String>{
     public List<Sach> selectAll() {
         return select_by_sql(selectAll);
     }
-
+    public List<Sach> select_all(){
+        return select_by_sql(selectal);
+    }
+    public List<Sach> selectOnStock(){
+        return select_by_sql(selectOnStock);
+    }
     @Override
     public Sach select_byID(String key) {
         List<Sach> list = this.select_by_sql(select_by_ID, key);

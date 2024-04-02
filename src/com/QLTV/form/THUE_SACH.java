@@ -18,6 +18,7 @@ import com.QLTV.entity.Sach;
 import com.QLTV.entity.TacGia;
 import com.QLTV.entity.TheLoai;
 import com.QLTV.entity.ViTri;
+import com.QLTV.utils.XAuth;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Component;
 import java.awt.HeadlessException;
@@ -36,18 +37,26 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import raven.calendar.model.ModelDate;
 import raven.calendar.utils.CalendarSelectedListener;
 
@@ -56,6 +65,7 @@ import raven.calendar.utils.CalendarSelectedListener;
  * @author Tuong
  */
 public class THUE_SACH extends javax.swing.JPanel {
+
     Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -82,6 +92,7 @@ public class THUE_SACH extends javax.swing.JPanel {
     Double tongtien = 0.0;
     Double phantram = 0.0;
     int id;
+
     /**
      * Creates new form THUE_SACH
      */
@@ -89,7 +100,7 @@ public class THUE_SACH extends javax.swing.JPanel {
         initComponents();
         //applyTableStyle(tbl_sach);
         //applyTableStyle(tbl_hoadon);
-        //txt_manv.setText(XAuth.user.getManv());
+        txt_manv.setText(XAuth.user.getManv());
         POPUP.add(jPanel1);
         calendar1.addCalendarSelectedListener(new CalendarSelectedListener() {
             @Override
@@ -115,7 +126,8 @@ public class THUE_SACH extends javax.swing.JPanel {
         timer.setInitialDelay(0);
         timer.start();
     }
-public DonThue getDonThueNew() throws ParseException {
+
+    public DonThue getDonThueNew() throws ParseException {
         DonThue dthueNew = new DonThue();
         dthueNew.setIddonthue(txt_iddonthue.getText());
         dthueNew.setManv(txt_manv.getText());
@@ -125,7 +137,7 @@ public DonThue getDonThueNew() throws ParseException {
         dthueNew.setNgaytradukien(txt_ngaytradukien.getText());
         dthueNew.setNgaytra("");
         dthueNew.setTienphat(0.0);
-        dthueNew.setTiendambao(tongtiendambao);
+        dthueNew.setTongtiendambao(tongtiendambao);
         dthueNew.setThanhtien(tongtien);
         dthueNew.setKhachdua(Double.valueOf(txt_khachdua.getText()));
         dthueNew.setThoilai(thoilai);
@@ -164,7 +176,7 @@ public DonThue getDonThueNew() throws ParseException {
                 DonThue dthueNew = getDonThueNew();
                 //System.out.println(dthueNew.getIddonthue());
                 //System.out.println(dthueNew.getIdkhach());
-                dthueDAO.insert(dthueNew);
+                dthueDAO.insert(dthueNew);//thêm vào đơn thuê
                 //System.out.println("tới đây rồi");
 
                 DonThueChiTiet dthueCT = new DonThueChiTiet();
@@ -176,7 +188,12 @@ public DonThue getDonThueNew() throws ParseException {
                     dthueCT.setIdsach(idsach);
                     dthueCT.setSoluong(Integer.parseInt(tbl_thuesach.getValueAt(i, 2).toString()));
                     dthueCT.setTiendambao(Double.parseDouble(tbl_thuesach.getValueAt(i, 6).toString()));
-                    dthuectDAO.insert(dthueCT);
+                    dthuectDAO.insert(dthueCT);//thêm vào đơn thuê chi tiết
+                    Sach s = sachDAO.select_byID(idsach);
+                    int sls = s.getSl();
+                    int slsm = sls - (Integer.parseInt(tbl_thuesach.getValueAt(i, 2).toString()));
+                    s.setSl(slsm);
+                    sachDAO.update(s);
                 }
                 //System.out.println("tới đây rồi 3");
                 loaddataSach();
@@ -193,6 +210,13 @@ public DonThue getDonThueNew() throws ParseException {
         loadDonThue();
         loaddataSach();
         loadDonThue();
+        tongcong = 0.0;
+        khachdua = 0.0;
+        thoilai = 0.0;
+        tienphat = 0.0;
+        tongtiendambao = 0.0;
+        tongtien = 0.0;
+        phantram = 0.0;
         txt_idkh.setText("");
         txt_tenkh.setText("");
         txt_diemuytin.setText("");
@@ -231,7 +255,7 @@ public DonThue getDonThueNew() throws ParseException {
         model_sach.setColumnIdentifiers(new Object[]{"Tên sách", "Tác giả", "Vị trí", "Số lượng", "Giá thuê 1 ngày"});
         model_sach.setRowCount(0);
         try {
-            List<Sach> list = sachDAO.selectAll();
+            List<Sach> list = sachDAO.selectOnStock();
             for (Sach sach : list) {
                 TheLoai tl = tlDAO.select_byID(sach.getIdtheloai().toString());
                 TacGia tg = tgDAO.select_byID(sach.getIdtacgia());
@@ -272,11 +296,16 @@ public DonThue getDonThueNew() throws ParseException {
     }
 
     public boolean batloi_tk() {
+        String kh = txt_idkh.getText();
         String khachdua = txt_khachdua.getText();
         String thoilai = txt_thoilai.getText();
         String sdtk = txt_sdtkhach.getText();
         String songaymuon = txt_songaymuon.getText();
-
+        String regex = "^\\d*[1-9]\\d*$";
+        boolean isPositiveNumberKD = khachdua.matches(regex);
+        boolean isPositiveNumberSDT = sdtk.matches(regex);
+        boolean isPositiveNumberNM = songaymuon.matches(regex);
+        
         String loi = "";
         if (tbl_thuesach.getRowCount() == 0) {
             loi += "Chưa có quyển sách nào!\n";
@@ -284,16 +313,27 @@ public DonThue getDonThueNew() throws ParseException {
         if (sdtk.equalsIgnoreCase("")) {
             loi += "Số điện thoại khách\n";
         }
+        if (isPositiveNumberSDT == false) {
+            loi += "Vui lòng chỉ nhập số dương\n";
+        }
         if (songaymuon.equalsIgnoreCase("")) {
             loi += "Số ngày mượn\n";
+        }
+        if (isPositiveNumberNM == false) {
+            loi += "Vui lòng chỉ nhập số dương\n";
         }
         if (khachdua.equalsIgnoreCase("")) {
             loi += "Khách đưa\n";
         }
+        if (isPositiveNumberKD == false) {
+            loi += "Vui lòng chỉ nhập số dương\n";
+        }
         if (thoilai.equalsIgnoreCase("")) {
             loi += "Thối lại\n";
         }
-
+        if (kh.equalsIgnoreCase("")) {
+            loi += "Kiểm tra lại thông tin khách hàng\n";
+        }
         if (!loi.equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(this, "--Vui lòng kiểm tra lại thông tin!!--\n" + loi, "Lỗi", JOptionPane.INFORMATION_MESSAGE);
             return false;
@@ -301,14 +341,59 @@ public DonThue getDonThueNew() throws ParseException {
         return true;
     }
 
+    public void checkinputSo(JTextField textField) {
+// Thêm DocumentListener để lắng nghe sự kiện thay đổi trong Document
+        textField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                handleDocumentChange(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                handleDocumentChange(e);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                handleDocumentChange(e);
+            }
+
+            private void handleDocumentChange(DocumentEvent e) {
+                SwingUtilities.invokeLater(() -> {
+                    Document doc = e.getDocument();
+                    try {
+                        String text = doc.getText(0, doc.getLength());
+                        if (!text.isEmpty() && !isNumber(text)) {
+                            // Nếu không phải là số, xóa dữ liệu vừa nhập
+                            doc.remove(e.getOffset(), e.getLength());
+                        }
+                    } catch (BadLocationException ex) {
+                        //System.out.println("Vui lòng nhập số!");
+                    }
+                });
+            }
+
+            private boolean isNumber(String text) {
+                try {
+                    double number = Double.parseDouble(text);
+                    return true;
+                } catch (NumberFormatException ex) {
+                    return false;
+                }
+            }
+        });
+    }
+
     void tinhTONGtiendambao() {
+        tongtiendambao = 0.0;
         for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
             tongtiendambao += Double.parseDouble(tbl_thuesach.getValueAt(i, 6).toString());
         }
         txt_tiendambao.setText(currencyVN.format(tongtiendambao));
     }
 
-    void tinhtien() {
+    void tinhtonggiathue() {
         tongcong = 0.0;
         for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
             tongcong += Double.parseDouble(tbl_thuesach.getValueAt(i, 5).toString());
@@ -317,9 +402,14 @@ public DonThue getDonThueNew() throws ParseException {
         txt_tonggiathue.setText(currencyVN.format(tongcong));
     }
 
-    void tinhsongaymuon() throws ParseException {
+    void tinhngaytradukien() throws ParseException {
         Date ngaymuon = sdf.parse(txt_ngaythuesach.getText());
-        int songaymuon = Integer.parseInt(txt_songaymuon.getText());
+        int songaymuon;
+        if (txt_songaymuon.getText().equalsIgnoreCase("")) {
+            songaymuon = 0;
+        } else {
+            songaymuon = Integer.parseInt(txt_songaymuon.getText());
+        }
         Calendar calendarNgayMuon = Calendar.getInstance();
         calendarNgayMuon.setTime(ngaymuon);
         calendarNgayMuon.add(Calendar.DAY_OF_MONTH, songaymuon);
@@ -329,23 +419,31 @@ public DonThue getDonThueNew() throws ParseException {
 
     public void timKH() {
         String sdt = txt_sdtkhach.getText();
-        try {
-            KhachHang kh = khDAO.select_bysdt(sdt);
-            txt_idkh.setText(kh.getIdkhach());
-            txt_tenkh.setText(kh.getHotenkhach());
-            txt_diemuytin.setText(Integer.toString(kh.getDiemuytin()));
-            phantram = ((100 - Double.valueOf(kh.getDiemuytin())));
-            txt_phantramdambao.setText(D_format.format(phantram) + "%");
-        } catch (NullPointerException e) {
-            int choice = JOptionPane.showConfirmDialog(this,"Khách hàng không tồn tại!\n Thêm khách hàng mới?","Thông báo",JOptionPane.OK_CANCEL_OPTION);
-            QLKhachHang_FORM qlkh = new QLKhachHang_FORM();
-            if(choice ==JOptionPane.OK_OPTION){
-                qlkh.setVisible(true);
-                qlkh.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            }else{
-                return;
+        Pattern pattern = Pattern.compile("^0[1-9][0-9]{8}+$");
+        Matcher regexMatcher = pattern.matcher(sdt);
+        if (regexMatcher.matches()) {
+            try {
+                KhachHang kh = khDAO.select_bysdt(sdt);
+                txt_idkh.setText(kh.getIdkhach());
+                txt_tenkh.setText(kh.getHotenkhach());
+                txt_diemuytin.setText(Integer.toString(kh.getDiemuytin()));
+                phantram = ((100 - Double.valueOf(kh.getDiemuytin())));//tính phần trăm phí đảm bảo
+                txt_phantramdambao.setText(D_format.format(phantram) + "%");
+                tinhngaymuon();
+            } catch (NullPointerException e) {
+                int choice = JOptionPane.showConfirmDialog(this, "Khách hàng không tồn tại!\n Thêm khách hàng mới?", "Thông báo", JOptionPane.OK_CANCEL_OPTION);
+                QLDocGia_FORM qlkh = new QLDocGia_FORM();
+                if (choice == JOptionPane.OK_OPTION) {
+                    qlkh.setVisible(true);
+                    qlkh.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                } else {
+                    return;
+                }
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ", "Thông báo", JOptionPane.OK_OPTION);
         }
+
     }
 
     public void taoHoaDon(MouseEvent evt) throws NumberFormatException, HeadlessException {
@@ -359,7 +457,10 @@ public DonThue getDonThueNew() throws ParseException {
             } catch (NullPointerException e) {
                 //JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
             }
-            if (sl != null) {
+            int slc = Integer.parseInt(tbl_sach.getValueAt(index, 3).toString());
+            if (Integer.parseInt(sl) > slc) {
+                JOptionPane.showMessageDialog(this, "Số lượng trong kho không đủ!", "Thông báo", JOptionPane.OK_OPTION);
+            } else if (sl != null) {
                 Object[] row = new Object[7];
                 model_hd = (DefaultTableModel) tbl_thuesach.getModel();
                 if (index != -1) {
@@ -374,7 +475,7 @@ public DonThue getDonThueNew() throws ParseException {
                         row[5] = 0.0;
                         row[6] = 0.0;
                         model_hd.addRow(row);
-                        tinhtien();
+                        tinhtonggiathue();
                     } else {
                         int hang = -1;
                         for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
@@ -395,7 +496,7 @@ public DonThue getDonThueNew() throws ParseException {
                             row[5] = 0.0;
                             row[6] = 0.0;
                             model_hd.addRow(row);
-                            tinhtien();
+                            tinhtonggiathue();
                         } else {
                             row[0] = selectBook;
                             row[1] = model_sach.getValueAt(index, 4).toString(); //row 1 là giá sách
@@ -404,7 +505,7 @@ public DonThue getDonThueNew() throws ParseException {
                             Double thanhtien = (Double.parseDouble(sl) * Double.parseDouble(row[1].toString()));
                             Double thanhtien2 = Double.parseDouble(tbl_thuesach.getValueAt(hang, 3).toString()) + thanhtien;
                             tbl_thuesach.setValueAt(D_format.format(thanhtien2), hang, 3);
-                            tinhtien();
+                            tinhtonggiathue();
                         }
                     }
                 }
@@ -441,58 +542,36 @@ public DonThue getDonThueNew() throws ParseException {
         }
     }
 
-    private void applyTableStyle(JTable table) {
-        //btn_them.setIcon(new FlatSVGIcon("/asda/asdasd", 0.35f));
-        //txt_timkiem.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_ICON, new FlatSVGIcon(""),0.35f);
-        //changeScrollStyle
-        JScrollPane scroll = (JScrollPane) table.getParent().getParent();
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-        scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
-                + "background:$Table.background;"
-                + "track:$Table.background;"
-                + "trackArc:999");
-        table.getTableHeader().putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        table.putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        //Table Alignment
-        table.getTableHeader().setDefaultRenderer(getAlignmentCellRender(table.getTableHeader().getDefaultRenderer(), true));
-        table.setDefaultRenderer(Object.class, getAlignmentCellRender(table.getDefaultRenderer(Object.class), false));
+    public void tinhngaymuon() {
+        try {
+            double ngaymuon;
+            tinhngaytradukien();
+            if (txt_songaymuon.getText().equalsIgnoreCase("")) {
+                ngaymuon = 0;
+            } else {
+                ngaymuon = Double.parseDouble(txt_songaymuon.getText());
+            }
+            for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
+                tbl_thuesach.setValueAt(txt_songaymuon.getText(), i, 4);
+            }
+            for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
+                Double tien = Double.valueOf(tbl_thuesach.getValueAt(i, 3).toString());
+                tbl_thuesach.setValueAt(D_format.format(ngaymuon * tien), i, 5);//giá thuê của sách
+
+                Double giathue = Double.valueOf(tbl_thuesach.getValueAt(i, 5).toString());
+                tbl_thuesach.setValueAt(D_format.format(giathue * (phantram / 100)), i, 6);//tiền đảm bảo của mỗi cuốn sách
+            }
+            tinhtonggiathue();
+            tinhTONGtiendambao();
+            tongtien = tongcong + tongtiendambao;
+            txt_thanhtien.setText(currencyVN.format(tongtien));
+        } catch (ParseException ex) {
+            java.util.logging.Logger.getLogger(THUESACH2_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Chưa có thông tin của khách hàng!");
+        }
     }
 
-    private TableCellRenderer getAlignmentCellRender(TableCellRenderer oldRender, boolean header) {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component com = oldRender.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (com instanceof JLabel) {
-                    JLabel label = (JLabel) com;
-                    if (column == 0) {
-                        label.setHorizontalAlignment(SwingConstants.LEADING);
-                    } else if (column == 3 || column == 4) {
-                        label.setHorizontalAlignment(SwingConstants.TRAILING);
-                    } else if (column == 2) {
-                        label.setHorizontalAlignment(SwingConstants.CENTER);
-                    }
-//                    if (header == false) {
-//                        if (column == 4) {
-//                            if (Double.parseDouble(value.toString()) > 0) {
-//                                com.setForeground(new Color(17, 182, 60));
-//                                label.setText("+" + value);
-//                            } else {
-//                                com.setForeground(new Color(202, 48, 48));
-//                            }
-//                        } else {
-//                            if (isSelected) {
-//                                com.setForeground(table.getSelectionForeground());
-//                            } else {
-//                                com.setForeground(table.getForeground());
-//                            }
-//                        }
-//                    }
-                }
-                return com;
-            }
-        };
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -622,6 +701,11 @@ public DonThue getDonThueNew() throws ParseException {
                 txt_timkiemCaretUpdate(evt);
             }
         });
+        txt_timkiem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txt_timkiemMouseExited(evt);
+            }
+        });
         crazyPanel2.add(txt_timkiem);
 
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -635,7 +719,9 @@ public DonThue getDonThueNew() throws ParseException {
         jLabel1.setText("ID Nhân viên");
         crazyPanel2.add(jLabel1);
 
+        txt_manv.setEditable(false);
         txt_manv.setToolTipText("");
+        txt_manv.setEnabled(false);
         crazyPanel2.add(txt_manv);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -787,7 +873,7 @@ public DonThue getDonThueNew() throws ParseException {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, true, true
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -875,6 +961,11 @@ public DonThue getDonThueNew() throws ParseException {
         jLabel5.setText("SDT khách");
         crazyPanel3.add(jLabel5);
 
+        txt_sdtkhach.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txt_sdtkhachCaretUpdate(evt);
+            }
+        });
         txt_sdtkhach.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_sdtkhachKeyPressed(evt);
@@ -888,6 +979,11 @@ public DonThue getDonThueNew() throws ParseException {
         jLabel14.setText("Số ngày mượn");
         crazyPanel3.add(jLabel14);
 
+        txt_songaymuon.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txt_songaymuonCaretUpdate(evt);
+            }
+        });
         txt_songaymuon.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_songaymuonKeyPressed(evt);
@@ -901,11 +997,6 @@ public DonThue getDonThueNew() throws ParseException {
 
         txt_ngaytradukien.setEditable(false);
         txt_ngaytradukien.setEnabled(false);
-        txt_ngaytradukien.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txt_ngaytradukienMouseClicked(evt);
-            }
-        });
         crazyPanel3.add(txt_ngaytradukien);
         crazyPanel3.add(jSeparator3);
         crazyPanel3.add(jSeparator4);
@@ -940,6 +1031,11 @@ public DonThue getDonThueNew() throws ParseException {
         jLabel11.setText("Khách đưa");
         crazyPanel3.add(jLabel11);
 
+        txt_khachdua.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txt_khachduaCaretUpdate(evt);
+            }
+        });
         txt_khachdua.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_khachduaKeyPressed(evt);
@@ -1028,6 +1124,7 @@ public DonThue getDonThueNew() throws ParseException {
 
     private void tbl_sachMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_sachMouseClicked
         taoHoaDon(evt);
+        tinhngaymuon();
     }//GEN-LAST:event_tbl_sachMouseClicked
 
     private void txt_iddonthueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_iddonthueActionPerformed
@@ -1037,43 +1134,8 @@ public DonThue getDonThueNew() throws ParseException {
     private void txt_sdtkhachKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sdtkhachKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_sdtkhach.getText().equalsIgnoreCase("")) {
             timKH();
-
         }
     }//GEN-LAST:event_txt_sdtkhachKeyPressed
-
-    private void txt_songaymuonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_songaymuonKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_songaymuon.getText().equalsIgnoreCase("")) {
-            try {
-                Double diemuytin = Double.valueOf(txt_diemuytin.getText());
-                //phantram = ((100 - diemuytin));
-                //tbl_thuesach.getColumnModel().getColumn(6).setHeaderValue("Tiền đảm bảo ("+phantram+"%)");
-                tinhsongaymuon();
-                double ngaymuon = Double.parseDouble(txt_songaymuon.getText());
-                for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
-                    tbl_thuesach.setValueAt(txt_songaymuon.getText(), i, 4);
-                }
-                for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
-                    Double tien = Double.parseDouble(tbl_thuesach.getValueAt(i, 3).toString());
-                    tbl_thuesach.setValueAt(D_format.format(ngaymuon * tien), i, 5);
-
-                    Double giathue = Double.parseDouble(tbl_thuesach.getValueAt(i, 5).toString());
-                    tbl_thuesach.setValueAt(D_format.format(giathue * (phantram / 100)), i, 6);
-                }
-                tinhtien();
-                tinhTONGtiendambao();
-                tongtien = tongcong + tongtiendambao;
-                txt_thanhtien.setText(currencyVN.format(tongtien));
-            }catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(this, "Chưa có thông tin của khách hàng!");
-            } catch (ParseException ex) {
-                java.util.logging.Logger.getLogger(THUE_SACH.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            }
-        }
-    }//GEN-LAST:event_txt_songaymuonKeyPressed
-
-    private void txt_ngaytradukienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_ngaytradukienMouseClicked
-        showPopup();
-    }//GEN-LAST:event_txt_ngaytradukienMouseClicked
 
     private void txt_khachduaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_khachduaKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("")) {
@@ -1100,6 +1162,28 @@ public DonThue getDonThueNew() throws ParseException {
             POPUP.setVisible(false);
         }
     }//GEN-LAST:event_calendar1MousePressed
+
+    private void txt_songaymuonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_songaymuonKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_songaymuon.getText().equalsIgnoreCase("")) {
+            tinhngaymuon();
+        }
+    }//GEN-LAST:event_txt_songaymuonKeyPressed
+
+    private void txt_timkiemMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_timkiemMouseExited
+        loaddataSach();
+    }//GEN-LAST:event_txt_timkiemMouseExited
+
+    private void txt_sdtkhachCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_sdtkhachCaretUpdate
+        checkinputSo(txt_sdtkhach);
+    }//GEN-LAST:event_txt_sdtkhachCaretUpdate
+
+    private void txt_songaymuonCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_songaymuonCaretUpdate
+        checkinputSo(txt_songaymuon);
+    }//GEN-LAST:event_txt_songaymuonCaretUpdate
+
+    private void txt_khachduaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_khachduaCaretUpdate
+        checkinputSo(txt_khachdua);
+    }//GEN-LAST:event_txt_khachduaCaretUpdate
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

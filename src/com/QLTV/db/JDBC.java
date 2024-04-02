@@ -15,10 +15,11 @@ import java.sql.SQLException;
  * @author tuong
  */
 public class JDBC {
+
     static String Driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     static String url = "jdbc:sqlserver://localhost:1433;databaseName=QL_ThuVien;encrypt=true;trustServerCertificate=true";
     static String user = "sa";
-    static String pass = "123";
+    static String pass = "123456";
 
     // nạp driver
     static {
@@ -88,7 +89,6 @@ public class JDBC {
             } finally {
                 stmt.getConnection().close();
             }
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

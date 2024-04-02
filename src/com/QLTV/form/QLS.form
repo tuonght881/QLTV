@@ -20,11 +20,11 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="759" max="32767" attributes="0"/>
+          <EmptySpace min="0" pref="798" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="crazyPanel1" pref="747" max="32767" attributes="0"/>
+                  <Component id="crazyPanel1" pref="786" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -72,6 +72,7 @@
               </Properties>
               <Events>
                 <EventHandler event="caretUpdate" listener="javax.swing.event.CaretListener" parameters="javax.swing.event.CaretEvent" handler="txt_timkiemCaretUpdate"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="txt_timkiemMouseExited"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
@@ -94,7 +95,7 @@
             <Component class="javax.swing.JTable" name="tbl_sach">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="8" rowCount="4">
+                  <Table columnCount="9" rowCount="4">
                     <Column editable="false" title="Title 1" type="java.lang.Object"/>
                     <Column editable="false" title="Title 2" type="java.lang.Object"/>
                     <Column editable="false" title="Title 3" type="java.lang.Object"/>
@@ -103,7 +104,57 @@
                     <Column editable="false" title="Title 6" type="java.lang.Object"/>
                     <Column editable="false" title="Title 7" type="java.lang.Object"/>
                     <Column editable="false" title="Title 8" type="java.lang.Object"/>
+                    <Column editable="true" title="Title 9" type="java.lang.Object"/>
                   </Table>
+                </Property>
+                <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                  <TableColumnModel selectionModel="0">
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                  </TableColumnModel>
                 </Property>
                 <Property name="editingColumn" type="int" value="0"/>
                 <Property name="editingRow" type="int" value="0"/>
@@ -172,7 +223,9 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txt_idsach">
                   <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel3">
@@ -189,10 +242,18 @@
                     <Property name="text" type="java.lang.String" value="Th&#x1ec3; lo&#x1ea1;i:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txt_theloai">
+                <Component class="javax.swing.JComboBox" name="cbo_TL">
                   <Properties>
-                    <Property name="toolTipText" type="java.lang.String" value=""/>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="0"/>
+                    </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cbo_TLMouseClicked"/>
+                  </Events>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel5">
                   <Properties>
@@ -200,7 +261,18 @@
                     <Property name="text" type="java.lang.String" value="T&#xe1;c gi&#x1ea3;:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txt_tacgia">
+                <Component class="javax.swing.JComboBox" name="cbo_tg">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="0"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cbo_tgMouseClicked"/>
+                  </Events>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel9">
                   <Properties>
@@ -208,7 +280,18 @@
                     <Property name="text" type="java.lang.String" value="V&#x1ecb; tr&#xed;:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txt_vitri">
+                <Component class="javax.swing.JComboBox" name="cbo_vt">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="0"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cbo_vtMouseClicked"/>
+                  </Events>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel11">
                   <Properties>

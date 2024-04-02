@@ -23,7 +23,7 @@ public class ViTriDAO extends EntityDao<ViTri, String> {
     String select_by_ID = "select * from ViTri where idvitri=?";
     String select_by_tenVT="select * from ViTri where tenvt = ?";
     String timkiem = "select * from ViTri where idvitri like ? or tenvt like ? order by trangthaivt desc";
-
+    String selectvt_hd = "select * from ViTri where trangthaivt = 1";
     @Override
     public void insert(ViTri entity) {
         JDBC.update(insert, entity.getIdvitri(), entity.getTenvt(), entity.getTrangthaivt());
@@ -43,7 +43,9 @@ public class ViTriDAO extends EntityDao<ViTri, String> {
     public List<ViTri> selectAll() {
         return select_by_sql(selectAll);
     }
-
+    public List<ViTri> selectVT_hd() {
+        return select_by_sql(selectvt_hd);
+    }
     @Override
     public ViTri select_byID(String key) {
         List<ViTri> list = this.select_by_sql(select_by_ID, key);

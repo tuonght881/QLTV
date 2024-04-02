@@ -23,18 +23,10 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="btn" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="crazyPanel1" pref="637" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="crazyPanel1" pref="747" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -42,23 +34,13 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="btn" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="crazyPanel1" pref="466" max="32767" attributes="0"/>
-              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+              <Component id="crazyPanel1" pref="459" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JButton" name="btn">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="change"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnActionPerformed"/>
-      </Events>
-    </Component>
     <Container class="raven.crazypanel.CrazyPanel" name="crazyPanel1">
       <Properties>
         <Property name="flatLafStyleComponent" type="raven.crazypanel.FlatLafStyleComponent" editor="raven.crazypanel.bean.editor.FlatLafStyleEditor">
@@ -94,7 +76,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="16" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="QU&#x1ea2;N L&#xdd; KH&#xc1;CH H&#xc0;NG"/>
+                <Property name="text" type="java.lang.String" value="QU&#x1ea2;N L&#xdd; &#x110;&#x1ed8;C GI&#x1ea2;"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -115,30 +97,6 @@
                     <Column editable="false" title="Title 3" type="java.lang.Object"/>
                     <Column editable="false" title="Title 4" type="java.lang.Object"/>
                   </Table>
-                </Property>
-                <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
-                  <TableColumnModel selectionModel="0">
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
-                  </TableColumnModel>
                 </Property>
                 <Property name="editingColumn" type="int" value="0"/>
                 <Property name="editingRow" type="int" value="0"/>
@@ -172,20 +130,20 @@
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btn_them">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Th&#xea;m"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_themActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JButton" name="btn_sua">
               <Properties>
                 <Property name="text" type="java.lang.String" value="C&#x1ead;p nh&#x1ead;t"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_suaActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btn_them">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Th&#xea;m"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_themActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">

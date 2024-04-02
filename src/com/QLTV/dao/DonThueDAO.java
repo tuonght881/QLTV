@@ -26,12 +26,12 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
 
     @Override
     public void insert(DonThue entity) {
-        JDBC.update(insert, entity.getIddonthue(), entity.getIdkhach(), entity.getManv(), entity.getNgaytao(), entity.getNgaythue(), entity.getNgaytradukien(), entity.getNgaytra(), entity.getTienphat(), entity.getTiendambao(), entity.getKhachdua(), entity.getThoilai(), entity.getThanhtien());
+        JDBC.update(insert, entity.getIddonthue(), entity.getIdkhach(), entity.getManv(), entity.getNgaytao(), entity.getNgaythue(), entity.getNgaytradukien(), entity.getNgaytra(), entity.getTienphat(), entity.getTongtiendambao(), entity.getKhachdua(), entity.getThoilai(), entity.getThanhtien());
     }
 
     @Override
     public void update(DonThue entity) {
-        JDBC.update(update, entity.getIdkhach(), entity.getManv(), entity.getNgaytao(), entity.getNgaythue(), entity.getNgaytradukien(), entity.getNgaytra(), entity.getTienphat(), entity.getTiendambao(), entity.getKhachdua(), entity.getThoilai(), entity.getThanhtien(), entity.getIddonthue());
+        JDBC.update(update, entity.getIdkhach(), entity.getManv(), entity.getNgaytao(), entity.getNgaythue(), entity.getNgaytradukien(), entity.getNgaytra(), entity.getTienphat(), entity.getTongtiendambao(), entity.getKhachdua(), entity.getThoilai(), entity.getThanhtien(), entity.getIddonthue());
     }
 
     @Override
@@ -69,7 +69,7 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
                 dthue.setNgaytradukien(r.getString("ngaytradukien"));
                 dthue.setNgaytra(r.getString("ngaytra"));
                 dthue.setTienphat(r.getDouble("tienphat"));
-                dthue.setTiendambao(r.getDouble("tongtiendambao"));
+                dthue.setTongtiendambao(r.getDouble("tongtiendambao"));
                 dthue.setKhachdua(r.getDouble("thoilai"));
                 dthue.setThoilai(r.getDouble("thoilai"));
                 dthue.setThanhtien(r.getDouble("thanhtien"));

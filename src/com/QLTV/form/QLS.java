@@ -12,8 +12,13 @@ import com.QLTV.entity.Sach;
 import com.QLTV.entity.TacGia;
 import com.QLTV.entity.TheLoai;
 import com.QLTV.entity.ViTri;
+import com.QLTV.form.QLTG_FORM;
+import com.QLTV.form.QLTheLoai_FORM;
+import com.QLTV.form.QLViTri_FORM;
+import com.QLTV.utils.XAuth;
 import com.QLTV.utils.Ximg;
 import com.formdev.flatlaf.FlatClientProperties;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.awt.Component;
 import java.awt.Image;
 import java.io.File;
@@ -31,6 +36,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -43,6 +49,7 @@ import javax.swing.table.TableColumn;
  * @author Tuong
  */
 public class QLS extends javax.swing.JPanel {
+
     Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -53,29 +60,65 @@ public class QLS extends javax.swing.JPanel {
     Locale localeVN = new Locale("vi", "VN");
     NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
     int index = -1;
+
     /**
      * Creates new form QLS
      */
     public QLS() {
         initComponents();
-        applyTableStyle(tbl_sach);
         loaddataSach();
+        loaddataTL();
+        loaddataTG();
+        loaddataVT();
+        loadIDS();
         btn_sua.setEnabled(false);
         btn_xoa.setEnabled(false);
+        if (XAuth.isManager() == true) {
+            btn_sua.setVisible(true);
+            btn_sua.setVisible(true);
+            btn_xoa.setVisible(true);
+            btn_xoa.setVisible(true);
+        } else {
+            btn_sua.setVisible(false);
+            btn_sua.setVisible(false);
+            btn_xoa.setVisible(false);
+            btn_xoa.setVisible(false);
+        }
     }
-public void setFormSach(Sach sach) throws ParseException {
+
+    public void loadIDS() {
+        try {
+            String idkh = "";
+            List<Sach> list = sachDAO.select_all();
+            for (Sach kh : list) {
+                idkh = kh.getIdsach();
+            }
+            int number = Integer.parseInt(idkh.substring(1));
+            number++;
+            String newText = "S" + String.format("%04d", number);
+            txt_idsach.setText(newText);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setFormSach(Sach sach) throws ParseException {
         TheLoai tl = tlDAO.select_byID(sach.getIdtheloai());
         TacGia tg = tgDAO.select_byID(sach.getIdtacgia());
         ViTri vt = vtDAO.select_byID(sach.getIdvitri());
         txt_idsach.setText(sach.getIdsach());
         txt_tensach.setText(sach.getTensach());
 
-        txt_theloai.setText(tl.getTentheloai());
-        txt_tacgia.setText(tg.getTentg());
-        txt_vitri.setText(vt.getTenvt());
+        cbo_TL.setSelectedItem(tl.getTentheloai());
+        cbo_tg.setSelectedItem(tg.getTentg());
+        cbo_vt.setSelectedItem(vt.getTenvt());
+
+        cbo_TL.setSelectedItem(tl.getTentheloai());
+        cbo_tg.setSelectedItem(tg.getTentg());
+        cbo_vt.setSelectedItem(vt.getTenvt());
 
         txt_soluong.setText(Integer.toString(sach.getSl()));
-        txt_giathue1ngay.setText( Double.toString(sach.getGiathue1ngay()));
+        txt_giathue1ngay.setText(Double.toString(sach.getGiathue1ngay()));
         txt_giaban.setText(Double.toString(sach.getGiaban()));
         if (sach.getTrangthaisach() == true) {
             rdo_hd.setSelected(true);
@@ -98,9 +141,9 @@ public void setFormSach(Sach sach) throws ParseException {
 
     public Sach getFormSach() throws ParseException {
         Sach sachNew = new Sach();
-        TheLoai tl = tlDAO.select_byTheLoai(txt_theloai.getText());
-        TacGia tg = tgDAO.select_byTenTG(txt_tacgia.getText());
-        ViTri vt = vtDAO.select_byTenVT(txt_vitri.getText());
+        TheLoai tl = tlDAO.select_byTheLoai(cbo_TL.getSelectedItem().toString());
+        TacGia tg = tgDAO.select_byTenTG(cbo_tg.getSelectedItem().toString());
+        ViTri vt = vtDAO.select_byTenVT(cbo_vt.getSelectedItem().toString());
         sachNew.setIdsach(txt_idsach.getText());
         sachNew.setTensach(txt_tensach.getText());
         sachNew.setIdtheloai(tl.getIdtheloai());
@@ -163,19 +206,35 @@ public void setFormSach(Sach sach) throws ParseException {
     }
 
     public void xoaSach() {
+        String entity = txt_idsach.getText();
         try {
-            String entity = txt_idsach.getText();
             sachDAO.delete(entity);
             loaddataSach();
             JOptionPane.showMessageDialog(this, "Xoá thành công");
             resetForm();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Xoá thất bại\n" + e.getMessage());
+            // Bắt các loại ngoại lệ, bao gồm SQLServerException
+            if (e.getMessage().contains("conflicted with the REFERENCE constraint")) {
+                // Xử lý lỗi về ràng buộc tham chiếu ở đây
+                int choice = JOptionPane.showConfirmDialog(this, "Xóa thất bại do sách này đã tồn tại trong hoá đơn.\nHành động xoá này chỉ thay đổi trạng thái của sách.", "Thông báo", JOptionPane.OK_CANCEL_OPTION);
+                if (choice == JOptionPane.OK_OPTION) {
+                    Sach s = sachDAO.select_byID(entity);
+                    s.setTrangthaisach(false);
+                    sachDAO.update(s);
+                    loaddataSach();
+                    resetForm();
+                }
+            } else {
+                // Xử lý các loại lỗi khác
+                JOptionPane.showMessageDialog(this, "Xóa thất bại.\n" + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
     public void resetForm() {
         loaddataSach();
+        loadIDS();
         txt_idsach.setEnabled(true);
         txt_idsach.setEditable(true);
         btn_them.setEnabled(true);
@@ -183,10 +242,7 @@ public void setFormSach(Sach sach) throws ParseException {
         btn_xoa.setEnabled(false);
 
         txt_idsach.setText("");
-        txt_theloai.setText("");
-        txt_tacgia.setText("");
         txt_tensach.setText("");
-        txt_vitri.setText("");
         txt_giaban.setText("");
         txt_soluong.setText("");
         txt_giaban.setText("");
@@ -197,9 +253,30 @@ public void setFormSach(Sach sach) throws ParseException {
         lbl_anh.setText("Hình ảnh");
     }
 
+    public void loaddataTL() {
+        List<TheLoai> list = tlDAO.selectAll();
+        for (TheLoai tl : list) {
+            cbo_TL.addItem(tl.getTentheloai());
+        }
+    }
+
+    public void loaddataTG() {
+        List<TacGia> list = tgDAO.selectAll();
+        for (TacGia tg : list) {
+            cbo_tg.addItem(tg.getTentg());
+        }
+    }
+
+    public void loaddataVT() {
+        List<ViTri> list = vtDAO.selectAll();
+        for (ViTri vt : list) {
+            cbo_vt.addItem(vt.getTenvt());
+        }
+    }
+
     public void loaddataSach() {
         DefaultTableModel modelTK = (DefaultTableModel) tbl_sach.getModel();
-        modelTK.setColumnIdentifiers(new Object[]{"ID Sách", "Tên sách", "Thể loại", "Tác giả", "Vị trí", "Số lượng", "Giá thuê", "Giá bán"});
+        modelTK.setColumnIdentifiers(new Object[]{"ID Sách", "Tên sách", "Thể loại", "Tác giả", "Vị trí", "Số lượng", "Giá thuê", "Giá bán", "Trạng thái"});
         modelTK.setRowCount(0);
         try {
             List<Sach> list = sachDAO.selectAll();
@@ -207,7 +284,7 @@ public void setFormSach(Sach sach) throws ParseException {
                 TheLoai tl = tlDAO.select_byID(sach.getIdtheloai().toString());
                 TacGia tg = tgDAO.select_byID(sach.getIdtacgia());
                 ViTri vt = vtDAO.select_byID(sach.getIdvitri());
-                Object[] row = {sach.getIdsach(), sach.getTensach(), tl.getTentheloai(), tg.getTentg(), vt.getTenvt(), sach.getSl(),currencyVN.format(sach.getGiathue1ngay()), currencyVN.format(sach.getGiaban()) };
+                Object[] row = {sach.getIdsach(), sach.getTensach(), tl.getTentheloai(), tg.getTentg(), vt.getTenvt(), sach.getSl(), currencyVN.format(sach.getGiathue1ngay()), currencyVN.format(sach.getGiaban()), sach.getTrangthaisach() ? "Hoạt động" : "Ngưng hoạt động"};
                 modelTK.addRow(row);
             }
             if (modelTK.getRowCount() == 0) {
@@ -230,7 +307,7 @@ public void setFormSach(Sach sach) throws ParseException {
                 TheLoai tl = tlDAO.select_byID(sach.getIdtheloai().toString());
                 TacGia tg = tgDAO.select_byID(sach.getIdtacgia());
                 ViTri vt = vtDAO.select_byID(sach.getIdvitri());
-                                Object[] row = {sach.getIdsach(), sach.getTensach(), tl.getTentheloai(), tg.getTentg(), vt.getTenvt(), sach.getSl(),currencyVN.format(sach.getGiathue1ngay()), currencyVN.format(sach.getGiaban()) };
+                Object[] row = {sach.getIdsach(), sach.getTensach(), tl.getTentheloai(), tg.getTentg(), vt.getTenvt(), sach.getSl(), currencyVN.format(sach.getGiathue1ngay()), currencyVN.format(sach.getGiaban())};
                 modelTK.addRow(row);
             }
             if (modelTK.getRowCount() == 0) {
@@ -244,13 +321,13 @@ public void setFormSach(Sach sach) throws ParseException {
 
     public boolean batloi_tk() {
         String idsach = txt_idsach.getText();
-        String theloai = txt_theloai.getText();
+        //String theloai = txt_theloai.getText();
         String tensach = txt_tensach.getText();
-        String tacgia = txt_tacgia.getText();
+        //String tacgia = txt_tacgia.getText();
         String sl = txt_soluong.getText();
         String giathue = txt_giathue1ngay.getText();
         String giaban = txt_giaban.getText();
-        String vitri = txt_vitri.getText();
+        //String vitri = txt_vitri.getText();
 
         String loi = "";
 
@@ -262,26 +339,18 @@ public void setFormSach(Sach sach) throws ParseException {
 //                loi += "ID tài khoản phải có 5 ký tự\n";
 //            }
 //        }
-        if (theloai.equalsIgnoreCase("")) {
-            loi += "Thể loại\n";
-        }
+
         if (tensach.equalsIgnoreCase("")) {
             loi += "Tên sách\n";
         }
-        if (tacgia.equalsIgnoreCase("")) {
-            loi += "Tác giả\n";
+        if (sl.equalsIgnoreCase("")) {
+            loi += "Số lượng\n";
         }
         if (giaban.equalsIgnoreCase("")) {
             loi += "Giá bán\n";
         }
         if (giathue.equalsIgnoreCase("")) {
             loi += "Giá thuê\n";
-        }
-        if (vitri.equalsIgnoreCase("")) {
-            loi += "Vị trí\n";
-        }
-        if (sl.equalsIgnoreCase("")) {
-            loi += "Số lượng\n";
         }
         if (rdo_hd.isSelected() == false && rdo_nhd.isSelected() == false) {
             loi += "Trạng thái";
@@ -348,6 +417,7 @@ public void setFormSach(Sach sach) throws ParseException {
             }
         };
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -373,11 +443,11 @@ public void setFormSach(Sach sach) throws ParseException {
         jLabel3 = new javax.swing.JLabel();
         txt_tensach = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        txt_theloai = new javax.swing.JTextField();
+        cbo_TL = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
-        txt_tacgia = new javax.swing.JTextField();
+        cbo_tg = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
-        txt_vitri = new javax.swing.JTextField();
+        cbo_vt = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
         txt_soluong = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
@@ -430,6 +500,11 @@ public void setFormSach(Sach sach) throws ParseException {
                 txt_timkiemCaretUpdate(evt);
             }
         });
+        txt_timkiem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txt_timkiemMouseExited(evt);
+            }
+        });
         crazyPanel2.add(txt_timkiem);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -440,17 +515,17 @@ public void setFormSach(Sach sach) throws ParseException {
 
         tbl_sach.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7", "Title 8"
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7", "Title 8", "Title 9"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -546,7 +621,9 @@ public void setFormSach(Sach sach) throws ParseException {
         jLabel1.setText("ID Sách:");
         crazyPanel3.add(jLabel1);
 
+        txt_idsach.setEditable(false);
         txt_idsach.setToolTipText("");
+        txt_idsach.setEnabled(false);
         crazyPanel3.add(txt_idsach);
 
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -558,18 +635,34 @@ public void setFormSach(Sach sach) throws ParseException {
         jLabel2.setText("Thể loại:");
         crazyPanel3.add(jLabel2);
 
-        txt_theloai.setToolTipText("");
-        crazyPanel3.add(txt_theloai);
+        cbo_TL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cbo_TLMouseClicked(evt);
+            }
+        });
+        crazyPanel3.add(cbo_TL);
 
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel5.setText("Tác giả:");
         crazyPanel3.add(jLabel5);
-        crazyPanel3.add(txt_tacgia);
+
+        cbo_tg.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cbo_tgMouseClicked(evt);
+            }
+        });
+        crazyPanel3.add(cbo_tg);
 
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel9.setText("Vị trí:");
         crazyPanel3.add(jLabel9);
-        crazyPanel3.add(txt_vitri);
+
+        cbo_vt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cbo_vtMouseClicked(evt);
+            }
+        });
+        crazyPanel3.add(cbo_vt);
 
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel11.setText("Số lượng:");
@@ -669,11 +762,11 @@ public void setFormSach(Sach sach) throws ParseException {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 759, Short.MAX_VALUE)
+            .addGap(0, 798, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
+                    .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 786, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         layout.setVerticalGroup(
@@ -706,27 +799,27 @@ public void setFormSach(Sach sach) throws ParseException {
         try {
             JFileChooser fc = new JFileChooser("image\\");
 
-                //	    lọc file hình ảnh
-                FileFilter filter = new FileNameExtensionFilter("Image Files", "png", "GIF", "jpg");
-                fc.setFileFilter(filter);
-                //	    Mở hộp thoại
-                fc.showOpenDialog(null);
-                File f = fc.getSelectedFile();
-                Ximg.save_img(f);
-                ImageIcon icon = Ximg.read_img(f.getName());
-                Image img = icon.getImage();
-                Image imgScale = img.getScaledInstance(120, 130, Image.SCALE_SMOOTH);
+            //	    lọc file hình ảnh
+            FileFilter filter = new FileNameExtensionFilter("Image Files", "png", "GIF", "jpg");
+            fc.setFileFilter(filter);
+            //	    Mở hộp thoại
+            fc.showOpenDialog(null);
+            File f = fc.getSelectedFile();
+            Ximg.save_img(f);
+            ImageIcon icon = Ximg.read_img(f.getName());
+            Image img = icon.getImage();
+            Image imgScale = img.getScaledInstance(120, 130, Image.SCALE_SMOOTH);
 
-                lbl_anh.setText("");
-                lbl_anh.setIcon(new ImageIcon(imgScale));
-                lbl_anh.setToolTipText(f.getName());
-            } catch (IllegalArgumentException e) {
-                //            Msg_Box.alert(this, "Bạn chưa chọn hình ảnh");
-            } catch (NullPointerException e) {
+            lbl_anh.setText("");
+            lbl_anh.setIcon(new ImageIcon(imgScale));
+            lbl_anh.setToolTipText(f.getName());
+        } catch (IllegalArgumentException e) {
+            //            Msg_Box.alert(this, "Bạn chưa chọn hình ảnh");
+        } catch (NullPointerException e) {
 
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }//GEN-LAST:event_lbl_anhMouseClicked
 
     private void btn_xoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_xoaActionPerformed
@@ -745,6 +838,34 @@ public void setFormSach(Sach sach) throws ParseException {
         themSach();
     }//GEN-LAST:event_btn_themActionPerformed
 
+    private void txt_timkiemMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_timkiemMouseExited
+        loaddataSach();
+    }//GEN-LAST:event_txt_timkiemMouseExited
+
+    private void cbo_TLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbo_TLMouseClicked
+        if (evt.getClickCount() == 2) {
+            QLTheLoai_FORM qls = new QLTheLoai_FORM();
+            qls.setVisible(true);
+            qls.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        }
+    }//GEN-LAST:event_cbo_TLMouseClicked
+
+    private void cbo_tgMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbo_tgMouseClicked
+        if (evt.getClickCount() == 2) {
+            QLTG_FORM qls = new QLTG_FORM();
+            qls.setVisible(true);
+            qls.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        }
+    }//GEN-LAST:event_cbo_tgMouseClicked
+
+    private void cbo_vtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbo_vtMouseClicked
+        if (evt.getClickCount() == 2) {
+            QLViTri_FORM qls = new QLViTri_FORM();
+            qls.setVisible(true);
+            qls.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        }
+    }//GEN-LAST:event_cbo_vtMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup btnG_trangthai;
@@ -752,6 +873,9 @@ public void setFormSach(Sach sach) throws ParseException {
     private javax.swing.JButton btn_sua;
     private javax.swing.JButton btn_them;
     private javax.swing.JButton btn_xoa;
+    private javax.swing.JComboBox<String> cbo_TL;
+    private javax.swing.JComboBox<String> cbo_tg;
+    private javax.swing.JComboBox<String> cbo_vt;
     private raven.crazypanel.CrazyPanel crazyPanel1;
     private raven.crazypanel.CrazyPanel crazyPanel2;
     private raven.crazypanel.CrazyPanel crazyPanel3;
@@ -779,10 +903,7 @@ public void setFormSach(Sach sach) throws ParseException {
     private javax.swing.JTextField txt_giathue1ngay;
     private javax.swing.JTextField txt_idsach;
     private javax.swing.JTextField txt_soluong;
-    private javax.swing.JTextField txt_tacgia;
     private javax.swing.JTextField txt_tensach;
-    private javax.swing.JTextField txt_theloai;
     private javax.swing.JTextField txt_timkiem;
-    private javax.swing.JTextField txt_vitri;
     // End of variables declaration//GEN-END:variables
 }

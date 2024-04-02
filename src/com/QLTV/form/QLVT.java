@@ -6,6 +6,7 @@ package com.QLTV.form;
 
 import com.QLTV.dao.ViTriDAO;
 import com.QLTV.entity.ViTri;
+import com.QLTV.utils.XAuth;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Color;
 import java.awt.Component;
@@ -27,19 +28,34 @@ import javax.swing.table.TableCellRenderer;
  * @author Tuong
  */
 public class QLVT extends javax.swing.JPanel {
+
     ViTriDAO vitriDAO = new ViTriDAO();
     int index = -1;
+    int id;
+
     /**
      * Creates new form QLVT
      */
     public QLVT() {
         initComponents();
-        applyTableStyle(tbl_vitri);
         loaddataViTri();
+        loadIDvt();
         btn_sua.setEnabled(false);
         btn_xoa.setEnabled(false);
+        if (XAuth.isManager() == true) {
+            btn_sua.setVisible(true);
+            btn_sua.setVisible(true);
+            btn_xoa.setVisible(true);
+            btn_xoa.setVisible(true);
+        } else {
+            btn_sua.setVisible(false);
+            btn_sua.setVisible(false);
+            btn_xoa.setVisible(false);
+            btn_xoa.setVisible(false);
+        }
     }
-public void setFormTG(ViTri vt) {
+
+    public void setFormTG(ViTri vt) {
         txt_idvitri.setText(vt.getIdvitri());
         txt_tenvitri.setText(vt.getTenvt());
         if (vt.getTrangthaivt() == true) {
@@ -106,19 +122,35 @@ public void setFormTG(ViTri vt) {
     }
 
     public void xoaTG() {
+        String entity = txt_idvitri.getText();
         try {
-            String entity = txt_idvitri.getText();
             vitriDAO.delete(entity);
             loaddataViTri();
             JOptionPane.showMessageDialog(this, "Xoá thành công");
             resetForm();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Xoá thất bại\n" + e.getMessage());
+            // Bắt các loại ngoại lệ, bao gồm SQLServerException
+            if (e.getMessage().contains("conflicted with the REFERENCE constraint")) {
+                // Xử lý lỗi về ràng buộc tham chiếu ở đây
+                int choice = JOptionPane.showConfirmDialog(this, "Xóa thất bại do vị trí này đang có trong sách.\nHành động xoá này chỉ thay đổi trạng thái của vị trí.", "Thông báo", JOptionPane.OK_CANCEL_OPTION);
+                if (choice == JOptionPane.OK_OPTION) {
+                    ViTri vt = vitriDAO.select_byID(entity);
+                    vt.setTrangthaivt(false);
+                    vitriDAO.update(vt);
+                    loaddataViTri();
+                    resetForm();
+                }
+            } else {
+                // Xử lý các loại lỗi khác
+                JOptionPane.showMessageDialog(this, "Xóa thất bại.\n" + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
     public void resetForm() {
         loaddataViTri();
+        loadIDvt();
         txt_idvitri.setEnabled(true);
         txt_idvitri.setEditable(true);
         txt_idvitri.setText("");
@@ -148,6 +180,18 @@ public void setFormTG(ViTri vt) {
         }
     }
 
+    public void loadIDvt() {
+        try {
+            List<ViTri> list = vitriDAO.selectAll();
+            for (ViTri dt : list) {
+                id = Integer.parseInt(dt.getIdvitri());
+            }
+            int id2 = id + 1;
+            txt_idvitri.setText(Integer.toString(id2));
+        } catch (Exception e) {
+        }
+    }
+
     public void timkiem() {
         String tukhoa = txt_timkiem.getText();
         DefaultTableModel modelViTri = (DefaultTableModel) tbl_vitri.getModel();
@@ -173,15 +217,6 @@ public void setFormTG(ViTri vt) {
         String tentacgia = txt_tenvitri.getText();
 
         String loi = "";
-
-        if (idkhachhang.equalsIgnoreCase("")) {
-            loi += "ID vị trí\n";
-        } 
-        else {
-            if (idkhachhang.length() != 5) {
-                loi += "ID vị trí phải có 5 ký tự\n";
-            }
-        }
         if (idkhachhang.length() > 5) {
             loi += "ID phải nhỏ hơn 100000";
         }
@@ -204,58 +239,6 @@ public void setFormTG(ViTri vt) {
         return true;
     }
 
-    private void applyTableStyle(JTable table) {
-        //btn_them.setIcon(new FlatSVGIcon("/asda/asdasd", 0.35f));
-        //txt_timkiem.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_ICON, new FlatSVGIcon(""),0.35f);
-        //changeScrollStyle
-        JScrollPane scroll = (JScrollPane) table.getParent().getParent();
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-        scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
-                + "background:$Table.background;"
-                + "track:$Table.background;"
-                + "trackArc:999");
-        table.getTableHeader().putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        table.putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        //Table Alignment
-        table.getTableHeader().setDefaultRenderer(getAlignmentCellRender(table.getTableHeader().getDefaultRenderer(), true));
-        table.setDefaultRenderer(Object.class, getAlignmentCellRender(table.getDefaultRenderer(Object.class), false));
-    }
-
-    private TableCellRenderer getAlignmentCellRender(TableCellRenderer oldRender, boolean header) {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component com = oldRender.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (com instanceof JLabel) {
-                    JLabel label = (JLabel) com;
-                    if (column == 0 || column == 4) {
-                        label.setHorizontalAlignment(SwingConstants.CENTER);
-                    } else if (column == 2 || column == 3) {
-                        label.setHorizontalAlignment(SwingConstants.TRAILING);
-                    } else {
-                        label.setHorizontalAlignment(SwingConstants.LEADING);
-                    }
-                    if (header == false) {
-                        if (column == 4) {
-                            if (Double.parseDouble(value.toString()) > 0) {
-                                com.setForeground(new Color(17, 182, 60));
-                                label.setText("+" + value);
-                            } else {
-                                com.setForeground(new Color(202, 48, 48));
-                            }
-                        } else {
-                            if (isSelected) {
-                                com.setForeground(table.getSelectionForeground());
-                            } else {
-                                com.setForeground(table.getForeground());
-                            }
-                        }
-                    }
-                }
-                return com;
-            }
-        };
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -275,8 +258,8 @@ public void setFormTG(ViTri vt) {
         crazyPanel3 = new raven.crazypanel.CrazyPanel();
         jLabel1 = new javax.swing.JLabel();
         txt_idvitri = new javax.swing.JTextField();
-        btn_them = new javax.swing.JButton();
         btn_sua = new javax.swing.JButton();
+        btn_them = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         txt_tenvitri = new javax.swing.JTextField();
         btn_xoa = new javax.swing.JButton();
@@ -317,6 +300,11 @@ public void setFormTG(ViTri vt) {
         txt_timkiem.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 txt_timkiemCaretUpdate(evt);
+            }
+        });
+        txt_timkiem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txt_timkiemMouseExited(evt);
             }
         });
         crazyPanel2.add(txt_timkiem);
@@ -387,16 +375,10 @@ public void setFormTG(ViTri vt) {
         jLabel1.setText("ID Vị trí");
         crazyPanel3.add(jLabel1);
 
+        txt_idvitri.setEditable(false);
         txt_idvitri.setToolTipText("");
+        txt_idvitri.setEnabled(false);
         crazyPanel3.add(txt_idvitri);
-
-        btn_them.setText("Thêm");
-        btn_them.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_themActionPerformed(evt);
-            }
-        });
-        crazyPanel3.add(btn_them);
 
         btn_sua.setText("Cập nhật");
         btn_sua.addActionListener(new java.awt.event.ActionListener() {
@@ -405,6 +387,14 @@ public void setFormTG(ViTri vt) {
             }
         });
         crazyPanel3.add(btn_sua);
+
+        btn_them.setText("Thêm");
+        btn_them.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_themActionPerformed(evt);
+            }
+        });
+        crazyPanel3.add(btn_them);
 
         jLabel2.setText("Tên vị trí");
         crazyPanel3.add(jLabel2);
@@ -485,6 +475,10 @@ public void setFormTG(ViTri vt) {
     private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
         resetForm();
     }//GEN-LAST:event_btn_resetActionPerformed
+
+    private void txt_timkiemMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_timkiemMouseExited
+        loaddataViTri();
+    }//GEN-LAST:event_txt_timkiemMouseExited
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

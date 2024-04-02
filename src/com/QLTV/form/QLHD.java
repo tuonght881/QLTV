@@ -13,14 +13,17 @@ import com.QLTV.dao.ViTriDAO;
 import com.QLTV.entity.HoaDon;
 import com.QLTV.entity.HoaDonChiTiet;
 import com.QLTV.entity.Sach;
+import com.QLTV.utils.XAuth;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -51,13 +54,13 @@ public class QLHD extends javax.swing.JPanel {
     HoaDonChiTietDAO hdctDAO = new HoaDonChiTietDAO();
     int index = -1;
     DefaultTableModel model_hd, model_hdct;
+    Locale localeVN = new Locale("vi", "VN");
+    NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
     /**
      * Creates new form QLHD
      */
     public QLHD() {
         initComponents();
-        applyTableStyle(tbl_hoadon);
-        applyTableStyle(tbl_hoadonCT);
         loaddataHoaDon();
         btn_xoa.setEnabled(false);
         TAB.setEnabledAt(1, false);
@@ -71,6 +74,11 @@ public class QLHD extends javax.swing.JPanel {
                 System.out.println("=>" + ngayF);
             }
         });
+        if(XAuth.isManager()==true){
+            btn_xoa.setVisible(true);
+        }else{
+            btn_xoa.setVisible(false);
+        }
     }
 private void showPopup() {
         //int x = txt_ngaysinh.getLocationOnScreen().x;
@@ -254,7 +262,7 @@ private void showPopup() {
                 String tensach = sachDAO.getTenSach(hdct.getIdsach());
                 String giaban = sachDAO.getGiaBan(hdct.getIdsach());
                 Double thanhtien = hdct.getSoluong() * Double.parseDouble(giaban);
-                Object[] row = {hdct.getIdhoadonct(), tensach, hdct.getSoluong(), giaban, thanhtien};
+                Object[] row = {hdct.getIdhoadonct(), tensach, hdct.getSoluong(),giaban,thanhtien};
                 model_hdct.addRow(row);
             }
             if (model_hdct.getRowCount() == 0) {
@@ -423,7 +431,6 @@ private void showPopup() {
         txt_thanhtien = new javax.swing.JTextField();
         crazyPanel5 = new raven.crazypanel.CrazyPanel();
         btn_xoa = new javax.swing.JButton();
-        btn_reset = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbl_hoadonCT = new javax.swing.JTable();
 
@@ -487,6 +494,11 @@ private void showPopup() {
         txt_timkiemHD.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 txt_timkiemHDCaretUpdate(evt);
+            }
+        });
+        txt_timkiemHD.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txt_timkiemHDMouseExited(evt);
             }
         });
         crazyPanel2.add(txt_timkiemHD);
@@ -775,14 +787,6 @@ private void showPopup() {
         });
         crazyPanel5.add(btn_xoa);
 
-        btn_reset.setText("Làm mới");
-        btn_reset.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_resetActionPerformed(evt);
-            }
-        });
-        crazyPanel5.add(btn_reset);
-
         HdctPanel.add(crazyPanel5);
 
         tbl_hoadonCT.setModel(new javax.swing.table.DefaultTableModel(
@@ -884,11 +888,6 @@ private void showPopup() {
         }
     }//GEN-LAST:event_btn_xoaActionPerformed
 
-    private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
-        resetForm();
-        resetHDCT();
-    }//GEN-LAST:event_btn_resetActionPerformed
-
     private void tbl_hoadonCTMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_hoadonCTMouseClicked
         //        if (evt.getClickCount() == 2) {
             //            index = tbl_hoadonCT.getSelectedRow();
@@ -900,13 +899,16 @@ private void showPopup() {
             //        }
     }//GEN-LAST:event_tbl_hoadonCTMouseClicked
 
+    private void txt_timkiemHDMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_timkiemHDMouseExited
+        loaddataHoaDon();
+    }//GEN-LAST:event_txt_timkiemHDMouseExited
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private raven.crazypanel.CrazyPanel HdctPanel;
     private raven.crazypanel.CrazyPanel HoadonPanel;
     private javax.swing.JPopupMenu POPUP;
     private javax.swing.JTabbedPane TAB;
-    private javax.swing.JButton btn_reset;
     private javax.swing.JButton btn_reset1;
     private javax.swing.JButton btn_xoa;
     private raven.calendar.Calendar calendar1;

@@ -1,5 +1,6 @@
 package raven.menu;
 
+import com.QLTV.utils.XAuth;
 import raven.menu.mode.LightDarkMode;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.ui.FlatUIUtils;
@@ -24,20 +25,38 @@ import raven.menu.mode.ToolBarAccentColor;
  */
 public class Menu extends JPanel {
 
-    private final String menuItems[][] = {
-        {"~Kinh doanh~"},
-        {"Bán sách"},
-        {"Thuê sách"},
-        {"Hoá đơn bán sách"},
-        {"Đơn thuê sách"},
-        {"~Dữ liệu~"},
-        {"Quản lý","Tài khoản","Độc giả" ,"Sách", "Tác giả", "Thể loại", "Vị trí"},
-        {"~Khác~"},
-        //{"Charts", "Apex", "Flot", "Peity", "Sparkline"},
-        //{"Icons", "Feather Icons", "Flag Icons", "Mdi Icons"},
-        //{"Special Pages", "Blank page", "Faq", "Invoice", "Profile", "Pricing", "Timeline"},
-        {"Logout"}
-    };
+    private final String[][] menuItemsQL
+            = {
+                {"~Kinh doanh~"},
+                {"Bán sách"},
+                {"Thuê sách"},
+                {"Hoá đơn bán sách"},
+                {"Đơn thuê sách"},
+                {"~Dữ liệu~"},
+                {"Quản lý", "Tài khoản", "Độc giả", "Sách", "Tác giả", "Thể loại", "Vị trí"},
+                {"~Khác~"},
+                {"Thông tin tài khoản"},
+                //{"Charts", "Apex", "Flot", "Peity", "Sparkline"},
+                //{"Icons", "Feather Icons", "Flag Icons", "Mdi Icons"},
+                //{"Special Pages", "Blank page", "Faq", "Invoice", "Profile", "Pricing", "Timeline"},
+                {"Đăng xuất"}
+            };
+    private final String[][] menuItemsNV
+            = {
+                {"~Kinh doanh~"},
+                {"Bán sách"},
+                {"Thuê sách"},
+                {"Hoá đơn bán sách"},
+                {"Đơn thuê sách"},
+                {"~Dữ liệu~"},
+                {"Quản lý", "Độc giả", "Sách", "Tác giả", "Thể loại", "Vị trí"},
+                {"~Khác~"},
+                {"Thông tin tài khoản"},
+                //{"Charts", "Apex", "Flot", "Peity", "Sparkline"},
+                //{"Icons", "Feather Icons", "Flag Icons", "Mdi Icons"},
+                //{"Special Pages", "Blank page", "Faq", "Invoice", "Profile", "Pricing", "Timeline"},
+                {"Đăng xuất"}
+            };
 
     public boolean isMenuFull() {
         return menuFull;
@@ -118,13 +137,25 @@ public class Menu extends JPanel {
 
     private void createMenu() {
         int index = 0;
-        for (int i = 0; i < menuItems.length; i++) {
-            String menuName = menuItems[i][0];
-            if (menuName.startsWith("~") && menuName.endsWith("~")) {
-                panelMenu.add(createTitle(menuName));
-            } else {
-                MenuItem menuItem = new MenuItem(this, menuItems[i], index++, events);
-                panelMenu.add(menuItem);
+        if (XAuth.user.getVaitro()==true) {
+            for (int i = 0; i < menuItemsQL.length; i++) {
+                String menuName = menuItemsQL[i][0];
+                if (menuName.startsWith("~") && menuName.endsWith("~")) {
+                    panelMenu.add(createTitle(menuName));
+                } else {
+                    MenuItem menuItem = new MenuItem(this, menuItemsQL[i], index++, events);
+                    panelMenu.add(menuItem);
+                }
+            }
+        } else {
+            for (int i = 0; i < menuItemsNV.length; i++) {
+                String menuName = menuItemsNV[i][0];
+                if (menuName.startsWith("~") && menuName.endsWith("~")) {
+                    panelMenu.add(createTitle(menuName));
+                } else {
+                    MenuItem menuItem = new MenuItem(this, menuItemsNV[i], index++, events);
+                    panelMenu.add(menuItem);
+                }
             }
         }
     }
@@ -245,7 +276,7 @@ public class Menu extends JPanel {
                 int hgap = menuFull ? sheaderFullHgap : 0;
                 int accentColorHeight = 0;
                 if (toolBarAccentColor.isVisible()) {
-                    accentColorHeight = toolBarAccentColor.getPreferredSize().height+gap;
+                    accentColorHeight = toolBarAccentColor.getPreferredSize().height + gap;
                 }
 
                 header.setBounds(x + hgap, y, iconWidth - (hgap * 2), iconHeight);
@@ -253,7 +284,7 @@ public class Menu extends JPanel {
                 int ldWidth = width - ldgap * 2;
                 int ldHeight = lightDarkMode.getPreferredSize().height;
                 int ldx = x + ldgap;
-                int ldy = y + height - ldHeight - ldgap  - accentColorHeight;
+                int ldy = y + height - ldHeight - ldgap - accentColorHeight;
 
                 int menux = x;
                 int menuy = y + iconHeight + gap;

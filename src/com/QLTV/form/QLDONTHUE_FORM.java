@@ -119,7 +119,7 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         txt_ngaythue.setText(dthue.getNgaytao());
         txt_ngaytradukien.setText(dthue.getNgaytradukien());
         txt_tenkhach.setText(kh.getHotenkhach());
-        txt_tiendambao.setText(Double.toString(dthue.getTiendambao()));
+        //txt_tiendambao.setText(Double.toString(dthue.getTiendambao()));
         String khachdua = D_format.format(dthue.getKhachdua());
         String thoilai = D_format.format(dthue.getThoilai());
         String thanhtien = D_format.format(dthue.getThanhtien());
@@ -171,7 +171,7 @@ public class QLDONTHUE_FORM extends javax.swing.JFrame {
         dthueNew.setNgaytradukien(txt_ngaytradukien.getText());
         dthueNew.setNgaytra(txt_ngaytra.getText());
         dthueNew.setTienphat(Double.parseDouble(txt_tienphat.getText()));
-        dthueNew.setTiendambao(Double.parseDouble(txt_tiendambao.getText()));
+        //dthueNew.setTiendambao(Double.parseDouble(txt_tiendambao.getText()));
         dthueNew.setKhachdua(Double.parseDouble(txt_ngaytradukien.getText()));
         dthueNew.setThoilai(Double.parseDouble(txt_ngaytra.getText()));
         dthueNew.setThanhtien(Double.parseDouble(txt_tongtien.getText()));

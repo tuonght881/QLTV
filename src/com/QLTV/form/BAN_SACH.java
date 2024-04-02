@@ -33,22 +33,30 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import javax.swing.BorderFactory;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.NumberFormatter;
 
 /**
  *
  * @author Tuong
  */
 public class BAN_SACH extends javax.swing.JPanel {
+
     Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -72,13 +80,12 @@ public class BAN_SACH extends javax.swing.JPanel {
     Double thoilai = 0.0;
 
     int id;
+
     /**
      * Creates new form BAN_SACH
      */
     public BAN_SACH() {
         initComponents();
-        applyTableStyle(tbl_sach);
-        applyTableStyle(tbl_hoadon);
         txt_manv.setText(XAuth.user.getManv());
         loaddataSach();
         loadHoaDon();
@@ -95,7 +102,8 @@ public class BAN_SACH extends javax.swing.JPanel {
         timer.setInitialDelay(0);
         timer.start();
     }
- public HoaDon getHoaDonNew() throws ParseException {
+
+    public HoaDon getHoaDonNew() throws ParseException {
         HoaDon hdNEW = new HoaDon();
         hdNEW.setIdhoadon(txt_idhoadon.getText());
         hdNEW.setManv(txt_manv.getText());
@@ -125,7 +133,6 @@ public class BAN_SACH extends javax.swing.JPanel {
             tbl_hoadon.getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
         }
 
-
         tbl_hoadon.getColumnModel().getColumn(0).setPreferredWidth(100);
         tbl_sach.getColumnModel().getColumn(0).setPreferredWidth(300);
         tbl_hoadon.getColumnModel().getColumn(0).setCellRenderer(new MultiLineTableCellRenderer());
@@ -148,6 +155,11 @@ public class BAN_SACH extends javax.swing.JPanel {
                     hdctNew.setIdsach(idsach);
                     hdctNew.setSoluong(Integer.parseInt(tbl_hoadon.getValueAt(i, 2).toString()));
                     hdctDAO.insert(hdctNew);
+                    Sach s = sachDAO.select_byID(idsach);
+                    int sls = s.getSl();
+                    int slsm = sls - (Integer.parseInt(tbl_hoadon.getValueAt(i, 2).toString()));
+                    s.setSl(slsm);
+                    sachDAO.update(s);
                 }
 
                 loaddataSach();
@@ -192,7 +204,7 @@ public class BAN_SACH extends javax.swing.JPanel {
         model_sach.setColumnIdentifiers(new Object[]{"Tên sách", "Tác giả", "Vị trí", "Số lượng", "Giá bán"});
         model_sach.setRowCount(0);
         try {
-            List<Sach> list = sachDAO.selectAll();
+            List<Sach> list = sachDAO.selectOnStock();
             for (Sach sach : list) {
                 TheLoai tl = tlDAO.select_byID(sach.getIdtheloai().toString());
                 TacGia tg = tgDAO.select_byID(sach.getIdtacgia());
@@ -235,11 +247,17 @@ public class BAN_SACH extends javax.swing.JPanel {
     public boolean batloi_tk() {
         String khachdua = txt_khachdua.getText();
         String thoilai = txt_thoilai.getText();
-
+        //String regex = "^\\d*[1-9]\\d*$";
+        boolean isPositiveNumber = khachdua.matches("^\\d*[1-9]\\d*$");
         String loi = "";
-
+        if (model_hd == null) {
+            loi += "Chưa có sách nào trong hoá đơn\n";
+        }
         if (khachdua.equalsIgnoreCase("")) {
             loi += "Khách đưa\n";
+        }
+        if(isPositiveNumber==false){
+            loi += "Vui lòng chỉ nhập số dương\n";
         }
         if (thoilai.equalsIgnoreCase("")) {
             loi += "Thối lại\n";
@@ -249,6 +267,50 @@ public class BAN_SACH extends javax.swing.JPanel {
             return false;
         }
         return true;
+    }
+
+    public void checkKhachdua() {
+// Thêm DocumentListener để lắng nghe sự kiện thay đổi trong Document
+        txt_khachdua.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                handleDocumentChange(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                handleDocumentChange(e);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                handleDocumentChange(e);
+            }
+
+            private void handleDocumentChange(DocumentEvent e) {
+                SwingUtilities.invokeLater(() -> {
+                    Document doc = e.getDocument();
+                    try {
+                        String text = doc.getText(0, doc.getLength());
+                        if (!text.isEmpty() && !isNumber(text)) {
+                            // Nếu không phải là số, xóa dữ liệu vừa nhập
+                            doc.remove(e.getOffset(), e.getLength());
+                        }
+                    } catch (BadLocationException ex) {
+                        //System.out.println("Vui lòng nhập số!");
+                    }
+                });
+            }
+
+            private boolean isNumber(String text) {
+                try {
+                    double number = Double.parseDouble(text);
+                    return true;
+                } catch (NumberFormatException ex) {
+                    return false;
+                }
+            }
+        });
     }
 
     void tinhtien() {
@@ -271,7 +333,10 @@ public class BAN_SACH extends javax.swing.JPanel {
             } catch (NullPointerException e) {
                 //JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
             }
-            if (sl != null) {
+            int slc = Integer.parseInt(tbl_sach.getValueAt(index, 3).toString());
+            if (Integer.parseInt(sl) > slc) {
+                JOptionPane.showMessageDialog(this, "Số lượng trong kho không đủ!", "Thông báo", JOptionPane.OK_OPTION);
+            } else if (sl != null) {
                 Object[] row = new Object[4];
                 model_hd = (DefaultTableModel) tbl_hoadon.getModel();
                 if (index != -1) {
@@ -393,6 +458,7 @@ public class BAN_SACH extends javax.swing.JPanel {
             }
         };
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -465,6 +531,11 @@ public class BAN_SACH extends javax.swing.JPanel {
         txt_timkiem.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 txt_timkiemCaretUpdate(evt);
+            }
+        });
+        txt_timkiem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txt_timkiemMouseExited(evt);
             }
         });
         crazyPanel2.add(txt_timkiem);
@@ -637,6 +708,11 @@ public class BAN_SACH extends javax.swing.JPanel {
         jLabel11.setText("Khách đưa");
         crazyPanel3.add(jLabel11);
 
+        txt_khachdua.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txt_khachduaCaretUpdate(evt);
+            }
+        });
         txt_khachdua.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_khachduaKeyPressed(evt);
@@ -746,6 +822,14 @@ public class BAN_SACH extends javax.swing.JPanel {
     private void btn_themActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themActionPerformed
         ThemHoaDon();
     }//GEN-LAST:event_btn_themActionPerformed
+
+    private void txt_timkiemMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_timkiemMouseExited
+        loaddataSach();
+    }//GEN-LAST:event_txt_timkiemMouseExited
+
+    private void txt_khachduaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_khachduaCaretUpdate
+        checkKhachdua();
+    }//GEN-LAST:event_txt_khachduaCaretUpdate
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

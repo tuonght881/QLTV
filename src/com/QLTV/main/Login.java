@@ -37,6 +37,8 @@ public class Login extends javax.swing.JFrame {
         } else if (tk.getMatkhau().equals(matkhau) && tk.getTrangthai() == true) {
             XAuth.user = tk;
             System.out.println(XAuth.user.getManv());
+            Application ap = new Application();
+            ap.setVisible(true);
             //Main m = new Main();
             //m.setVisible(true);
             this.dispose();

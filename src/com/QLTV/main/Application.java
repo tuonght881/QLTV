@@ -21,16 +21,15 @@ import raven.toast.Notifications;
  * @author Raven
  */
 public class Application extends javax.swing.JFrame {
-    
+
     private static Application app;
-    public static MainForm mainForm;
     private final LoginForm loginForm;
+    public static MainForm mainForm;
 
     public Application() {
         initComponents();
         setSize(new Dimension(1366, 768));
         setLocationRelativeTo(null);
-        mainForm = new MainForm();
         loginForm = new LoginForm();
         setContentPane(loginForm);
         Notifications.getInstance().setJFrame(this);
@@ -42,6 +41,7 @@ public class Application extends javax.swing.JFrame {
     }
 
     public static void login() {
+        mainForm = new MainForm();
         FlatAnimatedLafChange.showSnapshot();
         app.setContentPane(app.mainForm);
         app.mainForm.applyComponentOrientation(app.getComponentOrientation());
@@ -53,11 +53,7 @@ public class Application extends javax.swing.JFrame {
 
     public static void logout() {
         XAuth.clear();
-        FlatAnimatedLafChange.showSnapshot();
         app.setContentPane(app.loginForm);
-        app.loginForm.applyComponentOrientation(app.getComponentOrientation());
-        SwingUtilities.updateComponentTreeUI(app.loginForm);
-        FlatAnimatedLafChange.hideSnapshotWithAnimation();
     }
 
     public static void setSelectedMenu(int index, int subIndex) {
@@ -89,7 +85,6 @@ public class Application extends javax.swing.JFrame {
             FlatRobotoFont.install();
             FlatLaf.registerCustomDefaultsSource("raven.theme");
             UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-            UIManager.put( "PasswordField.showCapsLock", false );
             FlatMacDarkLaf.setup();
             SystemProperties pro = new SystemProperties();
             pro.loadFromFile();

@@ -27,7 +27,7 @@ public class DonThue {
     public DonThue() {
     }
 
-    public DonThue(String iddonthue, String idkhach, String manv, String ngaytao, String ngaythue, String ngaytradukien, String ngaytra, Double tienphat, Double tiendambao, Double khachdua, Double thoilai, Double thanhtien) {
+    public DonThue(String iddonthue, String idkhach, String manv, String ngaytao, String ngaythue, String ngaytradukien, String ngaytra, Double tienphat, Double tongtiendambao, Double khachdua, Double thoilai, Double thanhtien) {
         this.iddonthue = iddonthue;
         this.idkhach = idkhach;
         this.manv = manv;
@@ -36,7 +36,7 @@ public class DonThue {
         this.ngaytradukien = ngaytradukien;
         this.ngaytra = ngaytra;
         this.tienphat = tienphat;
-        this.tongtiendambao = tiendambao;
+        this.tongtiendambao = tongtiendambao;
         this.khachdua = khachdua;
         this.thoilai = thoilai;
         this.thanhtien = thanhtien;
@@ -106,12 +106,12 @@ public class DonThue {
         this.tienphat = tienphat;
     }
 
-    public Double getTiendambao() {
+    public Double getTongtiendambao() {
         return tongtiendambao;
     }
 
-    public void setTiendambao(Double tiendambao) {
-        this.tongtiendambao = tiendambao;
+    public void setTongtiendambao(Double tongtiendambao) {
+        this.tongtiendambao = tongtiendambao;
     }
 
     public Double getKhachdua() {

@@ -6,6 +6,7 @@ package com.QLTV.form;
 
 import com.QLTV.dao.TheLoaiDAO;
 import com.QLTV.entity.TheLoai;
+import com.QLTV.utils.XAuth;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
@@ -33,43 +34,43 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
 
     TheLoaiDAO tlDAO = new TheLoaiDAO();
     int index = -1;
-    SystemProperties pro = new SystemProperties();
+    int id;
 
     /**
      * Creates new form tesst
      */
     public QLTheLoai_FORM() {
-        pro.loadFromFile();
-        init();
         initComponents();
-        applyTableStyle(tbl_theloai);
         loaddataTheLoai();
+        loadIDTL();
         btn_sua.setEnabled(false);
         btn_xoa.setEnabled(false);
+        if (XAuth.isManager() == true) {
+            btn_sua.setVisible(true);
+            btn_sua.setVisible(true);
+            btn_xoa.setVisible(true);
+            btn_xoa.setVisible(true);
+        } else {
+            btn_sua.setVisible(false);
+            btn_sua.setVisible(false);
+            btn_xoa.setVisible(false);
+            btn_xoa.setVisible(false);
+        }
     }
 
-    private void init() {
+    public void loadIDTL() {
         try {
-            //FlatRobotoFont.install();
-            FlatLaf.registerCustomDefaultsSource("tableview");
-            //UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-            System.out.println(pro.isDarkMode());
-            if (pro.isDarkMode() == true) {
-            EventQueue.invokeLater(() -> {
-                //FlatAnimatedLafChange.showSnapshot();
-                FlatDarculaLaf.setup();
-                FlatLaf.updateUI();
-                //FlatAnimatedLafChange.hideSnapshotWithAnimation();
-            });
-            } else {
-            EventQueue.invokeLater(() -> {
-                //FlatAnimatedLafChange.showSnapshot();
-                FlatIntelliJLaf.setup();
-                FlatLaf.updateUI();
-                //FlatAnimatedLafChange.hideSnapshotWithAnimation();
-            });
+            String idkh = "";
+            List<TheLoai> list = tlDAO.select_ALL();
+            for (TheLoai kh : list) {
+                idkh = kh.getIdtheloai();
             }
+            int number = Integer.parseInt(idkh.substring(2));
+            number++;
+            String newText = "TL" + String.format("%03d", number);
+            txt_idtheloai.setText(newText);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -140,19 +141,35 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
     }
 
     public void xoaTG() {
+        String entity = txt_idtheloai.getText();
         try {
-            String entity = txt_idtheloai.getText();
             tlDAO.delete(entity);
             loaddataTheLoai();
             JOptionPane.showMessageDialog(this, "Xoá thành công");
             resetForm();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Xoá thất bại\n" + e.getMessage());
+            // Bắt các loại ngoại lệ, bao gồm SQLServerException
+            if (e.getMessage().contains("conflicted with the REFERENCE constraint")) {
+                // Xử lý lỗi về ràng buộc tham chiếu ở đây
+                int choice = JOptionPane.showConfirmDialog(this, "Xóa thất bại do thể loại này đang có trong sách.\nHành động xoá này chỉ thay đổi trạng thái của thể loại.", "Thông báo", JOptionPane.OK_CANCEL_OPTION);
+                if (choice == JOptionPane.OK_OPTION) {
+                    TheLoai tl = tlDAO.select_byID(entity);
+                    tl.setTrangthaitl(false);
+                    tlDAO.update(tl);
+                    loaddataTheLoai();
+                    resetForm();
+                }
+            } else {
+                // Xử lý các loại lỗi khác
+                JOptionPane.showMessageDialog(this, "Xóa thất bại.\n" + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
     public void resetForm() {
         loaddataTheLoai();
+        loadIDTL();
         txt_idtheloai.setEnabled(true);
         txt_idtheloai.setEditable(true);
         txt_idtheloai.setText("");
@@ -229,59 +246,6 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
         return true;
     }
 
-    private void applyTableStyle(JTable table) {
-        //btn_them.setIcon(new FlatSVGIcon("/asda/asdasd", 0.35f));
-        //txt_timkiem.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_ICON, new FlatSVGIcon(""),0.35f);
-        //changeScrollStyle
-        JScrollPane scroll = (JScrollPane) table.getParent().getParent();
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-        scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
-                + "background:$Table.background;"
-                + "track:$Table.background;"
-                + "trackArc:999");
-        table.getTableHeader().putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        table.putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        //Table Alignment
-        table.getTableHeader().setDefaultRenderer(getAlignmentCellRender(table.getTableHeader().getDefaultRenderer(), true));
-        table.setDefaultRenderer(Object.class, getAlignmentCellRender(table.getDefaultRenderer(Object.class), false));
-    }
-
-    private TableCellRenderer getAlignmentCellRender(TableCellRenderer oldRender, boolean header) {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component com = oldRender.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (com instanceof JLabel) {
-                    JLabel label = (JLabel) com;
-                    if (column == 0 || column == 4) {
-                        label.setHorizontalAlignment(SwingConstants.CENTER);
-                    } else if (column == 2 || column == 3) {
-                        label.setHorizontalAlignment(SwingConstants.TRAILING);
-                    } else {
-                        label.setHorizontalAlignment(SwingConstants.LEADING);
-                    }
-                    if (header == false) {
-                        if (column == 4) {
-                            if (Double.parseDouble(value.toString()) > 0) {
-                                com.setForeground(new Color(17, 182, 60));
-                                label.setText("+" + value);
-                            } else {
-                                com.setForeground(new Color(202, 48, 48));
-                            }
-                        } else {
-                            if (isSelected) {
-                                com.setForeground(table.getSelectionForeground());
-                            } else {
-                                com.setForeground(table.getForeground());
-                            }
-                        }
-                    }
-                }
-                return com;
-            }
-        };
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -301,8 +265,8 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
         crazyPanel3 = new raven.crazypanel.CrazyPanel();
         jLabel1 = new javax.swing.JLabel();
         txt_idtheloai = new javax.swing.JTextField();
-        btn_them = new javax.swing.JButton();
         btn_sua = new javax.swing.JButton();
+        btn_them = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         txt_tentheloai = new javax.swing.JTextField();
         btn_xoa = new javax.swing.JButton();
@@ -346,6 +310,11 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
         txt_timkiem.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 txt_timkiemCaretUpdate(evt);
+            }
+        });
+        txt_timkiem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txt_timkiemMouseExited(evt);
             }
         });
         crazyPanel2.add(txt_timkiem);
@@ -418,16 +387,10 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
         jLabel1.setText("ID Thể loại");
         crazyPanel3.add(jLabel1);
 
+        txt_idtheloai.setEditable(false);
         txt_idtheloai.setToolTipText("");
+        txt_idtheloai.setEnabled(false);
         crazyPanel3.add(txt_idtheloai);
-
-        btn_them.setText("Thêm");
-        btn_them.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_themActionPerformed(evt);
-            }
-        });
-        crazyPanel3.add(btn_them);
 
         btn_sua.setText("Cập nhật");
         btn_sua.addActionListener(new java.awt.event.ActionListener() {
@@ -436,6 +399,14 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
             }
         });
         crazyPanel3.add(btn_sua);
+
+        btn_them.setText("Thêm");
+        btn_them.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_themActionPerformed(evt);
+            }
+        });
+        crazyPanel3.add(btn_them);
 
         jLabel2.setText("Tên thể loại");
         crazyPanel3.add(jLabel2);
@@ -477,37 +448,29 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(75, 75, 75)
-                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
-                .addGap(76, 76, 76))
+                .addContainerGap()
+                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 718, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(35, 35, 35))
+                .addContainerGap()
+                .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
-        resetForm();
-    }//GEN-LAST:event_btn_resetActionPerformed
+    private void txt_timkiemCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_timkiemCaretUpdate
+        timkiem();
+    }//GEN-LAST:event_txt_timkiemCaretUpdate
 
-    private void btn_xoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_xoaActionPerformed
-        xoaTG();
-    }//GEN-LAST:event_btn_xoaActionPerformed
-
-    private void btn_suaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_suaActionPerformed
-        suaTG();
-    }//GEN-LAST:event_btn_suaActionPerformed
-
-    private void btn_themActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themActionPerformed
-        themTG();
-    }//GEN-LAST:event_btn_themActionPerformed
+    private void txt_timkiemMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_timkiemMouseExited
+        loaddataTheLoai();
+    }//GEN-LAST:event_txt_timkiemMouseExited
 
     private void tbl_theloaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_theloaiMouseClicked
         if (evt.getClickCount() == 2) {
@@ -516,9 +479,21 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tbl_theloaiMouseClicked
 
-    private void txt_timkiemCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_timkiemCaretUpdate
-        timkiem();
-    }//GEN-LAST:event_txt_timkiemCaretUpdate
+    private void btn_themActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themActionPerformed
+        themTG();
+    }//GEN-LAST:event_btn_themActionPerformed
+
+    private void btn_suaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_suaActionPerformed
+        suaTG();
+    }//GEN-LAST:event_btn_suaActionPerformed
+
+    private void btn_xoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_xoaActionPerformed
+        xoaTG();
+    }//GEN-LAST:event_btn_xoaActionPerformed
+
+    private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
+        resetForm();
+    }//GEN-LAST:event_btn_resetActionPerformed
 
     /**
      * @param args the command line arguments

@@ -142,7 +142,7 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
         dthueNew.setNgaytradukien(txt_ngaytradukien.getText());
         dthueNew.setNgaytra("");
         dthueNew.setTienphat(0.0);
-        dthueNew.setTiendambao(tongtiendambao);
+        //dthueNew.setTiendambao(tongtiendambao);
         dthueNew.setThanhtien(tongtien);
         dthueNew.setKhachdua(Double.valueOf(txt_khachdua.getText()));
         dthueNew.setThoilai(thoilai);
@@ -355,7 +355,7 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
             txt_phantramdambao.setText(D_format.format(phantram) + "%");
         } catch (NullPointerException e) {
             int choice = JOptionPane.showConfirmDialog(this,"Khách hàng không tồn tại!\n Thêm khách hàng mới?","Thông báo",JOptionPane.OK_CANCEL_OPTION);
-            QLKhachHang_FORM qlkh = new QLKhachHang_FORM();
+            QLDocGia_FORM qlkh = new QLDocGia_FORM();
             if(choice ==JOptionPane.OK_OPTION){
                 qlkh.setVisible(true);
                 qlkh.setDefaultCloseOperation(DISPOSE_ON_CLOSE);

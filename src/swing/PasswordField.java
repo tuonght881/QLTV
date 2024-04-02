@@ -153,18 +153,18 @@ public class PasswordField extends JPasswordField {
         // Đặt vị trí và kích thước của toggleButton
         updateToggleButtonPosition();
         g2.dispose();
-            if (Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK)) {
-                        // Lấy kích thước của icon Caps Lock
-            int iconWidth = 60;
-            int iconHeight = 25;
-
-            // Tính toán vị trí để vẽ icon Caps Lock
-            int xCapsLock = getWidth() - iconWidth;
-            int yCapsLock = (getHeight() - iconHeight) / 2;
-
-            // Vẽ icon Caps Lock
-            capsLockIcon.paintIcon(this, g, xCapsLock, yCapsLock);
-    }
+//            if (Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK)) {
+//                        // Lấy kích thước của icon Caps Lock
+//            int iconWidth = 60;
+//            int iconHeight = 25;
+//
+//            // Tính toán vị trí để vẽ icon Caps Lock
+//            int xCapsLock = getWidth() - iconWidth;
+//            int yCapsLock = (getHeight() - iconHeight) / 2;
+//
+//            // Vẽ icon Caps Lock
+//            capsLockIcon.paintIcon(this, g, xCapsLock, yCapsLock);
+//    }
     }
 
     public String getHint() {
@@ -177,7 +177,7 @@ public class PasswordField extends JPasswordField {
     }
 
     private void updateToggleButtonPosition() {
-        int buttonWidth = 30; // Độ rộng của nút toggleButton
+        int buttonWidth = 60; // Độ rộng của nút toggleButton
         int buttonHeight = 20; // Độ cao của nút toggleButton
         int padding = 5; // Khoảng cách giữa nút toggleButton và cạnh phải của PasswordField
 
