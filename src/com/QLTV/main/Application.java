@@ -14,6 +14,7 @@ import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.raven.properties.SystemProperties;
 import com.QLTV.form.MainForm;
 import com.QLTV.utils.XAuth;
+import javax.swing.ImageIcon;
 import raven.toast.Notifications;
 
 /**
@@ -33,6 +34,8 @@ public class Application extends javax.swing.JFrame {
         loginForm = new LoginForm();
         setContentPane(loginForm);
         Notifications.getInstance().setJFrame(this);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/com/raven/icon/books.png"));
+        setIconImage(icon.getImage());
     }
 
     public static void showForm(Component component) {
@@ -65,6 +68,7 @@ public class Application extends javax.swing.JFrame {
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Quản lý thư viện");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

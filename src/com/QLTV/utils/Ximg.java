@@ -21,7 +21,7 @@ public class Ximg {
 
     // lấy hình ảnh theo đường dẫn
     public static Image getImage() {
-        URL url = Ximg.class.getResource("/com/poly/pictures/coffeedesign.png");
+        URL url = Ximg.class.getResource("/src/com/raven/icon/png/books.png");
         return new ImageIcon(url).getImage();
     }
 
