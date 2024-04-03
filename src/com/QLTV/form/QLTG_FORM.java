@@ -239,6 +239,10 @@ public class QLTG_FORM extends javax.swing.JFrame {
         if (tentacgia.equalsIgnoreCase("")) {
             loi += "Tên tác giả\n";
         }
+        boolean OnlyLetters = tentacgia.matches("^[a-zA-Z]*$");
+        if (OnlyLetters == false) {
+            loi += "Tên tác giả không được nhập số\n";
+        }
         if (rdo_hd.isSelected() == false && rdo_nhd.isSelected() == false) {
             loi += "Vui lòng chọn tình trạng tác giả";
         }

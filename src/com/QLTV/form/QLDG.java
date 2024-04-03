@@ -237,6 +237,10 @@ public class QLDG extends javax.swing.JPanel {
         if (hotenkhachhang.equalsIgnoreCase("")) {
             loi += "Họ tên khách hàng\n";
         }
+        boolean OnlyLetters = hotenkhachhang.matches("^[a-zA-Z]*$");
+        if (OnlyLetters == false) {
+            loi += "Họ tên không được nhập số\n";
+        }
         if (sdt.equalsIgnoreCase("")) {
             loi += "SDT\n";
         } else {

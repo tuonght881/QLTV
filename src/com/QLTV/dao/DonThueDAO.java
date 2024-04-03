@@ -23,7 +23,9 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
     String update = "UPDATE donthue SET idkhach = ?, manv = ?, ngaytao = ?, ngaythue = ?, ngaytradukien = ?, ngaytra = ?,tienphat = ?,tongtiendambao =?, khachdua=?,thoilai=?,thanhtien = ? WHERE iddonthue = ?";
     String delete = "delete donthue where iddonthue=?";
     String select_by_ID = "select * from DonThue where iddonthue=?";
-
+    String doanhthuthuengay ="SELECT ISNULL(SUM(dthue.thanhtien), 0) AS doanhthuthue FROM donthue dthue WHERE dthue.ngaytao like ?";
+    String doanhthuthueTONG ="SELECT ISNULL(SUM(dthue.thanhtien+ dthue.tienphat), 0) AS doanhthuthue FROM donthue dthue WHERE dthue.ngaytao like ?";
+    String doanhthuthuethang = "SELECT SUM(dt.thanhtien + dt.tienphat) AS doanhthu_thue_sach FROM donthue dt WHERE MONTH(CONVERT(date, dt.ngaytao, 105)) = ?";
     @Override
     public void insert(DonThue entity) {
         JDBC.update(insert, entity.getIddonthue(), entity.getIdkhach(), entity.getManv(), entity.getNgaytao(), entity.getNgaythue(), entity.getNgaytradukien(), entity.getNgaytra(), entity.getTienphat(), entity.getTongtiendambao(), entity.getKhachdua(), entity.getThoilai(), entity.getThanhtien());
@@ -95,4 +97,44 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
             throw new RuntimeException(e);
         }
     }
+    
+    public double doanhThuthueNgay(String ngay) {
+        ResultSet rs = JDBC.query(doanhthuthuengay, "%" + ngay + "%");
+        double doanhthuthue = 0.0;
+        try {
+            if (rs.next()) {
+                doanhthuthue = rs.getDouble("doanhthuthue");
+            }
+            rs.getStatement().getConnection().close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return doanhthuthue;
+    }
+    public double doanhThuthueNgayTong(String ngay) {
+        ResultSet rs = JDBC.query(doanhthuthueTONG, "%" + ngay + "%");
+        double doanhthuthue = 0.0;
+        try {
+            if (rs.next()) {
+                doanhthuthue = rs.getDouble("doanhthuthue");
+            }
+            rs.getStatement().getConnection().close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return doanhthuthue;
+    }
+    public double doanhThuthuethangTong(int thang) {
+        ResultSet rs = JDBC.query(doanhthuthuethang,  thang );
+        double doanhthuthue = 0.0;
+        try {
+            if (rs.next()) {
+                doanhthuthue = rs.getDouble("doanhthu_thue_sach");
+            }
+            rs.getStatement().getConnection().close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return doanhthuthue;
+    }        
 }

@@ -104,6 +104,8 @@ public class MainForm extends JLayeredPane {
                         Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else if (index == 6) {
+                    Application.showForm(new ThongKe());
+                } else if (index == 7) {
                     Application.logout();
                 } else {
                     action.cancel();

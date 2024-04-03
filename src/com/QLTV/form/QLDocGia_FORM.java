@@ -82,8 +82,13 @@ public void setFormTG(KhachHang kh) {
     }
 
     public void fillFormTG() {
-        txt_diemuytin.setEditable(true);
-        txt_diemuytin.setEnabled(true);
+        if (XAuth.isManager() == true) {
+            txt_diemuytin.setEditable(true);
+            txt_diemuytin.setEnabled(true);
+        } else {
+            txt_diemuytin.setEditable(false);
+            txt_diemuytin.setEnabled(false);
+        }
         txt_idkhachhang.setEnabled(false);
         txt_idkhachhang.setEditable(false);
         btn_them.setEnabled(false);
@@ -239,6 +244,10 @@ public void setFormTG(KhachHang kh) {
         }
         if (hotenkhachhang.equalsIgnoreCase("")) {
             loi += "Họ tên khách hàng\n";
+        }
+        boolean OnlyLetters = hotenkhachhang.matches("^[a-zA-Z]*$");
+        if (OnlyLetters == false) {
+            loi += "Họ tên không được nhập số\n";
         }
         if (sdt.equalsIgnoreCase("")) {
             loi += "SDT\n";
@@ -455,6 +464,10 @@ public void setFormTG(KhachHang kh) {
 
         jLabel5.setText("Điểm uy tín");
         crazyPanel3.add(jLabel5);
+
+        txt_diemuytin.setEditable(false);
+        txt_diemuytin.setText("90");
+        txt_diemuytin.setEnabled(false);
         crazyPanel3.add(txt_diemuytin);
 
         crazyPanel1.add(crazyPanel3);

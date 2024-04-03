@@ -235,6 +235,10 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
         if (tentheloai.equalsIgnoreCase("")) {
             loi += "Tên thể loại\n";
         }
+        boolean OnlyLetters = tentheloai.matches("^[a-zA-Z]*$");
+        if (OnlyLetters == false) {
+            loi += "Tên thể loại không được nhập số\n";
+        }
         if (rdo_hd.isSelected() == false && rdo_nhd.isSelected() == false) {
             loi += "Vui lòng chọn tình trạng thể loại";
         }
