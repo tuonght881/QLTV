@@ -803,7 +803,6 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
         txt_phantramdambao.setEditable(false);
         txt_phantramdambao.setEnabled(false);
         crazyPanel7.add(txt_phantramdambao);
-
         crazyPanel6.add(crazyPanel7);
 
         tbl_thuesach.setModel(new javax.swing.table.DefaultTableModel(
@@ -1113,7 +1112,6 @@ public class THUESACH2_FORM extends javax.swing.JFrame {
     private void txt_sdtkhachKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sdtkhachKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_sdtkhach.getText().equalsIgnoreCase("")) {
             timKH();
-
         }
     }//GEN-LAST:event_txt_sdtkhachKeyPressed
 

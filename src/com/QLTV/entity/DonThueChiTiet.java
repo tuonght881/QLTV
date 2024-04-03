@@ -17,7 +17,6 @@ public class DonThueChiTiet {
 
     public DonThueChiTiet() {
     }
-
     public DonThueChiTiet(int iddonthuect, String iddonthue, String idsach, int soluong, Double tiendambao) {
         this.iddonthuect = iddonthuect;
         this.iddonthue = iddonthue;
