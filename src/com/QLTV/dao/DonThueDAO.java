@@ -97,6 +97,7 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
             throw new RuntimeException(e);
         }
     }
+    
     public double doanhThuthueNgay(String ngay) {
         ResultSet rs = JDBC.query(doanhthuthuengay, "%" + ngay + "%");
         double doanhthuthue = 0.0;
