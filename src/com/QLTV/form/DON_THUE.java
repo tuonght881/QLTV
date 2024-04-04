@@ -89,7 +89,7 @@ public class DON_THUE extends javax.swing.JPanel {
                 try {
                     tinhtienphat();
                 } catch (ParseException ex) {
-                    Logger.getLogger(QLDONTHUE_FORM.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(DON_THUE.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });

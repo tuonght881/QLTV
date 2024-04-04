@@ -1,5 +1,6 @@
 package raven.menu;
 
+import com.QLTV.utils.XAuth;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.ui.FlatUIUtils;
@@ -55,7 +56,7 @@ public class MenuItem extends JPanel {
     private final List<MenuEvent> events;
     private final Menu menu;
     private final String menus[];
-    private final int menuIndex;
+    private int menuIndex;
     private final int menuItemHeight = 38;
     private final int subMenuItemHeight = 35;
     private final int subMenuLeftGap = 34;
@@ -75,12 +76,26 @@ public class MenuItem extends JPanel {
     }
 
     private Icon getIcon() {
-        Color lightColor = FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red);
-        Color darkColor = FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red);
-        FlatSVGIcon icon = new FlatSVGIcon("raven/menu/icon/" + menuIndex + ".svg");
-        FlatSVGIcon.ColorFilter f = new FlatSVGIcon.ColorFilter();
-        f.add(Color.decode("#969696"), lightColor, darkColor);
-        icon.setColorFilter(f);
+        FlatSVGIcon icon = null;
+        if (XAuth.isManager()) {
+            Color lightColor = FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red);
+            Color darkColor = FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red);
+            icon = new FlatSVGIcon("raven/menu/icon/" + menuIndex + ".svg");
+            FlatSVGIcon.ColorFilter f = new FlatSVGIcon.ColorFilter();
+            f.add(Color.decode("#969696"), lightColor, darkColor);
+            icon.setColorFilter(f);
+        } else {
+            Color lightColor = FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red);
+            Color darkColor = FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red);
+            if(menuIndex==6){
+                icon = new FlatSVGIcon("raven/menu/icon/" + 7 + ".svg");
+            }else{
+            icon = new FlatSVGIcon("raven/menu/icon/" + menuIndex + ".svg");
+            }
+            FlatSVGIcon.ColorFilter f = new FlatSVGIcon.ColorFilter();
+            f.add(Color.decode("#969696"), lightColor, darkColor);
+            icon.setColorFilter(f);
+        }
         return icon;
     }
 

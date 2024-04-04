@@ -566,7 +566,7 @@ public class THUE_SACH extends javax.swing.JPanel {
             tongtien = tongcong + tongtiendambao;
             txt_thanhtien.setText(currencyVN.format(tongtien));
         } catch (ParseException ex) {
-            java.util.logging.Logger.getLogger(THUESACH2_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(THUE_SACH.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Chưa có thông tin của khách hàng!");
         }
