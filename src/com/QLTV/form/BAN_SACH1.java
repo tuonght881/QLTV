@@ -55,7 +55,7 @@ import javax.swing.text.NumberFormatter;
  *
  * @author Tuong
  */
-public class BAN_SACH extends javax.swing.JPanel {
+public class BAN_SACH1 extends javax.swing.JPanel {
 
     Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
@@ -84,7 +84,7 @@ public class BAN_SACH extends javax.swing.JPanel {
     /**
      * Creates new form BAN_SACH
      */
-    public BAN_SACH() {
+    public BAN_SACH1() {
         initComponents();
         txt_manv.setText(XAuth.user.getManv());
         loaddataSach();
@@ -100,7 +100,6 @@ public class BAN_SACH extends javax.swing.JPanel {
         timer = new Timer(1000, act);
         timer.setInitialDelay(0);
         timer.start();
-        //TableCustom.apply(jScrollPane1, TableCustom.TableType.MULTI_LINE);
     }
 
     public HoaDon getHoaDonNew() throws ParseException {

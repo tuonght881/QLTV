@@ -115,16 +115,7 @@
                 </Property>
               </Properties>
               <SubComponents>
-                <Component class="javax.swing.JTextField" name="txt_timkiemHD">
-                  <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="99" green="99" red="99" type="rgb"/>
-                    </Property>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="caretUpdate" listener="javax.swing.event.CaretListener" parameters="javax.swing.event.CaretEvent" handler="txt_timkiemHDCaretUpdate"/>
-                    <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="txt_timkiemHDMouseExited"/>
-                  </Events>
+                <Component class="javax.swing.JLabel" name="jLabel11">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel4">
                   <Properties>

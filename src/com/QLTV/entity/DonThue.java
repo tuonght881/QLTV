@@ -18,9 +18,9 @@ public class DonThue {
     String ngaythue;
     String ngaytradukien;
     String ngaytra;
+    Boolean trangthai;
     Double tienphat;
     Double tongtiendambao;
-
     Double khachdua;
     Double thoilai;
     Double thanhtien;
@@ -28,7 +28,7 @@ public class DonThue {
     public DonThue() {
     }
 
-    public DonThue(String iddonthue, String idkhach, String manv, String ngaytao, String ngaythue, String ngaytradukien, String ngaytra, Double tienphat, Double tongtiendambao, Double khachdua, Double thoilai, Double thanhtien) {
+    public DonThue(String iddonthue, String idkhach, String manv, String ngaytao, String ngaythue, String ngaytradukien, String ngaytra, Boolean trangthai, Double tienphat, Double tongtiendambao, Double khachdua, Double thoilai, Double thanhtien) {
         this.iddonthue = iddonthue;
         this.idkhach = idkhach;
         this.manv = manv;
@@ -36,6 +36,7 @@ public class DonThue {
         this.ngaythue = ngaythue;
         this.ngaytradukien = ngaytradukien;
         this.ngaytra = ngaytra;
+        this.trangthai = trangthai;
         this.tienphat = tienphat;
         this.tongtiendambao = tongtiendambao;
         this.khachdua = khachdua;
@@ -99,6 +100,14 @@ public class DonThue {
         this.ngaytra = ngaytra;
     }
 
+    public Boolean getTrangthai() {
+        return trangthai;
+    }
+
+    public void setTrangthai(Boolean trangthai) {
+        this.trangthai = trangthai;
+    }
+
     public Double getTienphat() {
         return tienphat;
     }
@@ -138,5 +147,6 @@ public class DonThue {
     public void setThanhtien(Double thanhtien) {
         this.thanhtien = thanhtien;
     }
+
     
 }

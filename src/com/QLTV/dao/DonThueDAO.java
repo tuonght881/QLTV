@@ -17,24 +17,23 @@ import java.util.List;
  */
 public class DonThueDAO extends EntityDao<DonThue, String> {
 
-    String madonthue = "select top 1 * from donthue order by iddonthue desc";
+    String madonthue = "select top 1 * from donthue order by trangthai desc";
     String selectAll = "select * from donthue";
-    String insert = "insert into DonThue values(?,?,?,?,?,?,?,?,?,?,?,?)";
-    String update = "UPDATE donthue SET idkhach = ?, manv = ?, ngaytao = ?, ngaythue = ?, ngaytradukien = ?, ngaytra = ?,tienphat = ?,tongtiendambao = ?, khachdua= ? ,thoilai= ? ,thanhtien = ? WHERE iddonthue = ?;";
+    String insert = "insert into DonThue values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    String update = "UPDATE donthue SET idkhach = ?, manv = ?, ngaytao = ?, ngaythue = ?, ngaytradukien = ?, ngaytra = ?,trangthai=?,tienphat = ?,tongtiendambao = ?, khachdua= ? ,thoilai= ? ,thanhtien = ? WHERE iddonthue = ?;";
     String delete = "delete donthue where iddonthue=?";
     String select_by_ID = "select * from DonThue where iddonthue=?";
     String doanhthuthuengay = "SELECT ISNULL(SUM(dthue.thanhtien), 0) AS doanhthuthue FROM donthue dthue WHERE dthue.ngaytao like ?";
     String doanhthuthueTONG = "SELECT ISNULL(SUM(dthue.thanhtien+ dthue.tienphat), 0) AS doanhthuthue FROM donthue dthue WHERE dthue.ngaytao like ?";
     String doanhthuthuethang = "SELECT SUM(dt.thanhtien + dt.tienphat) AS doanhthu_thue_sach FROM donthue dt WHERE MONTH(CONVERT(date, dt.ngaytao, 105)) = ?";
-
     @Override
     public void insert(DonThue entity) {
-        JDBC.update(insert, entity.getIddonthue(), entity.getIdkhach(), entity.getManv(), entity.getNgaytao(), entity.getNgaythue(), entity.getNgaytradukien(), entity.getNgaytra(), entity.getTienphat(), entity.getTongtiendambao(), entity.getKhachdua(), entity.getThoilai(), entity.getThanhtien());
+        JDBC.update(insert, entity.getIddonthue(), entity.getIdkhach(),entity.getManv(),entity.getNgaytao(),entity.getNgaythue(),entity.getNgaytradukien(),entity.getNgaytra(),entity.getTrangthai(),entity.getTienphat(),entity.getTongtiendambao(),entity.getKhachdua(),entity.getThoilai(), entity.getThanhtien());
     }
 
     @Override
     public void update(DonThue entity) {
-        JDBC.update(update, entity.getIdkhach(), entity.getManv(), entity.getNgaytao(), entity.getNgaythue(), entity.getNgaytradukien(), entity.getNgaytra(), entity.getTienphat(), entity.getTongtiendambao(), entity.getKhachdua(), entity.getThoilai(), entity.getThanhtien(), entity.getIddonthue());
+        JDBC.update(update, entity.getIdkhach(), entity.getManv(), entity.getNgaytao(), entity.getNgaythue(), entity.getNgaytradukien(), entity.getNgaytra(), entity.getTrangthai(),entity.getTienphat(), entity.getTongtiendambao(), entity.getKhachdua(), entity.getThoilai(), entity.getThanhtien(), entity.getIddonthue());
     }
 
     @Override
@@ -75,6 +74,7 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
                 dthue.setNgaythue(r.getString("ngaythue"));
                 dthue.setNgaytradukien(r.getString("ngaytradukien"));
                 dthue.setNgaytra(r.getString("ngaytra"));
+                dthue.setTrangthai(r.getBoolean("trangthai"));
                 dthue.setTienphat(r.getDouble("tienphat"));
                 dthue.setTongtiendambao(r.getDouble("tongtiendambao"));
                 dthue.setKhachdua(r.getDouble("khachdua"));

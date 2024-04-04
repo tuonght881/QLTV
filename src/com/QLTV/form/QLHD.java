@@ -207,6 +207,7 @@ private void showPopup() {
             loaddataHoaDon();
             JOptionPane.showMessageDialog(this, "Xoá thành công");
             resetForm();
+            TAB.setSelectedIndex(0);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Xoá thất bại\n" + e.getMessage());
         }
@@ -879,7 +880,7 @@ private void showPopup() {
     private void btn_xoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_xoaActionPerformed
         int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
-            System.out.println("Người dùng đã chọn YES");
+            //System.out.println("Người dùng đã chọn YES");
             xoaHD();
         } else if (choice == JOptionPane.NO_OPTION) {
             return;

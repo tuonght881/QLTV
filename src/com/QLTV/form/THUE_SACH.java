@@ -136,6 +136,7 @@ public class THUE_SACH extends javax.swing.JPanel {
         dthueNew.setNgaythue(txt_ngaythuesach.getText());
         dthueNew.setNgaytradukien(txt_ngaytradukien.getText());
         dthueNew.setNgaytra("");
+        dthueNew.setTrangthai(false);
         dthueNew.setTienphat(0.0);
         dthueNew.setTongtiendambao(tongtiendambao);
         dthueNew.setThanhtien(tongtien);
@@ -305,7 +306,7 @@ public class THUE_SACH extends javax.swing.JPanel {
         boolean isPositiveNumberKD = khachdua.matches(regex);
         boolean isPositiveNumberSDT = sdtk.matches(regex);
         boolean isPositiveNumberNM = songaymuon.matches(regex);
-        
+
         String loi = "";
         if (tbl_thuesach.getRowCount() == 0) {
             loi += "Chưa có quyển sách nào!\n";
@@ -1136,23 +1137,25 @@ public class THUE_SACH extends javax.swing.JPanel {
             timKH();
         }
     }//GEN-LAST:event_txt_sdtkhachKeyPressed
-
+    int dem = 0;
     private void txt_khachduaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_khachduaKeyPressed
         boolean check = false;
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("")) {
+        
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("") && dem == 0) {
             khachdua = Double.parseDouble(txt_khachdua.getText());
             if (khachdua >= tongcong) {
                 thoilai = khachdua - tongtien;
                 txt_thoilai.setText(currencyVN.format(thoilai));
-                check=true;
+                check = true;
+                dem++;
             } else {
                 JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
-                check=false;
+                check = false;
             }
-        }
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER && check == true) {
+        }else
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && dem == 1) {
             ThemDonThue();
-            check = false;
+            dem = 0;
         }
     }//GEN-LAST:event_txt_khachduaKeyPressed
 
