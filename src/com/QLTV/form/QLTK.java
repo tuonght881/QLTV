@@ -201,23 +201,23 @@ public class QLTK extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Xoá thành công");
                 resetForm();
             } catch (Exception e) {
-            // Bắt các loại ngoại lệ, bao gồm SQLServerException
-            if (e.getMessage().contains("conflicted with the REFERENCE constraint")) {
-                // Xử lý lỗi về ràng buộc tham chiếu ở đây
-                int choice = JOptionPane.showConfirmDialog(this, "Xóa thất bại do tài khoản này đã tạo hoá đơn.\nHành động xoá này chỉ thay đổi trạng thái của tài khoản.","Thông báo",JOptionPane.OK_CANCEL_OPTION);
-                if(choice == JOptionPane.OK_OPTION){
-                    TaiKhoan tk = tkDAO.select_byID(entity);
-                    tk.setTrangthai(false);
-                    tkDAO.update(tk);
-                    loaddataTaiKhoan();
-                    resetForm();
+                // Bắt các loại ngoại lệ, bao gồm SQLServerException
+                if (e.getMessage().contains("conflicted with the REFERENCE constraint")) {
+                    // Xử lý lỗi về ràng buộc tham chiếu ở đây
+                    int choice = JOptionPane.showConfirmDialog(this, "Xóa thất bại do tài khoản này đã tạo hoá đơn.\nHành động xoá này chỉ thay đổi trạng thái của tài khoản.", "Thông báo", JOptionPane.OK_CANCEL_OPTION);
+                    if (choice == JOptionPane.OK_OPTION) {
+                        TaiKhoan tk = tkDAO.select_byID(entity);
+                        tk.setTrangthai(false);
+                        tkDAO.update(tk);
+                        loaddataTaiKhoan();
+                        resetForm();
+                    }
+                } else {
+                    // Xử lý các loại lỗi khác
+                    JOptionPane.showMessageDialog(this, "Xóa thất bại.\n" + e.getMessage());
+                    e.printStackTrace();
                 }
-            } else {
-                // Xử lý các loại lỗi khác
-                JOptionPane.showMessageDialog(this, "Xóa thất bại.\n" + e.getMessage());
-                e.printStackTrace();
             }
-        }
         }
     }
 
@@ -265,10 +265,15 @@ public class QLTK extends javax.swing.JPanel {
             for (TaiKhoan tk : list) {
                 mnv = tk.getManv();
             }
-            int number = Integer.parseInt(mnv.substring(2));
-            number++;
-            String newText = "NV" + String.format("%03d", number);
-            txt_manv.setText(newText);
+            if (mnv.equalsIgnoreCase("")) {
+                mnv = "NV001";
+                txt_manv.setText(mnv);
+            } else {
+                int number = Integer.parseInt(mnv.substring(2));
+                number++;
+                String newText = "NV" + String.format("%03d", number);
+                txt_manv.setText(newText);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

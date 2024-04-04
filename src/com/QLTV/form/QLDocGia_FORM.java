@@ -39,9 +39,11 @@ import javax.swing.table.TableCellRenderer;
  * @author Tuong
  */
 public class QLDocGia_FORM extends javax.swing.JFrame {
+
     KhachHangDAO khDAO = new KhachHangDAO();
     int index = -1;
     int id;
+
     /**
      * Creates new form tesst
      */
@@ -64,7 +66,8 @@ public class QLDocGia_FORM extends javax.swing.JFrame {
             btn_xoa.setVisible(false);
         }
     }
-public void setFormTG(KhachHang kh) {
+
+    public void setFormTG(KhachHang kh) {
         txt_idkhachhang.setText(kh.getIdkhach());
         txt_tenkhachhang.setText(kh.getHotenkhach());
         txt_sdt.setText(kh.getSdt());
@@ -213,10 +216,15 @@ public void setFormTG(KhachHang kh) {
             for (KhachHang kh : list) {
                 idkh = kh.getIdkhach();
             }
-            int number = Integer.parseInt(idkh.substring(2));
-            number++;
-            String newText = "KH" + String.format("%03d", number);
-            txt_idkhachhang.setText(newText);
+            if (idkh.equalsIgnoreCase("")) {
+                idkh = "KH001";
+                txt_idkhachhang.setText(idkh);
+            } else {
+                int number = Integer.parseInt(idkh.substring(2));
+                number++;
+                String newText = "KH" + String.format("%03d", number);
+                txt_idkhachhang.setText(newText);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -273,6 +281,7 @@ public void setFormTG(KhachHang kh) {
         }
         return true;
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

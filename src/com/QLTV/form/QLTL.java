@@ -7,25 +7,9 @@ package com.QLTV.form;
 import com.QLTV.dao.TheLoaiDAO;
 import com.QLTV.entity.TheLoai;
 import com.QLTV.utils.XAuth;
-import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLaf;
-import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
-import com.raven.properties.SystemProperties;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.EventQueue;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -188,10 +172,15 @@ public class QLTL extends javax.swing.JPanel {
             for (TheLoai kh : list) {
                 idkh = kh.getIdtheloai();
             }
-            int number = Integer.parseInt(idkh.substring(2));
-            number++;
-            String newText = "TL" + String.format("%03d", number);
-            txt_idtheloai.setText(newText);
+            if (idkh.equalsIgnoreCase("")) {
+                idkh = "TL001";
+                txt_idtheloai.setText(idkh);
+            } else {
+                int number = Integer.parseInt(idkh.substring(2));
+                number++;
+                String newText = "TL" + String.format("%03d", number);
+                txt_idtheloai.setText(newText);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

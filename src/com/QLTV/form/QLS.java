@@ -14,8 +14,6 @@ import com.QLTV.entity.TheLoai;
 import com.QLTV.entity.ViTri;
 import com.QLTV.utils.XAuth;
 import com.QLTV.utils.Ximg;
-import com.formdev.flatlaf.FlatClientProperties;
-import java.awt.Component;
 import java.awt.Image;
 import java.io.File;
 import java.text.NumberFormat;
@@ -24,21 +22,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 
 /**
  *
@@ -89,10 +79,15 @@ public class QLS extends javax.swing.JPanel {
             for (Sach kh : list) {
                 idkh = kh.getIdsach();
             }
-            int number = Integer.parseInt(idkh.substring(1));
-            number++;
-            String newText = "S" + String.format("%04d", number);
-            txt_idsach.setText(newText);
+            if (idkh.equalsIgnoreCase("")) {
+                idkh = "S0001";
+                txt_idsach.setText(idkh);
+            } else {
+                int number = Integer.parseInt(idkh.substring(1));
+                number++;
+                String newText = "S" + String.format("%04d", number);
+                txt_idsach.setText(newText);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

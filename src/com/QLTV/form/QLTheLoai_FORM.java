@@ -53,10 +53,15 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
             for (TheLoai kh : list) {
                 idkh = kh.getIdtheloai();
             }
-            int number = Integer.parseInt(idkh.substring(2));
-            number++;
-            String newText = "TL" + String.format("%03d", number);
-            txt_idtheloai.setText(newText);
+            if (idkh.equalsIgnoreCase("")) {
+                idkh = "TL001";
+                txt_idtheloai.setText(idkh);
+            } else {
+                int number = Integer.parseInt(idkh.substring(2));
+                number++;
+                String newText = "TL" + String.format("%03d", number);
+                txt_idtheloai.setText(newText);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

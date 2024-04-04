@@ -7,21 +7,11 @@ package com.QLTV.form;
 import com.QLTV.dao.ViTriDAO;
 import com.QLTV.entity.ViTri;
 import com.QLTV.utils.XAuth;
-import com.formdev.flatlaf.FlatClientProperties;
-import java.awt.Color;
-import java.awt.Component;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 /**
  *

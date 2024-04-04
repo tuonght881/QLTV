@@ -5,22 +5,11 @@
 package com.QLTV.form;
 
 import com.QLTV.dao.TacGiaDAO;
-import com.QLTV.entity.KhachHang;
 import com.QLTV.entity.TacGia;
 import com.QLTV.utils.XAuth;
-import com.formdev.flatlaf.FlatClientProperties;
-import java.awt.Color;
-import java.awt.Component;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -61,10 +50,15 @@ public class QLTG extends javax.swing.JPanel {
             for (TacGia kh : list) {
                 idkh = kh.getIdtg();
             }
-            int number = Integer.parseInt(idkh.substring(2));
-            number++;
-            String newText = "TG" + String.format("%03d", number);
-            txt_idtacgia.setText(newText);
+            if (idkh.equalsIgnoreCase("")) {
+                idkh = "TG001";
+                txt_idtacgia.setText(idkh);
+            } else {
+                int number = Integer.parseInt(idkh.substring(2));
+                number++;
+                String newText = "TG" + String.format("%03d", number);
+                txt_idtacgia.setText(newText);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

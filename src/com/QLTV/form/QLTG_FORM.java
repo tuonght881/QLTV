@@ -55,10 +55,15 @@ public class QLTG_FORM extends javax.swing.JFrame {
             for (TacGia kh : list) {
                 idkh = kh.getIdtg();
             }
-            int number = Integer.parseInt(idkh.substring(2));
-            number++;
-            String newText = "TG" + String.format("%03d", number);
-            txt_idtacgia.setText(newText);
+            if (idkh.equalsIgnoreCase("")) {
+                idkh = "TG001";
+                txt_idtacgia.setText(idkh);
+            } else {
+                int number = Integer.parseInt(idkh.substring(2));
+                number++;
+                String newText = "TG" + String.format("%03d", number);
+                txt_idtacgia.setText(newText);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

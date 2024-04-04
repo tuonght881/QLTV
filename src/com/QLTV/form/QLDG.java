@@ -205,10 +205,15 @@ public class QLDG extends javax.swing.JPanel {
             for (KhachHang kh : list) {
                 idkh = kh.getIdkhach();
             }
-            int number = Integer.parseInt(idkh.substring(2));
+            if (idkh.equalsIgnoreCase("")) {
+                idkh ="KH001";
+                txt_idkhachhang.setText(idkh);
+            }else{
+                      int number = Integer.parseInt(idkh.substring(2));
             number++;
             String newText = "KH" + String.format("%03d", number);
-            txt_idkhachhang.setText(newText);
+            txt_idkhachhang.setText(newText);  
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
