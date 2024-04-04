@@ -85,7 +85,6 @@ public class DON_THUE extends javax.swing.JPanel {
                 String ngayF = sdf.format(ngay);
                 txt_ngaytra.setText(ngayF.toString());
                 POPUP.setVisible(false);
-                System.out.println("=>" + ngayF);
                 try {
                     tinhtienphat();
                 } catch (ParseException ex) {
@@ -149,8 +148,8 @@ public class DON_THUE extends javax.swing.JPanel {
             lbl_ngaytre.setText("Trễ " + diffInDays + " ngày " + diffInHours + " giờ " + diffInMinutes + " phút");
             txt_tienphat.setText(Long.toString(totalPrice));
         }
-        System.out.println(diffInDays + " ngay " + diffInHours + " gio " + diffInMinutes + " phut");
-        System.out.println("Giá tiền: " + totalPrice);
+//        System.out.println(diffInDays + " ngay " + diffInHours + " gio " + diffInMinutes + " phut");
+//        System.out.println("Giá tiền: " + totalPrice);
     }
 
     public void setFormHDCT(HoaDonChiTiet hdct) throws ParseException {
@@ -161,20 +160,21 @@ public class DON_THUE extends javax.swing.JPanel {
 
     public DonThue getFormDonThue() throws ParseException {
         DonThue dthueNew = new DonThue();
-//        dthueNew.setIddonthue(txt_iddonthue2.getText());
-//        dthueNew.setIdkhach(txt_idKhach.getText());
-//        dthueNew.setManv(txt_manv.getText());
-//        dthueNew.setNgaytao(txt_ngaythue.getText());
-//        dthueNew.setNgaythue(txt_ngaythue.getText());
-//        dthueNew.setNgaytradukien(txt_ngaytradukien.getText());
+        dthueNew.setIddonthue(txt_iddonthue2.getText().trim());
+        dthueNew.setIdkhach(txt_idKhach.getText().trim());
+        dthueNew.setManv(txt_manv.getText().trim());
+        //dthueNew.setNgaytao(txt_ngaythue.getText());
+        //dthueNew.setNgaythue(txt_ngaythue.getText());
+        //String ntrdk = txt_ngaytradukien.getText().trim();
+        //dthueNew.setNgaytradukien(ntrdk);
 
         dthueNew.setNgaytra(txt_ngaytra.getText());
-        dthueNew.setTienphat(Double.parseDouble(txt_tienphat.getText()));
+        dthueNew.setTienphat(Double.valueOf(txt_tienphat.getText().trim()));
 
-//        dthueNew.setTongtiendambao(Double.parseDouble(txt_tiendambao.getText()));
-//        dthueNew.setKhachdua(Double.parseDouble(txt_ngaytradukien.getText()));
-//        dthueNew.setThoilai(Double.parseDouble(txt_ngaytra.getText()));
-//        dthueNew.setThanhtien(Double.valueOf(txt_tongtien.getText()));
+        dthueNew.setTongtiendambao(Double.valueOf(txt_tiendambao.getText().trim()));
+        dthueNew.setKhachdua(Double.valueOf(txt_khachdua.getText().trim()));
+        dthueNew.setThoilai(Double.valueOf(txt_thoilai.getText().trim()));
+        dthueNew.setThanhtien(Double.valueOf(txt_tongtien.getText().trim()));
         return dthueNew;
     }
 
@@ -212,7 +212,7 @@ public class DON_THUE extends javax.swing.JPanel {
             int uytin = kh.getDiemuytin();
             Double tien = Double.parseDouble(txt_tienphat.getText());
             DonThue dthueNew = getFormDonThue();
-            dthueDAO.update(dthueNew);
+            dthueDAO.up(dthueNew);
             if (tien > 0) {
                 uytin = uytin - 15;
                 kh.setDiemuytin(uytin);
@@ -237,6 +237,8 @@ public class DON_THUE extends javax.swing.JPanel {
             resetForm();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Cập nhật thất bại!\n" + e.getMessage());
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -366,61 +368,7 @@ public class DON_THUE extends javax.swing.JPanel {
         return true;
     }
 
-    private void applyTableStyle(JTable table) {
-        //btn_them.setIcon(new FlatSVGIcon("/asda/asdasd", 0.35f));
-        //txt_timkiem.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_ICON, new FlatSVGIcon(""),0.35f);
-        //changeScrollStyle
-        JScrollPane scroll = (JScrollPane) table.getParent().getParent();
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-        scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
-                + "background:$Table.background;"
-                + "track:$Table.background;"
-                + "trackArc:999");
-        table.getTableHeader().putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        table.putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        //Table Alignment
-        table.getTableHeader().setDefaultRenderer(getAlignmentCellRender(table.getTableHeader().getDefaultRenderer(), true));
-        table.setDefaultRenderer(Object.class, getAlignmentCellRender(table.getDefaultRenderer(Object.class), false));
-        // Điều chỉnh chiều ngang của cột thứ 7
-        TableColumn column = table.getColumnModel().getColumn(6); // Cột thứ 7 (index bắt đầu từ 0)
-        column.setPreferredWidth(500);
-    }
 
-    private TableCellRenderer getAlignmentCellRender(TableCellRenderer oldRender, boolean header) {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component com = oldRender.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (com instanceof JLabel) {
-                    JLabel label = (JLabel) com;
-                    if (column == 0 || column == 4) {
-                        label.setHorizontalAlignment(SwingConstants.CENTER);
-                    } else if (column == 2 || column == 3) {
-                        label.setHorizontalAlignment(SwingConstants.TRAILING);
-                    } else {
-                        label.setHorizontalAlignment(SwingConstants.LEADING);
-                    }
-//                    if (header == false) {
-//                        if (column == 4) {
-//                            if (Double.parseDouble(value.toString()) > 0) {
-//                                com.setForeground(new Color(17, 182, 60));
-//                                label.setText("+" + value);
-//                            } else {
-//                                com.setForeground(new Color(202, 48, 48));
-//                            }
-//                        } else {
-//                            if (isSelected) {
-//                                com.setForeground(table.getSelectionForeground());
-//                            } else {
-//                                com.setForeground(table.getForeground());
-//                            }
-//                        }
-//                    }
-                }
-                return com;
-            }
-        };
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1145,7 +1093,7 @@ public class DON_THUE extends javax.swing.JPanel {
             } else {
                 int choice = JOptionPane.showConfirmDialog(null, "Bạn đã hoàn phí đảm bảo cho khách chưa?", "Xác nhận", JOptionPane.YES_NO_OPTION);
                 if (choice == JOptionPane.YES_OPTION) {
-                    System.out.println("Người dùng đã chọn YES");
+                    //System.out.println("Người dùng đã chọn YES");
                     return;
                 } else if (choice == JOptionPane.NO_OPTION) {
                     return;

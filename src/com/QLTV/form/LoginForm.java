@@ -18,7 +18,9 @@ import javax.swing.UIManager;
  * @author Tuong
  */
 public class LoginForm extends javax.swing.JPanel {
-TaiKhoanDAO tkDAO = new TaiKhoanDAO();
+
+    TaiKhoanDAO tkDAO = new TaiKhoanDAO();
+
     /**
      * Creates new form LoginForm
      */
@@ -27,6 +29,7 @@ TaiKhoanDAO tkDAO = new TaiKhoanDAO();
         initComponents();
         setBackground(new Color(0, 0, 0, 0));
     }
+
     public void dangnhap() {
         String manv = txtUser.getText();
         String matkhau = txtPassword.getText();
@@ -67,6 +70,7 @@ TaiKhoanDAO tkDAO = new TaiKhoanDAO();
         }
         return true;
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -88,6 +92,11 @@ TaiKhoanDAO tkDAO = new TaiKhoanDAO();
         panel2.setOpaque(false);
 
         txtUser.setHint("Mã nhân viên");
+        txtUser.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtUserKeyPressed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -104,6 +113,7 @@ TaiKhoanDAO tkDAO = new TaiKhoanDAO();
         });
 
         txtPassword.setHint("Mật khẩu");
+        txtPassword.setNextFocusableComponent(txtUser);
         txtPassword.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtPasswordKeyPressed(evt);
@@ -180,6 +190,12 @@ TaiKhoanDAO tkDAO = new TaiKhoanDAO();
             }
         }
     }//GEN-LAST:event_txtPasswordKeyPressed
+
+    private void txtUserKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUserKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && batloi_tk()) {
+            dangnhap();
+        }
+    }//GEN-LAST:event_txtUserKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

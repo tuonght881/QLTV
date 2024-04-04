@@ -23,7 +23,7 @@ public class HoaDonChiTietDAO extends EntityDao<HoaDonChiTiet, String> {
     String insert = "insert into HoaDonChiTiet values(?,?,?)";
     String select_by_ID = "select * from HoaDonChiTiet where idhoadonct = ?";
     String delete = "delete HoaDonChiTiet where idhoadonct=?";
-    String sltheo_sach = "SELECT s.idsach, s.tensach, ISNULL(SUM(hdct.soluong),0) AS soluong_ban FROM sach s LEFT JOIN hoadonchitiet hdct ON s.idsach = hdct.idsach GROUP BY s.idsach, s.tensach;";
+    String sltheo_sach = "SELECT s.idsach, s.tensach, ISNULL(SUM(hdct.soluong),0) AS soluong_ban  FROM sach s  LEFT JOIN hoadonchitiet hdct ON s.idsach = hdct.idsach  GROUP BY s.idsach, s.tensach  HAVING ISNULL(SUM(hdct.soluong), 0) > 0;";
 
     @Override
     public void insert(HoaDonChiTiet entity) {

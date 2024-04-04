@@ -1138,14 +1138,21 @@ public class THUE_SACH extends javax.swing.JPanel {
     }//GEN-LAST:event_txt_sdtkhachKeyPressed
 
     private void txt_khachduaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_khachduaKeyPressed
+        boolean check = false;
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("")) {
             khachdua = Double.parseDouble(txt_khachdua.getText());
             if (khachdua >= tongcong) {
                 thoilai = khachdua - tongtien;
                 txt_thoilai.setText(currencyVN.format(thoilai));
+                check=true;
             } else {
                 JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
+                check=false;
             }
+        }
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER && check == true) {
+            ThemDonThue();
+            check = false;
         }
     }//GEN-LAST:event_txt_khachduaKeyPressed
 

@@ -22,7 +22,7 @@ public class DonThueChiTietDAO extends EntityDao<DonThueChiTiet, String> {
     String delete = "delete donthuect where iddonthuect=?";
     String select_by_ID = "select * from donthuect where iddonthuect = ?";
     String select_by_hoadon = "select * from DonThueCT where iddonthue = ?";
-    String slThue = "SELECT s.idsach, s.tensach, ISNULL(SUM(dtct.soluong),0) AS soluong_thue FROM sach s LEFT JOIN donthuect dtct ON s.idsach = dtct.idsach GROUP BY s.idsach, s.tensach;";
+    String slThue = "SELECT s.idsach, s.tensach, ISNULL(SUM(dtct.soluong),0) AS soluong_thue FROM sach s LEFT JOIN donthuect dtct ON s.idsach = dtct.idsach GROUP BY s.idsach, s.tensach HAVING ISNULL(SUM(dtct.soluong),0) > 0;";
 
     @Override
     public void insert(DonThueChiTiet entity) {

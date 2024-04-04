@@ -114,8 +114,8 @@ public class ThongKe extends javax.swing.JPanel {
     public void initchartngay() {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM");
-        // Lấy ngày hiện tại và giảm đi 30 ngày
-        cal.add(Calendar.DATE, -7);
+        // Lấy ngày hiện tại và giảm đi 6 ngày
+        cal.add(Calendar.DATE, -6);
         for (int i = 1; i <= 7; i++) {
             String date = df.format(cal.getTime());
             double dthuban = hdDAO.doanhThuNgay(date);
@@ -129,8 +129,8 @@ public class ThongKe extends javax.swing.JPanel {
     public void initchartthang() {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("MM");
-        // Lấy ngày hiện tại và giảm đi 30 ngày
-        cal.add(Calendar.MONTH, -7);
+        // Lấy tháng hiện tại và trừ đi 6
+        cal.add(Calendar.MONTH, -6);
         for (int i = 1; i <= 7; i++) {
             String date = df.format(cal.getTime());
             int month = Integer.parseInt(date);

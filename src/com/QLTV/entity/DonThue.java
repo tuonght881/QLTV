@@ -27,6 +27,7 @@ public class DonThue {
 
     public DonThue() {
     }
+
     public DonThue(String iddonthue, String idkhach, String manv, String ngaytao, String ngaythue, String ngaytradukien, String ngaytra, Double tienphat, Double tongtiendambao, Double khachdua, Double thoilai, Double thanhtien) {
         this.iddonthue = iddonthue;
         this.idkhach = idkhach;
@@ -137,6 +138,5 @@ public class DonThue {
     public void setThanhtien(Double thanhtien) {
         this.thanhtien = thanhtien;
     }
-
     
 }
