@@ -306,7 +306,7 @@ public class QLTK extends javax.swing.JPanel {
         String sdt = txt_sdt.getText().trim();
         String ngaysinh = txt_ngaysinh.getText();
         String diachi = txt_diachi.getText();
-        boolean OnlyLetters = hoten.matches("^[a-zA-Z]*$");
+        boolean OnlyLetters = hoten.matches(".*\\d.*");
         String loi = "";
 
         if (manv.equalsIgnoreCase("")) {

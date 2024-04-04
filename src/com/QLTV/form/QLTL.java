@@ -222,8 +222,8 @@ public class QLTL extends javax.swing.JPanel {
         if (tentheloai.equalsIgnoreCase("")) {
             loi += "Tên thể loại\n";
         }
-        boolean OnlyLetters = tentheloai.matches("^[a-zA-Z]*$");
-        if (OnlyLetters == false) {
+        boolean OnlyLetters = tentheloai.matches(".*\\d.*");
+        if (OnlyLetters) {
             loi += "Tên thể loại không được nhập số\n";
         }
         if (rdo_hd.isSelected() == false && rdo_nhd.isSelected() == false) {

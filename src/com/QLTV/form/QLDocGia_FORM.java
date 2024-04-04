@@ -231,10 +231,10 @@ public class QLDocGia_FORM extends javax.swing.JFrame {
     }
 
     public boolean batloi_kh() {
-        String idKhachhang = txt_idkhachhang.getText();
-        String hotenkhachhang = txt_tenkhachhang.getText();
-        String sdt = txt_sdt.getText();
-        String diemuytin = txt_diemuytin.getText();
+        String idKhachhang = txt_idkhachhang.getText().trim();
+        String hotenkhachhang = txt_tenkhachhang.getText().trim();
+        String sdt = txt_sdt.getText().trim();
+        String diemuytin = txt_diemuytin.getText().trim();
 
         String loi = "";
 
@@ -253,8 +253,9 @@ public class QLDocGia_FORM extends javax.swing.JFrame {
         if (hotenkhachhang.equalsIgnoreCase("")) {
             loi += "Họ tên khách hàng\n";
         }
-        boolean OnlyLetters = hotenkhachhang.matches("^[a-zA-Z]*$");
-        if (OnlyLetters == false) {
+        boolean OnlyLetters = hotenkhachhang.matches(".*\\d.*");
+        //System.out.println(OnlyLetters);
+        if (OnlyLetters) {
             loi += "Họ tên không được nhập số\n";
         }
         if (sdt.equalsIgnoreCase("")) {
@@ -426,7 +427,9 @@ public class QLDocGia_FORM extends javax.swing.JFrame {
         jLabel1.setText("ID Khách hàng");
         crazyPanel3.add(jLabel1);
 
+        txt_idkhachhang.setEditable(false);
         txt_idkhachhang.setToolTipText("");
+        txt_idkhachhang.setEnabled(false);
         crazyPanel3.add(txt_idkhachhang);
 
         btn_sua.setText("Cập nhật");

@@ -334,14 +334,29 @@ public class QLS extends javax.swing.JPanel {
         if (tensach.equalsIgnoreCase("")) {
             loi += "Tên sách\n";
         }
+        boolean OnlyLetters = tensach.matches(".*\\d.*");
+        //System.out.println(OnlyLetters);
+        if (OnlyLetters) {
+            loi += "Tên sách không được nhập số\n";
+        }
+        boolean Onlynb = sl.matches("\\d+");
         if (sl.equalsIgnoreCase("")) {
             loi += "Số lượng\n";
+        }
+        if(!Onlynb){
+            loi += "Số lượng không được nhập chữ\n";
         }
         if (giaban.equalsIgnoreCase("")) {
             loi += "Giá bán\n";
         }
+        if(!giaban.matches("\\d+")){
+            loi+="Giá bán không được nhập chữ";
+        }
         if (giathue.equalsIgnoreCase("")) {
             loi += "Giá thuê\n";
+        }
+        if(!giathue.matches("\\d+")){
+            loi+="Giá thuê không được nhập chữ";
         }
         if (rdo_hd.isSelected() == false && rdo_nhd.isSelected() == false) {
             loi += "Trạng thái";

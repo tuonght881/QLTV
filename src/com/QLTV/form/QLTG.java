@@ -225,8 +225,8 @@ public class QLTG extends javax.swing.JPanel {
         if (tentacgia.equalsIgnoreCase("")) {
             loi += "Tên tác giả\n";
         }
-        boolean OnlyLetters = tentacgia.matches("^[a-zA-Z]*$");
-        if (OnlyLetters == false) {
+        boolean OnlyLetters = tentacgia.matches(".*\\d.*");
+        if (OnlyLetters) {
             loi += "Tên tác giả không được nhập số\n";
         }
         if (rdo_hd.isSelected() == false && rdo_nhd.isSelected() == false) {

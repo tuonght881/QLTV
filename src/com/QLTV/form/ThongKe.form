@@ -86,6 +86,23 @@
                     </Container>
                   </SubComponents>
                 </Container>
+                <Container class="raven.crazypanel.CrazyPanel" name="crazyPanel10">
+                  <SubComponents>
+                    <Component class="javax.swing.JLabel" name="lbl_doanhthu2">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="T&#x1ed5;ng doanh thu:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jbl_tdoanhthu2">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Segoe UI" size="18" style="1"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="jLabel6"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
             <Container class="raven.crazypanel.CrazyPanel" name="crazyPanel9">
@@ -124,6 +141,23 @@
                         <Property name="useNullLayout" type="boolean" value="true"/>
                       </Layout>
                     </Container>
+                  </SubComponents>
+                </Container>
+                <Container class="raven.crazypanel.CrazyPanel" name="crazyPanel8">
+                  <SubComponents>
+                    <Component class="javax.swing.JLabel" name="lbl_doanhthu1">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="T&#x1ed5;ng doanh thu:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jbl_tdoanhthu1">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Segoe UI" size="18" style="1"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="jLabel6"/>
+                      </Properties>
+                    </Component>
                   </SubComponents>
                 </Container>
               </SubComponents>

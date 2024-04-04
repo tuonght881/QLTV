@@ -7,21 +7,11 @@ package com.QLTV.form;
 import com.QLTV.dao.KhachHangDAO;
 import com.QLTV.entity.KhachHang;
 import com.QLTV.utils.XAuth;
-import com.formdev.flatlaf.FlatClientProperties;
-import java.awt.Color;
-import java.awt.Component;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -206,13 +196,13 @@ public class QLDG extends javax.swing.JPanel {
                 idkh = kh.getIdkhach();
             }
             if (idkh.equalsIgnoreCase("")) {
-                idkh ="KH001";
+                idkh = "KH001";
                 txt_idkhachhang.setText(idkh);
-            }else{
-                      int number = Integer.parseInt(idkh.substring(2));
-            number++;
-            String newText = "KH" + String.format("%03d", number);
-            txt_idkhachhang.setText(newText);  
+            } else {
+                int number = Integer.parseInt(idkh.substring(2));
+                number++;
+                String newText = "KH" + String.format("%03d", number);
+                txt_idkhachhang.setText(newText);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -242,8 +232,9 @@ public class QLDG extends javax.swing.JPanel {
         if (hotenkhachhang.equalsIgnoreCase("")) {
             loi += "Họ tên khách hàng\n";
         }
-        boolean OnlyLetters = hotenkhachhang.matches("^[a-zA-Z]*$");
-        if (OnlyLetters == false) {
+        boolean OnlyLetters = hotenkhachhang.matches(".*\\d.*");
+        //System.out.println(OnlyLetters);
+        if (OnlyLetters) {
             loi += "Họ tên không được nhập số\n";
         }
         if (sdt.equalsIgnoreCase("")) {

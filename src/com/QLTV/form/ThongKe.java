@@ -52,11 +52,16 @@ public class ThongKe extends javax.swing.JPanel {
         initpiechart();
         initpiechartsls_tg();
         initChartDT();
+
+        jbl_tdoanhthu1.setVisible(false);
+        jbl_tdoanhthu2.setVisible(false);
+        lbl_doanhthu1.setVisible(false);
+        lbl_doanhthu2.setVisible(false);
     }
 
     public void initChartDT() {
         List<tongdoanhthu> sblist = hdDAO.dthu();
-        System.out.println(sblist.getFirst());
+        //System.out.println(sblist.getFirst());
         //pieChart.add(new ModelPieChart("Doanh thu bán sách",sblist.getDoanhThuBanSach(),color));
         for (tongdoanhthu sban : sblist) {
             doanhthu.addData(new ModelPieChart("Doanh thu bán sách", sban.getDoanhThuBanSach(), new Color(23, 126, 238)));
@@ -152,10 +157,16 @@ public class ThongKe extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         pieChart = new javaswingdev.chart.PieChart();
+        crazyPanel10 = new raven.crazypanel.CrazyPanel();
+        lbl_doanhthu2 = new javax.swing.JLabel();
+        jbl_tdoanhthu2 = new javax.swing.JLabel();
         crazyPanel9 = new raven.crazypanel.CrazyPanel();
         jLabel5 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         chartslthue = new javaswingdev.chart.PieChart();
+        crazyPanel8 = new raven.crazypanel.CrazyPanel();
+        lbl_doanhthu1 = new javax.swing.JLabel();
+        jbl_tdoanhthu1 = new javax.swing.JLabel();
         crazyPanel7 = new raven.crazypanel.CrazyPanel();
         jLabel4 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -213,6 +224,15 @@ public class ThongKe extends javax.swing.JPanel {
 
         crazyPanel5.add(jPanel1);
 
+        lbl_doanhthu2.setText("Tổng doanh thu:");
+        crazyPanel10.add(lbl_doanhthu2);
+
+        jbl_tdoanhthu2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jbl_tdoanhthu2.setText("jLabel6");
+        crazyPanel10.add(jbl_tdoanhthu2);
+
+        crazyPanel5.add(crazyPanel10);
+
         crazyPanel4.add(crazyPanel5);
 
         crazyPanel9.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
@@ -242,6 +262,15 @@ public class ThongKe extends javax.swing.JPanel {
         );
 
         crazyPanel9.add(jPanel3);
+
+        lbl_doanhthu1.setText("Tổng doanh thu:");
+        crazyPanel8.add(lbl_doanhthu1);
+
+        jbl_tdoanhthu1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jbl_tdoanhthu1.setText("jLabel6");
+        crazyPanel8.add(jbl_tdoanhthu1);
+
+        crazyPanel9.add(crazyPanel8);
 
         crazyPanel4.add(crazyPanel9);
 
@@ -355,6 +384,7 @@ public class ThongKe extends javax.swing.JPanel {
     private com.raven.chart2.Chart bieudothang;
     private javaswingdev.chart.PieChart chartslthue;
     private raven.crazypanel.CrazyPanel crazyPanel1;
+    private raven.crazypanel.CrazyPanel crazyPanel10;
     private raven.crazypanel.CrazyPanel crazyPanel13;
     private raven.crazypanel.CrazyPanel crazyPanel2;
     private raven.crazypanel.CrazyPanel crazyPanel3;
@@ -362,6 +392,7 @@ public class ThongKe extends javax.swing.JPanel {
     private raven.crazypanel.CrazyPanel crazyPanel5;
     private raven.crazypanel.CrazyPanel crazyPanel6;
     private raven.crazypanel.CrazyPanel crazyPanel7;
+    private raven.crazypanel.CrazyPanel crazyPanel8;
     private raven.crazypanel.CrazyPanel crazyPanel9;
     private javaswingdev.chart.PieChart doanhthu;
     private javax.swing.JLabel jLabel1;
@@ -373,7 +404,11 @@ public class ThongKe extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel jbl_tdoanhthu;
+    private javax.swing.JLabel jbl_tdoanhthu1;
+    private javax.swing.JLabel jbl_tdoanhthu2;
     private javax.swing.JLabel lbl_doanhthu;
+    private javax.swing.JLabel lbl_doanhthu1;
+    private javax.swing.JLabel lbl_doanhthu2;
     private javaswingdev.chart.PieChart pieChart;
     // End of variables declaration//GEN-END:variables
 }
