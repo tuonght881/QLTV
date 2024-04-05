@@ -223,7 +223,10 @@ public class DON_THUE extends javax.swing.JPanel {
                     kh.setDiemuytin(uytin);
                     khDAO.update(kh);
                 }
-            } else {
+            } else if(kh.getDiemuytin()==100){
+                kh.setDiemuytin(100);
+                khDAO.update(kh);
+            }else{
                 uytin = uytin + 5;
                 kh.setDiemuytin(uytin);
                 khDAO.update(kh);

@@ -218,10 +218,10 @@ public class QLVT extends javax.swing.JPanel {
         if (tentacgia.equalsIgnoreCase("")) {
             loi += "Tên vị trí\n";
         }
-        boolean OnlyLetters = tentacgia.matches(".*\\d.*");
-        if (OnlyLetters) {
-            loi += "Tên vị trí không được nhập số\n";
-        }
+//        boolean OnlyLetters = tentacgia.matches(".*\\d.*");
+//        if (OnlyLetters) {
+//            loi += "Tên vị trí không được nhập số\n";
+//        }
         if (rdo_hd.isSelected() == false && rdo_nhd.isSelected() == false) {
             loi += "Vui lòng chọn tình trạng hoạt động";
         }

@@ -225,14 +225,17 @@ public class QLS extends javax.swing.JPanel {
 
     public void resetForm() {
         loaddataSach();
+        loaddataTG();
+        loaddataTL();
+        loaddataVT();
         loadIDS();
-        txt_idsach.setEnabled(true);
-        txt_idsach.setEditable(true);
+        txt_idsach.setEnabled(false);
+        txt_idsach.setEditable(false);
         btn_them.setEnabled(true);
         btn_sua.setEnabled(false);
         btn_xoa.setEnabled(false);
 
-        txt_idsach.setText("");
+        //txt_idsach.setText("");
         txt_tensach.setText("");
         txt_giaban.setText("");
         txt_soluong.setText("");
@@ -245,6 +248,7 @@ public class QLS extends javax.swing.JPanel {
     }
 
     public void loaddataTL() {
+        cbo_TL.removeAllItems();
         List<TheLoai> list = tlDAO.selectAll();
         for (TheLoai tl : list) {
             cbo_TL.addItem(tl.getTentheloai());
@@ -252,6 +256,7 @@ public class QLS extends javax.swing.JPanel {
     }
 
     public void loaddataTG() {
+        cbo_tg.removeAllItems();
         List<TacGia> list = tgDAO.selectAll();
         for (TacGia tg : list) {
             cbo_tg.addItem(tg.getTentg());
@@ -259,6 +264,7 @@ public class QLS extends javax.swing.JPanel {
     }
 
     public void loaddataVT() {
+        cbo_vt.removeAllItems();
         List<ViTri> list = vtDAO.selectAll();
         for (ViTri vt : list) {
             cbo_vt.addItem(vt.getTenvt());
