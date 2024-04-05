@@ -577,6 +577,9 @@ public class BAN_SACH extends javax.swing.JPanel {
             }
         });
         jScrollPane1.setViewportView(tbl_sach);
+        if (tbl_sach.getColumnModel().getColumnCount() > 0) {
+            tbl_sach.getColumnModel().getColumn(0).setPreferredWidth(100);
+        }
 
         crazyPanel4.add(jScrollPane1);
 

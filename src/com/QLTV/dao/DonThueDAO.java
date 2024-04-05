@@ -46,10 +46,6 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
         return select_by_sql(selectAll);
     }
 
-    public List<DonThue> up(DonThue entity) {
-        return select_by_sql(update, entity);
-    }
-
     @Override
     public DonThue select_byID(String key) {
         List<DonThue> list = this.select_by_sql(select_by_ID, key);

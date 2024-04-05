@@ -69,6 +69,7 @@ public class DON_THUE extends javax.swing.JPanel {
     Double tienphat = 0.0;
     Locale localeVN = new Locale("vi", "VN");
     NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+
     /**
      * Creates new form DON_THUE
      */
@@ -92,9 +93,9 @@ public class DON_THUE extends javax.swing.JPanel {
                 }
             }
         });
-        if(XAuth.isManager()==true){
+        if (XAuth.isManager() == true) {
             btn_xoa.setVisible(true);
-        }else{
+        } else {
             btn_xoa.setVisible(false);
         }
     }
@@ -163,10 +164,10 @@ public class DON_THUE extends javax.swing.JPanel {
         dthueNew.setIddonthue(txt_iddonthue2.getText().trim());
         dthueNew.setIdkhach(txt_idKhach.getText().trim());
         dthueNew.setManv(txt_manv.getText().trim());
-        //dthueNew.setNgaytao(txt_ngaythue.getText());
-        //dthueNew.setNgaythue(txt_ngaythue.getText());
-        //String ntrdk = txt_ngaytradukien.getText().trim();
-        //dthueNew.setNgaytradukien(ntrdk);
+        dthueNew.setNgaytao(txt_ngaythue.getText());
+        dthueNew.setNgaythue(txt_ngaythue.getText());
+        String ntrdk = txt_ngaytradukien.getText().trim();
+        dthueNew.setNgaytradukien(ntrdk);
         dthueNew.setTrangthai(true);
         dthueNew.setNgaytra(txt_ngaytra.getText());
         dthueNew.setTienphat(Double.valueOf(txt_tienphat.getText().trim()));
@@ -210,13 +211,18 @@ public class DON_THUE extends javax.swing.JPanel {
         try {
             KhachHang kh = khDAO.select_byID(txt_idKhach.getText());
             int uytin = kh.getDiemuytin();
-            Double tien = Double.parseDouble(txt_tienphat.getText());
+            Double tien = Double.valueOf(txt_tienphat.getText());
             DonThue dthueNew = getFormDonThue();
-            dthueDAO.up(dthueNew);
+            dthueDAO.update(dthueNew);
             if (tien > 0) {
-                uytin = uytin - 15;
-                kh.setDiemuytin(uytin);
-                khDAO.update(kh);
+                if (kh.getDiemuytin() < 15 || kh.getDiemuytin() == 0) {
+                    kh.setDiemuytin(0);
+                    khDAO.update(kh);
+                } else {
+                    uytin = uytin - 15;
+                    kh.setDiemuytin(uytin);
+                    khDAO.update(kh);
+                }
             } else {
                 uytin = uytin + 5;
                 kh.setDiemuytin(uytin);
@@ -289,13 +295,13 @@ public class DON_THUE extends javax.swing.JPanel {
 
     public void loaddataDonThue() {
         model_donthue = (DefaultTableModel) tbl_donthue.getModel();
-        model_donthue.setColumnIdentifiers(new Object[]{"ID Đơn Thuê", "Tên khách", "Số điện thoại", "Ngày thuê","Trạng thái"});
+        model_donthue.setColumnIdentifiers(new Object[]{"ID Đơn Thuê", "Tên khách", "Số điện thoại", "Ngày thuê", "Trạng thái"});
         model_donthue.setRowCount(0);
         try {
             List<DonThue> list = dthueDAO.selectAll();
             for (DonThue dthue : list) {
                 KhachHang kh = khDAO.select_byID(dthue.getIdkhach());
-                Object[] row = {dthue.getIddonthue(), kh.getHotenkhach(), kh.getSdt(), dthue.getNgaythue(),dthue.getTrangthai()?"Hoàn thành":"Chưa hoàn thành"};
+                Object[] row = {dthue.getIddonthue(), kh.getHotenkhach(), kh.getSdt(), dthue.getNgaythue(), dthue.getTrangthai() ? "Hoàn thành" : "Chưa hoàn thành"};
                 model_donthue.addRow(row);
             }
             if (model_donthue.getRowCount() == 0) {
@@ -347,8 +353,6 @@ public class DON_THUE extends javax.swing.JPanel {
         }
         return true;
     }
-
-
 
     /**
      * This method is called from within the constructor to initialize the form.

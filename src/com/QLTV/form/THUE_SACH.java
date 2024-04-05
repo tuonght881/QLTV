@@ -113,7 +113,6 @@ public class THUE_SACH extends javax.swing.JPanel {
         });
         loaddataSach();
         loadDonThue();
-        xuongdong();
         ActionListener act = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -146,30 +145,6 @@ public class THUE_SACH extends javax.swing.JPanel {
         return dthueNew;
     }
 
-    public void xuongdong() {
-        // Tạo renderer cho cột đầu tiên (căn lề trái)
-        //DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
-        //leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
-
-        // Áp dụng renderer cho cột đầu tiên
-        //tbl_hoadon.getColumnModel().getColumn(0).setCellRenderer(leftRenderer);
-        // Tạo renderer cho các cột còn lại (căn lề phải)
-        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
-
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setVerticalAlignment(SwingConstants.CENTER);
-        // Áp dụng renderer cho các cột còn lại
-        for (int i = 1; i < tbl_thuesach.getColumnCount(); i++) {
-            tbl_thuesach.getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
-        }
-
-        tbl_thuesach.getColumnModel().getColumn(0).setPreferredWidth(100);
-        tbl_sach.getColumnModel().getColumn(0).setPreferredWidth(300);
-        tbl_thuesach.getColumnModel().getColumn(0).setCellRenderer(new MultiLineTableCellRenderer());
-        tbl_sach.getColumnModel().getColumn(0).setCellRenderer(new MultiLineTableCellRenderer());
-        tbl_sach.getColumnModel().getColumn(1).setCellRenderer(new MultiLineTableCellRenderer());
-    }
 
     public void ThemDonThue() {
         if (batloi_tk()) {
@@ -233,7 +208,6 @@ public class THUE_SACH extends javax.swing.JPanel {
         if (model_hd != null) {
             model_hd.setRowCount(0);
         }
-        xuongdong();
     }
 
     public void loadDonThue() {
@@ -787,6 +761,9 @@ public class THUE_SACH extends javax.swing.JPanel {
             }
         });
         jScrollPane1.setViewportView(tbl_sach);
+        if (tbl_sach.getColumnModel().getColumnCount() > 0) {
+            tbl_sach.getColumnModel().getColumn(0).setPreferredWidth(150);
+        }
 
         crazyPanel6.add(jScrollPane1);
 
