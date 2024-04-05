@@ -138,9 +138,9 @@ public class QLDG extends javax.swing.JPanel {
         txt_diemuytin.setEditable(false);
         txt_diemuytin.setEnabled(false);
         loaddataKhachHang();
-        txt_idkhachhang.setEnabled(true);
-        txt_idkhachhang.setEditable(true);
-        txt_idkhachhang.setText("");
+        //txt_idkhachhang.setEnabled(true);
+        //txt_idkhachhang.setEditable(true);
+        //txt_idkhachhang.setText("");
         txt_tenkhachhang.setText("");
         txt_diemuytin.setText("90");
         txt_sdt.setText("");
@@ -191,7 +191,7 @@ public class QLDG extends javax.swing.JPanel {
     public void loadIDDG() {
         try {
             String idkh = "";
-            List<KhachHang> list = khDAO.selectAll();
+            List<KhachHang> list = khDAO.select_all();
             for (KhachHang kh : list) {
                 idkh = kh.getIdkhach();
             }

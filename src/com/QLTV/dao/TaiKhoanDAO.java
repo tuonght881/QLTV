@@ -17,7 +17,7 @@ import java.util.List;
  * @author Tuong
  */
 public class TaiKhoanDAO extends EntityDao<TaiKhoan, String> {
-
+    String select_al = "SELECT * FROM taikhoan ORDER BY CAST(SUBSTRING(manv, 3, LEN(manv)) AS INT);";
     String selectAll = "select * from TaiKhoan order by trangthai desc";
     String insert = "insert into TaiKhoan values(?,?,?,?,?,?,?,?,?)";
     String update = "update TaiKhoan set matkhau = ?,vaitro = ?,trangthai = ?,hoten=?,gioitinh=?,sdt=?,ngaysinh=?,diachi=? where manv=?";
@@ -44,7 +44,9 @@ public class TaiKhoanDAO extends EntityDao<TaiKhoan, String> {
     public List<TaiKhoan> selectAll() {
         return select_by_sql(selectAll);
     }
-
+    public List<TaiKhoan> select_al() {
+        return select_by_sql(select_al);
+    }
     @Override
     public TaiKhoan select_byID(String key) {
         List<TaiKhoan> list = this.select_by_sql(select_by_ID, key);

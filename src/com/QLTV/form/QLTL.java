@@ -136,9 +136,9 @@ public class QLTL extends javax.swing.JPanel {
     public void resetForm() {
         loaddataTheLoai();
         loadIDTL();
-        txt_idtheloai.setEnabled(true);
-        txt_idtheloai.setEditable(true);
-        txt_idtheloai.setText("");
+        txt_idtheloai.setEnabled(false);
+        txt_idtheloai.setEditable(false);
+        //txt_idtheloai.setText("");
         txt_tentheloai.setText("");
         hd_tl.clearSelection();
         btn_them.setEnabled(true);

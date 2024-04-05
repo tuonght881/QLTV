@@ -261,7 +261,7 @@ public class QLTK extends javax.swing.JPanel {
     public void loadMaNV() {
         try {
             String mnv = "";
-            List<TaiKhoan> list = tkDAO.selectAll();
+            List<TaiKhoan> list = tkDAO.select_al();
             for (TaiKhoan tk : list) {
                 mnv = tk.getManv();
             }
@@ -324,7 +324,7 @@ public class QLTK extends javax.swing.JPanel {
         if (hoten.equalsIgnoreCase("")) {
             loi += "Họ tên\n";
         }
-        if (OnlyLetters == false) {
+        if (OnlyLetters) {
             loi += "Họ tên không được nhập số\n";
         }
         if (matkhau.equalsIgnoreCase("")) {

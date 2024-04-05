@@ -142,9 +142,9 @@ public class QLViTri_FORM extends javax.swing.JFrame {
     public void resetForm() {
         loaddataViTri();
         loadIDvt();
-        txt_idvitri.setEnabled(true);
-        txt_idvitri.setEditable(true);
-        txt_idvitri.setText("");
+        txt_idvitri.setEnabled(false);
+        txt_idvitri.setEditable(false);
+        //txt_idvitri.setText("");
         txt_tenvitri.setText("");
         hd_vt.clearSelection();
         btn_them.setEnabled(true);
@@ -173,7 +173,7 @@ public class QLViTri_FORM extends javax.swing.JFrame {
 
     public void loadIDvt() {
         try {
-            List<ViTri> list = vitriDAO.selectAll();
+            List<ViTri> list = vitriDAO.select_all();
             for (ViTri dt : list) {
                 id = Integer.parseInt(dt.getIdvitri());
             }

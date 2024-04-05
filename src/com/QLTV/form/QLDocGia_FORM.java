@@ -196,7 +196,7 @@ public class QLDocGia_FORM extends javax.swing.JFrame {
     public void loadIDDG() {
         try {
             String idkh = "";
-            List<KhachHang> list = khDAO.selectAll();
+            List<KhachHang> list = khDAO.select_all();
             for (KhachHang kh : list) {
                 idkh = kh.getIdkhach();
             }

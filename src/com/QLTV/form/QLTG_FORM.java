@@ -51,7 +51,7 @@ public class QLTG_FORM extends javax.swing.JFrame {
     public void loadIDTG() {
         try {
             String idkh = "";
-            List<TacGia> list = tgDAO.selectAll();
+            List<TacGia> list = tgDAO.select_all();
             for (TacGia kh : list) {
                 idkh = kh.getIdtg();
             }
@@ -165,9 +165,9 @@ public class QLTG_FORM extends javax.swing.JFrame {
     public void resetForm() {
         loaddataTacGia();
         loadIDTG();
-        txt_idtacgia.setEnabled(true);
-        txt_idtacgia.setEditable(true);
-        txt_idtacgia.setText("");
+        txt_idtacgia.setEnabled(false);
+        txt_idtacgia.setEditable(false);
+        //txt_idtacgia.setText("");
         txt_tentacgia.setText("");
         hd_tg.clearSelection();
         btn_them.setEnabled(true);
