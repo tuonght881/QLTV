@@ -15,13 +15,11 @@ import com.raven.chart2.ModelChart;
 import java.awt.Color;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import javaswingdev.chart.ModelPieChart;
 import javaswingdev.chart.PieChart;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
