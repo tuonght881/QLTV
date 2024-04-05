@@ -455,7 +455,7 @@ public class QLDG extends javax.swing.JPanel {
         crazyPanel3.add(jLabel5);
 
         txt_diemuytin.setEditable(false);
-        txt_diemuytin.setText("80");
+        txt_diemuytin.setText("70");
         txt_diemuytin.setEnabled(false);
         crazyPanel3.add(txt_diemuytin);
 
