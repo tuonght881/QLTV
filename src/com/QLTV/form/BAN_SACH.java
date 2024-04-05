@@ -298,7 +298,7 @@ public class BAN_SACH extends javax.swing.JPanel {
 
     public void taoHoaDon(MouseEvent evt) throws NumberFormatException, HeadlessException {
         if (evt.getClickCount() == 2) {
-            index = tbl_hoadon.getSelectedRow();
+            index = tbl_sach.getSelectedRow();
             String sl = JOptionPane.showInputDialog(this, "Nhập số lượng", "Thông báo", JOptionPane.OK_CANCEL_OPTION);
             try {
                 while (sl.equalsIgnoreCase("")) {
@@ -307,7 +307,7 @@ public class BAN_SACH extends javax.swing.JPanel {
             } catch (NullPointerException e) {
                 //JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
             }
-            int slc = Integer.parseInt(tbl_hoadon.getValueAt(index, 3).toString());
+            int slc = Integer.parseInt(tbl_sach.getValueAt(index, 3).toString());
             if (Integer.parseInt(sl) > slc) {
                 JOptionPane.showMessageDialog(this, "Số lượng trong kho không đủ!", "Thông báo", JOptionPane.OK_OPTION);
             } else if (sl != null) {
@@ -347,7 +347,7 @@ public class BAN_SACH extends javax.swing.JPanel {
                             int sl2 = Integer.parseInt(tbl_hoadon.getValueAt(hang, 2).toString()) + Integer.parseInt(sl);
                             tbl_hoadon.setValueAt(sl2, hang, 2);
                             Double thanhtien = (Double.parseDouble(sl) * Double.parseDouble(row[1].toString()));
-                            Double thanhtien2 = Double.parseDouble(tbl_hoadon.getValueAt(hang, 3).toString()) + thanhtien;
+                            Double thanhtien2 = Double.valueOf(tbl_hoadon.getValueAt(hang, 3).toString()) + thanhtien;
                             tbl_hoadon.setValueAt(D_format.format(thanhtien2), hang, 3);
                             tinhtien();
                         }
@@ -775,23 +775,24 @@ public class BAN_SACH extends javax.swing.JPanel {
     private void txt_timkiemCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_timkiemCaretUpdate
         timkiem();
     }//GEN-LAST:event_txt_timkiemCaretUpdate
-
+    int dem =0;
     private void txt_khachduaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_khachduaKeyPressed
         boolean check = false;
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("")) {
-            khachdua = Double.parseDouble(txt_khachdua.getText());
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("")&&dem==0) {
+            khachdua = Double.valueOf(txt_khachdua.getText());
             if (khachdua >= tongcong) {
                 thoilai = khachdua - tongcong;
                 txt_thoilai.setText(currencyVN.format(thoilai));
                 check = true;
+                dem++;
             } else {
                 JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
                 check = false;
             }
-        }
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER && check == true) {
+        }else
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && dem==1) {
             ThemHoaDon();
-            check = false;
+            dem=0;
         }
     }//GEN-LAST:event_txt_khachduaKeyPressed
 

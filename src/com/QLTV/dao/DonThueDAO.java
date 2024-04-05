@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class DonThueDAO extends EntityDao<DonThue, String> {
 
-    String madonthue = "select top 1 * from donthue order by trangthai desc";
+    String madonthue = "select top 1 * from donthue order by trangthai asc";
     String selectAll = "select * from donthue";
     String insert = "insert into DonThue values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
     String update = "UPDATE donthue SET idkhach = ?, manv = ?, ngaytao = ?, ngaythue = ?, ngaytradukien = ?, ngaytra = ?,trangthai=?,tienphat = ?,tongtiendambao = ?, khachdua= ? ,thoilai= ? ,thanhtien = ? WHERE iddonthue = ?;";
