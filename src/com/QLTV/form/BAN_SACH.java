@@ -307,8 +307,11 @@ public class BAN_SACH extends javax.swing.JPanel {
             } catch (NullPointerException e) {
                 //JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
             }
-            int slc = Integer.parseInt(tbl_sach.getValueAt(index, 3).toString());
-            if (Integer.parseInt(sl) > slc) {
+            int slc = 0;
+            slc = Integer.parseInt(tbl_sach.getValueAt(index, 3).toString());
+            if (sl == null) {
+                return;
+            } else if (Integer.parseInt(sl) > slc) {
                 JOptionPane.showMessageDialog(this, "Số lượng trong kho không đủ!", "Thông báo", JOptionPane.OK_OPTION);
             } else if (sl != null) {
                 Object[] row = new Object[4];
@@ -775,10 +778,10 @@ public class BAN_SACH extends javax.swing.JPanel {
     private void txt_timkiemCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_timkiemCaretUpdate
         timkiem();
     }//GEN-LAST:event_txt_timkiemCaretUpdate
-    int dem =0;
+    int dem = 0;
     private void txt_khachduaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_khachduaKeyPressed
         boolean check = false;
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("")&&dem==0) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("") && dem == 0) {
             khachdua = Double.valueOf(txt_khachdua.getText());
             if (khachdua >= tongcong) {
                 thoilai = khachdua - tongcong;
@@ -789,10 +792,9 @@ public class BAN_SACH extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
                 check = false;
             }
-        }else
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER && dem==1) {
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER && dem == 1) {
             ThemHoaDon();
-            dem=0;
+            dem = 0;
         }
     }//GEN-LAST:event_txt_khachduaKeyPressed
 

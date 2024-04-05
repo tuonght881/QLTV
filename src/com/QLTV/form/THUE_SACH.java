@@ -432,7 +432,11 @@ public class THUE_SACH extends javax.swing.JPanel {
             } catch (NullPointerException e) {
                 //JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
             }
-            int slc = Integer.parseInt(tbl_sach.getValueAt(index, 3).toString());
+            int slc =0;
+            slc = Integer.parseInt(tbl_sach.getValueAt(index, 3).toString());
+            if(sl==null){
+                return;
+            }else
             if (Integer.parseInt(sl) > slc) {
                 JOptionPane.showMessageDialog(this, "Số lượng trong kho không đủ!", "Thông báo", JOptionPane.OK_OPTION);
             } else if (sl != null) {
