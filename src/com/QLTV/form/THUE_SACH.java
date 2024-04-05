@@ -404,7 +404,7 @@ public class THUE_SACH extends javax.swing.JPanel {
                 txt_diemuytin.setText(Integer.toString(kh.getDiemuytin()));
                 phantram = ((100 - Double.valueOf(kh.getDiemuytin())));//tính phần trăm phí đảm bảo
                 txt_phantramdambao.setText(D_format.format(phantram) + "%");
-                tinhngaymuon();
+                soNgayMuonTienDamBao();
             } catch (NullPointerException e) {
                 int choice = JOptionPane.showConfirmDialog(this, "Khách hàng không tồn tại!\n Thêm khách hàng mới?", "Thông báo", JOptionPane.OK_CANCEL_OPTION);
                 QLDocGia_FORM qlkh = new QLDocGia_FORM();
@@ -521,7 +521,7 @@ public class THUE_SACH extends javax.swing.JPanel {
         }
     }
 
-    public void tinhngaymuon() {
+    public void soNgayMuonTienDamBao() {
         try {
             double ngaymuon;
             tinhngaytradukien();
@@ -1106,7 +1106,7 @@ public class THUE_SACH extends javax.swing.JPanel {
 
     private void tbl_sachMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_sachMouseClicked
         taoHoaDon(evt);
-        tinhngaymuon();
+        soNgayMuonTienDamBao();
     }//GEN-LAST:event_tbl_sachMouseClicked
 
     private void txt_iddonthueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_iddonthueActionPerformed
@@ -1156,7 +1156,7 @@ public class THUE_SACH extends javax.swing.JPanel {
 
     private void txt_songaymuonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_songaymuonKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_songaymuon.getText().equalsIgnoreCase("")) {
-            tinhngaymuon();
+            soNgayMuonTienDamBao();
         }
     }//GEN-LAST:event_txt_songaymuonKeyPressed
 

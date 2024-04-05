@@ -243,7 +243,7 @@
                 <Component class="com.raven.chart2.LineChart" name="bieudo">
                   <Properties>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[650, 280]"/>
+                      <Dimension value="[500, 280]"/>
                     </Property>
                   </Properties>
                 </Component>

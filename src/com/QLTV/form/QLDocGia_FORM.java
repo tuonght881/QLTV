@@ -78,7 +78,10 @@ public class QLDocGia_FORM extends javax.swing.JFrame {
         }
         txt_idkhachhang.setEnabled(false);
         txt_idkhachhang.setEditable(false);
+        txt_diemuytin.setEnabled(true);
+        txt_diemuytin.setEditable(true);
         btn_them.setEnabled(false);
+        btn_sua.setVisible(true);
         btn_sua.setEnabled(true);
         btn_xoa.setEnabled(true);
         String idkh = (String) tbl_khachhang.getValueAt(index, 0);
@@ -140,6 +143,7 @@ public class QLDocGia_FORM extends javax.swing.JFrame {
 
     public void resetForm() {
         loadIDDG();
+        btn_sua.setVisible(false);
         txt_diemuytin.setEditable(false);
         txt_diemuytin.setEnabled(false);
         loaddataKhachHang();
@@ -147,7 +151,7 @@ public class QLDocGia_FORM extends javax.swing.JFrame {
         txt_idkhachhang.setEditable(true);
         txt_idkhachhang.setText("");
         txt_tenkhachhang.setText("");
-        txt_diemuytin.setText("90");
+        txt_diemuytin.setText("70");
         txt_sdt.setText("");
         btn_them.setEnabled(true);
         btn_sua.setEnabled(false);
@@ -462,7 +466,7 @@ public class QLDocGia_FORM extends javax.swing.JFrame {
         crazyPanel3.add(jLabel5);
 
         txt_diemuytin.setEditable(false);
-        txt_diemuytin.setText("90");
+        txt_diemuytin.setText("70");
         txt_diemuytin.setEnabled(false);
         crazyPanel3.add(txt_diemuytin);
 

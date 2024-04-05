@@ -335,7 +335,7 @@ public class ThongKe extends javax.swing.JPanel {
         jLabel1.setText("Doanh thu theo ngày (7 ngày gần nhất)");
         crazyPanel1.add(jLabel1);
 
-        bieudo.setPreferredSize(new java.awt.Dimension(650, 280));
+        bieudo.setPreferredSize(new java.awt.Dimension(500, 280));
         crazyPanel1.add(bieudo);
 
         crazyPanel3.add(crazyPanel1);

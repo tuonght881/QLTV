@@ -142,7 +142,7 @@ public class QLDG extends javax.swing.JPanel {
         //txt_idkhachhang.setEditable(true);
         //txt_idkhachhang.setText("");
         txt_tenkhachhang.setText("");
-        txt_diemuytin.setText("90");
+        txt_diemuytin.setText("70");
         txt_sdt.setText("");
         btn_them.setEnabled(true);
         btn_sua.setEnabled(false);
@@ -455,7 +455,7 @@ public class QLDG extends javax.swing.JPanel {
         crazyPanel3.add(jLabel5);
 
         txt_diemuytin.setEditable(false);
-        txt_diemuytin.setText("90");
+        txt_diemuytin.setText("80");
         txt_diemuytin.setEnabled(false);
         crazyPanel3.add(txt_diemuytin);
 
