@@ -396,7 +396,7 @@ public class QLTL extends javax.swing.JPanel {
         });
         crazyPanel3.add(btn_them);
 
-        jLabel2.setText("Tên thể loại");
+        jLabel2.setText("(*)Tên thể loại");
         crazyPanel3.add(jLabel2);
 
         txt_tentheloai.setToolTipText("");
@@ -418,7 +418,7 @@ public class QLTL extends javax.swing.JPanel {
         });
         crazyPanel3.add(btn_reset);
 
-        jLabel3.setText("Trạng thái");
+        jLabel3.setText("(*)Trạng thái");
         crazyPanel3.add(jLabel3);
 
         hd_tl.add(rdo_hd);

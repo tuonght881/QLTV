@@ -172,7 +172,7 @@
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="11"/>
-                <Property name="text" type="java.lang.String" value="MaNV:"/>
+                <Property name="text" type="java.lang.String" value="(*)MaNV:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txt_manv">
@@ -185,7 +185,7 @@
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="11"/>
-                <Property name="text" type="java.lang.String" value="H&#x1ecd; t&#xea;n:"/>
+                <Property name="text" type="java.lang.String" value="(*)H&#x1ecd; t&#xea;n:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txt_hoten">
@@ -193,7 +193,7 @@
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="11"/>
-                <Property name="text" type="java.lang.String" value="M&#x1ead;t kh&#x1ea9;u:"/>
+                <Property name="text" type="java.lang.String" value="(*)M&#x1ead;t kh&#x1ea9;u:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JPasswordField" name="txt_matkhau">
@@ -205,7 +205,7 @@
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="11"/>
-                <Property name="text" type="java.lang.String" value="SDT:"/>
+                <Property name="text" type="java.lang.String" value="(*)SDT:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txt_sdt">
@@ -213,7 +213,7 @@
             <Component class="javax.swing.JLabel" name="jLabel9">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="11"/>
-                <Property name="text" type="java.lang.String" value="&#x110;&#x1ecb;a ch&#x1ec9;:"/>
+                <Property name="text" type="java.lang.String" value="(*)&#x110;&#x1ecb;a ch&#x1ec9;:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txt_diachi">
@@ -233,7 +233,7 @@
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="11"/>
-                <Property name="text" type="java.lang.String" value="Ng&#xe0;y sinh:"/>
+                <Property name="text" type="java.lang.String" value="(*)Ng&#xe0;y sinh:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txt_ngaysinh">
@@ -248,7 +248,7 @@
             <Component class="javax.swing.JLabel" name="jLabel10">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="11"/>
-                <Property name="text" type="java.lang.String" value="Gi&#x1edb;i t&#xed;nh:"/>
+                <Property name="text" type="java.lang.String" value="(*)Gi&#x1edb;i t&#xed;nh:"/>
               </Properties>
             </Component>
             <Container class="raven.crazypanel.CrazyPanel" name="crazyPanel9">
@@ -279,7 +279,7 @@
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="11"/>
-                <Property name="text" type="java.lang.String" value="Vai tr&#xf2;:"/>
+                <Property name="text" type="java.lang.String" value="(*)Vai tr&#xf2;:"/>
               </Properties>
             </Component>
             <Container class="raven.crazypanel.CrazyPanel" name="crazyPanel6">
@@ -328,7 +328,7 @@
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="11"/>
-                <Property name="text" type="java.lang.String" value="Tr&#x1ea1;ng th&#xe1;i:"/>
+                <Property name="text" type="java.lang.String" value="(*)Tr&#x1ea1;ng th&#xe1;i:"/>
               </Properties>
             </Component>
             <Container class="raven.crazypanel.CrazyPanel" name="crazyPanel7">

@@ -570,14 +570,14 @@ public class THUE_SACH extends javax.swing.JPanel {
         txt_ngaythuesach = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         txt_manv = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        txt_iddonthue = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         crazyPanel4 = new raven.crazypanel.CrazyPanel();
         crazyPanel6 = new raven.crazypanel.CrazyPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_sach = new javax.swing.JTable();
         crazyPanel7 = new raven.crazypanel.CrazyPanel();
-        jLabel2 = new javax.swing.JLabel();
-        txt_iddonthue = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         txt_idkh = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -665,7 +665,7 @@ public class THUE_SACH extends javax.swing.JPanel {
         ));
         crazyPanel2.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
             "",
-            "[][][][][]push[]",
+            "[][][][][][][]push[]",
             "",
             new String[]{
                 "width 200",
@@ -702,6 +702,20 @@ public class THUE_SACH extends javax.swing.JPanel {
         txt_manv.setToolTipText("");
         txt_manv.setEnabled(false);
         crazyPanel2.add(txt_manv);
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel2.setText("ID Đơn thuê");
+        crazyPanel2.add(jLabel2);
+
+        txt_iddonthue.setEditable(false);
+        txt_iddonthue.setToolTipText("");
+        txt_iddonthue.setEnabled(false);
+        txt_iddonthue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_iddonthueActionPerformed(evt);
+            }
+        });
+        crazyPanel2.add(txt_iddonthue);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel4.setText("THUÊ SÁCH");
@@ -800,21 +814,7 @@ public class THUE_SACH extends javax.swing.JPanel {
             }
         ));
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel2.setText("ID Đơn thuê");
-        crazyPanel7.add(jLabel2);
-
-        txt_iddonthue.setEditable(false);
-        txt_iddonthue.setToolTipText("");
-        txt_iddonthue.setEnabled(false);
-        txt_iddonthue.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_iddonthueActionPerformed(evt);
-            }
-        });
-        crazyPanel7.add(txt_iddonthue);
-
-        jLabel12.setText("ID khách");
+        jLabel12.setText("(*)ID khách");
         crazyPanel7.add(jLabel12);
 
         txt_idkh.setEditable(false);
@@ -822,7 +822,7 @@ public class THUE_SACH extends javax.swing.JPanel {
         crazyPanel7.add(txt_idkh);
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel6.setText("Khách hàng");
+        jLabel6.setText("(*)Khách hàng");
         crazyPanel7.add(jLabel6);
 
         txt_tenkh.setEditable(false);
@@ -830,14 +830,14 @@ public class THUE_SACH extends javax.swing.JPanel {
         crazyPanel7.add(txt_tenkh);
 
         lbl_diemuytin.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        lbl_diemuytin.setText("Điểm uy tín");
+        lbl_diemuytin.setText("(*)Điểm uy tín");
         crazyPanel7.add(lbl_diemuytin);
 
         txt_diemuytin.setEditable(false);
         txt_diemuytin.setEnabled(false);
         crazyPanel7.add(txt_diemuytin);
 
-        jLabel13.setText("Phí đảm bảo");
+        jLabel13.setText("(*)Phí đảm bảo");
         crazyPanel7.add(jLabel13);
 
         txt_phantramdambao.setEditable(false);
@@ -940,7 +940,7 @@ public class THUE_SACH extends javax.swing.JPanel {
         crazyPanel3.setName(""); // NOI18N
 
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel5.setText("SDT khách");
+        jLabel5.setText("(*)SDT khách");
         crazyPanel3.add(jLabel5);
 
         txt_sdtkhach.addCaretListener(new javax.swing.event.CaretListener() {
@@ -958,7 +958,7 @@ public class THUE_SACH extends javax.swing.JPanel {
         crazyPanel3.add(jSeparator2);
 
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel14.setText("Số ngày mượn");
+        jLabel14.setText("(*)Số ngày mượn");
         crazyPanel3.add(jLabel14);
 
         txt_songaymuon.addCaretListener(new javax.swing.event.CaretListener() {
@@ -1010,7 +1010,7 @@ public class THUE_SACH extends javax.swing.JPanel {
         crazyPanel3.add(jSeparator6);
 
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel11.setText("Khách đưa");
+        jLabel11.setText("(*)Khách đưa");
         crazyPanel3.add(jLabel11);
 
         txt_khachdua.addCaretListener(new javax.swing.event.CaretListener() {

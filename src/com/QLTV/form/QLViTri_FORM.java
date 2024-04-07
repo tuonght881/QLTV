@@ -370,7 +370,7 @@ public class QLViTri_FORM extends javax.swing.JFrame {
             }
         ));
 
-        jLabel1.setText("ID Vị trí");
+        jLabel1.setText("(*)ID Vị trí");
         crazyPanel3.add(jLabel1);
 
         txt_idvitri.setEditable(false);
@@ -394,7 +394,7 @@ public class QLViTri_FORM extends javax.swing.JFrame {
         });
         crazyPanel3.add(btn_them);
 
-        jLabel2.setText("Tên vị trí");
+        jLabel2.setText("(*)Tên vị trí");
         crazyPanel3.add(jLabel2);
 
         txt_tenvitri.setToolTipText("");
@@ -416,7 +416,7 @@ public class QLViTri_FORM extends javax.swing.JFrame {
         });
         crazyPanel3.add(btn_reset);
 
-        jLabel3.setText("Trạng thái");
+        jLabel3.setText("(*)Trạng thái");
         crazyPanel3.add(jLabel3);
 
         hd_vt.add(rdo_hd);

@@ -143,7 +143,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="T&#xea;n th&#x1ec3; lo&#x1ea1;i"/>
+                <Property name="text" type="java.lang.String" value="(*)T&#xea;n th&#x1ec3; lo&#x1ea1;i"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txt_tentheloai">
@@ -169,7 +169,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Tr&#x1ea1;ng th&#xe1;i"/>
+                <Property name="text" type="java.lang.String" value="(*)Tr&#x1ea1;ng th&#xe1;i"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="rdo_hd">

@@ -20,11 +20,11 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="798" max="32767" attributes="0"/>
+          <EmptySpace min="0" pref="813" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="crazyPanel1" pref="786" max="32767" attributes="0"/>
+                  <Component id="crazyPanel1" pref="801" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -173,6 +173,9 @@
             <Property name="flatLafStyleComponent" type="raven.crazypanel.FlatLafStyleComponent" editor="raven.crazypanel.bean.editor.FlatLafStyleEditor">
               <SerializedValue value="-84,-19,0,5,115,114,0,38,114,97,118,101,110,46,99,114,97,122,121,112,97,110,101,108,46,70,108,97,116,76,97,102,83,116,121,108,101,67,111,109,112,111,110,101,110,116,-45,-56,5,104,-120,-26,26,62,2,0,2,76,0,8,111,119,110,83,116,121,108,101,116,0,18,76,106,97,118,97,47,108,97,110,103,47,83,116,114,105,110,103,59,91,0,6,115,116,121,108,101,115,116,0,19,91,76,106,97,118,97,47,108,97,110,103,47,83,116,114,105,110,103,59,120,112,116,0,28,98,97,99,107,103,114,111,117,110,100,58,36,84,97,98,108,101,46,98,97,99,107,103,114,111,117,110,100,117,114,0,19,91,76,106,97,118,97,46,108,97,110,103,46,83,116,114,105,110,103,59,-83,-46,86,-25,-23,29,123,71,2,0,0,120,112,0,0,0,0"/>
             </Property>
+            <Property name="migLayoutConstraints" type="raven.crazypanel.MigLayoutConstraints" editor="raven.crazypanel.bean.editor.MigPanelEditor">
+              <SerializedValue value="-84,-19,0,5,115,114,0,37,114,97,118,101,110,46,99,114,97,122,121,112,97,110,101,108,46,77,105,103,76,97,121,111,117,116,67,111,110,115,116,114,97,105,110,116,115,7,-4,-14,44,102,-86,-49,42,2,0,4,76,0,17,99,111,108,117,109,110,67,111,110,115,116,114,97,105,110,116,115,116,0,18,76,106,97,118,97,47,108,97,110,103,47,83,116,114,105,110,103,59,91,0,19,99,111,109,112,111,110,101,110,116,67,111,110,115,116,114,97,105,110,116,116,0,19,91,76,106,97,118,97,47,108,97,110,103,47,83,116,114,105,110,103,59,76,0,17,108,97,121,111,117,116,67,111,110,115,116,114,97,105,110,116,115,113,0,126,0,1,76,0,14,114,111,119,67,111,110,115,116,114,97,105,110,116,115,113,0,126,0,1,120,112,116,0,0,117,114,0,19,91,76,106,97,118,97,46,108,97,110,103,46,83,116,114,105,110,103,59,-83,-46,86,-25,-23,29,123,71,2,0,0,120,112,0,0,0,0,116,0,4,102,105,108,108,116,0,0"/>
+            </Property>
           </Properties>
           <SubComponents>
             <Container class="raven.crazypanel.CrazyPanel" name="crazyPanel6">
@@ -218,7 +221,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel1">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="11"/>
-                    <Property name="text" type="java.lang.String" value="ID S&#xe1;ch:"/>
+                    <Property name="text" type="java.lang.String" value="(*)ID S&#xe1;ch:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txt_idsach">
@@ -231,7 +234,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel3">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="11"/>
-                    <Property name="text" type="java.lang.String" value="T&#xea;n s&#xe1;ch:"/>
+                    <Property name="text" type="java.lang.String" value="(*)T&#xea;n s&#xe1;ch:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txt_tensach">
@@ -305,7 +308,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel11">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="11"/>
-                    <Property name="text" type="java.lang.String" value="S&#x1ed1; l&#x1b0;&#x1ee3;ng:"/>
+                    <Property name="text" type="java.lang.String" value="(*)S&#x1ed1; l&#x1b0;&#x1ee3;ng:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txt_soluong">
@@ -313,7 +316,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel10">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="11"/>
-                    <Property name="text" type="java.lang.String" value="Gi&#xe1; thu&#xea;/ng&#xe0;y"/>
+                    <Property name="text" type="java.lang.String" value="(*)Gi&#xe1; thu&#xea;/ng&#xe0;y"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txt_giathue1ngay">
@@ -321,7 +324,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel8">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="11"/>
-                    <Property name="text" type="java.lang.String" value="Gi&#xe1; b&#xe1;n:"/>
+                    <Property name="text" type="java.lang.String" value="(*)Gi&#xe1; b&#xe1;n:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txt_giaban">
@@ -329,7 +332,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel6">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="11"/>
-                    <Property name="text" type="java.lang.String" value="Tr&#x1ea1;ng th&#xe1;i:"/>
+                    <Property name="text" type="java.lang.String" value="(*)Tr&#x1ea1;ng th&#xe1;i:"/>
                   </Properties>
                 </Component>
                 <Container class="raven.crazypanel.CrazyPanel" name="crazyPanel7">

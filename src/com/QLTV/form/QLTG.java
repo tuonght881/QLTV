@@ -375,7 +375,7 @@ public class QLTG extends javax.swing.JPanel {
             }
         ));
 
-        jLabel1.setText("ID Tác giả");
+        jLabel1.setText("(*)ID Tác giả");
         crazyPanel3.add(jLabel1);
 
         txt_idtacgia.setEditable(false);
@@ -399,7 +399,7 @@ public class QLTG extends javax.swing.JPanel {
         });
         crazyPanel3.add(btn_them);
 
-        jLabel2.setText("Tên tác giả");
+        jLabel2.setText("(*)Tên tác giả");
         crazyPanel3.add(jLabel2);
 
         txt_tentacgia.setToolTipText("");
@@ -421,7 +421,7 @@ public class QLTG extends javax.swing.JPanel {
         });
         crazyPanel3.add(btn_reset);
 
-        jLabel3.setText("Trạng thái");
+        jLabel3.setText("(*)Trạng thái");
         crazyPanel3.add(jLabel3);
 
         hd_tg.add(rdo_hd);

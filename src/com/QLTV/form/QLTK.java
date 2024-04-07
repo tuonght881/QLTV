@@ -632,7 +632,7 @@ public class QLTK extends javax.swing.JPanel {
         crazyPanel3.setName(""); // NOI18N
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel1.setText("MaNV:");
+        jLabel1.setText("(*)MaNV:");
         crazyPanel3.add(jLabel1);
 
         txt_manv.setEditable(false);
@@ -641,12 +641,12 @@ public class QLTK extends javax.swing.JPanel {
         crazyPanel3.add(txt_manv);
 
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel3.setText("Họ tên:");
+        jLabel3.setText("(*)Họ tên:");
         crazyPanel3.add(jLabel3);
         crazyPanel3.add(txt_hoten);
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel2.setText("Mật khẩu:");
+        jLabel2.setText("(*)Mật khẩu:");
         crazyPanel3.add(jLabel2);
 
         txt_matkhau.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -660,12 +660,12 @@ public class QLTK extends javax.swing.JPanel {
         crazyPanel3.add(txt_matkhau);
 
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel5.setText("SDT:");
+        jLabel5.setText("(*)SDT:");
         crazyPanel3.add(jLabel5);
         crazyPanel3.add(txt_sdt);
 
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel9.setText("Địa chỉ:");
+        jLabel9.setText("(*)Địa chỉ:");
         crazyPanel3.add(jLabel9);
         crazyPanel3.add(txt_diachi);
 
@@ -694,7 +694,7 @@ public class QLTK extends javax.swing.JPanel {
         ));
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel8.setText("Ngày sinh:");
+        jLabel8.setText("(*)Ngày sinh:");
         crazyPanel8.add(jLabel8);
 
         txt_ngaysinh.setEditable(false);
@@ -707,7 +707,7 @@ public class QLTK extends javax.swing.JPanel {
         crazyPanel8.add(txt_ngaysinh);
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel10.setText("Giới tính:");
+        jLabel10.setText("(*)Giới tính:");
         crazyPanel8.add(jLabel10);
 
         crazyPanel9.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
@@ -726,7 +726,7 @@ public class QLTK extends javax.swing.JPanel {
         crazyPanel8.add(crazyPanel9);
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel7.setText("Vai trò:");
+        jLabel7.setText("(*)Vai trò:");
         crazyPanel8.add(jLabel7);
 
         crazyPanel6.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
@@ -771,7 +771,7 @@ public class QLTK extends javax.swing.JPanel {
         ));
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel6.setText("Trạng thái:");
+        jLabel6.setText("(*)Trạng thái:");
         crazyPanel4.add(jLabel6);
 
         crazyPanel7.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(

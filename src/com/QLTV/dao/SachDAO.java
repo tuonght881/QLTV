@@ -17,7 +17,7 @@ import java.sql.ResultSet;
  */
 public class SachDAO extends EntityDao<Sach, String>{
     String selectal = "select * from Sach order by idsach asc";
-    String selectAll = "select * from Sach order by trangthaiSach desc, sl desc";
+    String selectAll = "select * from Sach order by idsach asc, sl desc";
     String selectOnStock = "select * from Sach where sl > 0 and trangthaiSach = 1";
     String insert = "insert into Sach values(?,?,?,?,?,?,?,?,?,?)";
     String select_by_ID = "select * from Sach where idsach=?";

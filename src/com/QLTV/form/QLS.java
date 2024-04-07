@@ -503,6 +503,12 @@ public class QLS extends javax.swing.JPanel {
             "background:$Table.background",
             null
         ));
+        crazyPanel8.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
+            "fill",
+            "",
+            "",
+            null
+        ));
 
         crazyPanel6.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
             "",
@@ -574,7 +580,7 @@ public class QLS extends javax.swing.JPanel {
         crazyPanel3.setName(""); // NOI18N
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel1.setText("ID Sách:");
+        jLabel1.setText("(*)ID Sách:");
         crazyPanel3.add(jLabel1);
 
         txt_idsach.setEditable(false);
@@ -583,7 +589,7 @@ public class QLS extends javax.swing.JPanel {
         crazyPanel3.add(txt_idsach);
 
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel3.setText("Tên sách:");
+        jLabel3.setText("(*)Tên sách:");
         crazyPanel3.add(jLabel3);
         crazyPanel3.add(txt_tensach);
 
@@ -636,22 +642,22 @@ public class QLS extends javax.swing.JPanel {
         crazyPanel3.add(cbo_vt);
 
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel11.setText("Số lượng:");
+        jLabel11.setText("(*)Số lượng:");
         crazyPanel3.add(jLabel11);
         crazyPanel3.add(txt_soluong);
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel10.setText("Giá thuê/ngày");
+        jLabel10.setText("(*)Giá thuê/ngày");
         crazyPanel3.add(jLabel10);
         crazyPanel3.add(txt_giathue1ngay);
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel8.setText("Giá bán:");
+        jLabel8.setText("(*)Giá bán:");
         crazyPanel3.add(jLabel8);
         crazyPanel3.add(txt_giaban);
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel6.setText("Trạng thái:");
+        jLabel6.setText("(*)Trạng thái:");
         crazyPanel3.add(jLabel6);
 
         crazyPanel7.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
@@ -733,11 +739,11 @@ public class QLS extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 798, Short.MAX_VALUE)
+            .addGap(0, 813, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 786, Short.MAX_VALUE)
+                    .addComponent(crazyPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 801, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         layout.setVerticalGroup(

@@ -412,7 +412,7 @@ public class QLDocGia_FORM extends javax.swing.JFrame {
             }
         ));
 
-        jLabel1.setText("ID Khách hàng");
+        jLabel1.setText("(*)ID Khách hàng");
         crazyPanel3.add(jLabel1);
 
         txt_idkhachhang.setEditable(false);
@@ -436,7 +436,7 @@ public class QLDocGia_FORM extends javax.swing.JFrame {
         });
         crazyPanel3.add(btn_them);
 
-        jLabel2.setText("Họ tên khách hàng");
+        jLabel2.setText("(*)Họ tên khách hàng");
         crazyPanel3.add(jLabel2);
 
         txt_tenkhachhang.setToolTipText("");
@@ -458,7 +458,7 @@ public class QLDocGia_FORM extends javax.swing.JFrame {
         });
         crazyPanel3.add(btn_reset);
 
-        jLabel3.setText("SDT");
+        jLabel3.setText("(*)SDT");
         crazyPanel3.add(jLabel3);
         crazyPanel3.add(txt_sdt);
 

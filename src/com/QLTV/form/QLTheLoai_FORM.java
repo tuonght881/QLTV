@@ -382,7 +382,7 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
             }
         ));
 
-        jLabel1.setText("ID Thể loại");
+        jLabel1.setText("(*)ID Thể loại");
         crazyPanel3.add(jLabel1);
 
         txt_idtheloai.setEditable(false);
@@ -406,7 +406,7 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
         });
         crazyPanel3.add(btn_them);
 
-        jLabel2.setText("Tên thể loại");
+        jLabel2.setText("(*)Tên thể loại");
         crazyPanel3.add(jLabel2);
 
         txt_tentheloai.setToolTipText("");
@@ -428,7 +428,7 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
         });
         crazyPanel3.add(btn_reset);
 
-        jLabel3.setText("Trạng thái");
+        jLabel3.setText("(*)Trạng thái");
         crazyPanel3.add(jLabel3);
 
         hd_tl.add(rdo_hd);
