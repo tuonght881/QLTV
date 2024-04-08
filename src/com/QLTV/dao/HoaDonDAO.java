@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class HoaDonDAO extends EntityDao<HoaDon, String> {
 
-    String selectAll = "select * from HoaDon";
+    String selectAll = "select * from HoaDon order by ngaytao desc";
     String insert = "insert into HoaDon values(?,?,?,?,?,?)";
     String mahoadon = "select top 1 * from hoadon order by idhoadon desc";
     String select_by_ID = "select * from HoaDon where idhoadon=?";

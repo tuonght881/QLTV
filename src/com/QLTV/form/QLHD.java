@@ -718,6 +718,9 @@ private void showPopup() {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel3.setText("Mã NV");
         crazyPanel3.add(jLabel3);
+
+        txt_manv.setEditable(false);
+        txt_manv.setEnabled(false);
         crazyPanel3.add(txt_manv);
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -737,16 +740,25 @@ private void showPopup() {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel5.setText("Khách đưa");
         crazyPanel3.add(jLabel5);
+
+        txt_khachdua.setEditable(false);
+        txt_khachdua.setEnabled(false);
         crazyPanel3.add(txt_khachdua);
 
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel9.setText("Thối lại");
         crazyPanel3.add(jLabel9);
+
+        txt_thoilai.setEditable(false);
+        txt_thoilai.setEnabled(false);
         crazyPanel3.add(txt_thoilai);
 
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel11.setText("Thành tiền");
         crazyPanel3.add(jLabel11);
+
+        txt_thanhtien.setEditable(false);
+        txt_thanhtien.setEnabled(false);
         crazyPanel3.add(txt_thanhtien);
 
         HdctPanel.add(crazyPanel3);

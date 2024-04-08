@@ -280,6 +280,10 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txt_manv">
+                  <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                  </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel2">
                   <Properties>
@@ -304,6 +308,10 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txt_khachdua">
+                  <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                  </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel9">
                   <Properties>
@@ -312,6 +320,10 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txt_thoilai">
+                  <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                  </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel11">
                   <Properties>
@@ -320,6 +332,10 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txt_thanhtien">
+                  <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>

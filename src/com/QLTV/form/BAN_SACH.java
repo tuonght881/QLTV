@@ -160,6 +160,9 @@ public class BAN_SACH extends javax.swing.JPanel {
         if (model_hd != null) {
             model_hd.setRowCount(0);
         }
+        tongcong = 0.0;
+        khachdua = 0.0;
+        thoilai = 0.0;
     }
 
     public void loadHoaDon() {
@@ -223,23 +226,25 @@ public class BAN_SACH extends javax.swing.JPanel {
     }
 
     public boolean batloi_bansach() {
-        String khachdua = txt_khachdua.getText();
+        String khachduaString = txt_khachdua.getText();
         String thoilai = txt_thoilai.getText();
         //String regex = "^\\d*[1-9]\\d*$";
-        boolean isPositiveNumber = khachdua.matches("^\\d*[1-9]\\d*$");
+        boolean isPositiveNumber = khachduaString.matches("^\\d*[1-9]\\d*$");
         String loi = "";
         if (model_hd == null) {
             loi += "Chưa có sách nào trong hoá đơn\n";
         }
-        if (khachdua.equalsIgnoreCase("")) {
+        if (khachduaString.equalsIgnoreCase("")) {
             loi += "Khách đưa\n";
-        }
-        if (isPositiveNumber == false) {
+        } else if (isPositiveNumber == false) {
             loi += "Vui lòng chỉ nhập số dương\n";
+        } else if (khachdua < tongcong) {
+            loi += "Khách đưa\n";
         }
         if (thoilai.equalsIgnoreCase("")) {
             loi += "Thối lại\n";
         }
+
         if (!loi.equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(this, "--Vui lòng kiểm tra lại thông tin!!--\n" + loi, "Lỗi", JOptionPane.INFORMATION_MESSAGE);
             return false;
@@ -385,59 +390,6 @@ public class BAN_SACH extends javax.swing.JPanel {
             setText((value == null) ? "" : value.toString());
             return this;
         }
-    }
-
-    private void applyTableStyle(JTable table) {
-        //btn_them.setIcon(new FlatSVGIcon("/asda/asdasd", 0.35f));
-        //txt_timkiem.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_ICON, new FlatSVGIcon(""),0.35f);
-        //changeScrollStyle
-        JScrollPane scroll = (JScrollPane) table.getParent().getParent();
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-        scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
-                + "background:$Table.background;"
-                + "track:$Table.background;"
-                + "trackArc:999");
-        table.getTableHeader().putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        table.putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        //Table Alignment
-        table.getTableHeader().setDefaultRenderer(getAlignmentCellRender(table.getTableHeader().getDefaultRenderer(), true));
-        table.setDefaultRenderer(Object.class, getAlignmentCellRender(table.getDefaultRenderer(Object.class), false));
-    }
-
-    private TableCellRenderer getAlignmentCellRender(TableCellRenderer oldRender, boolean header) {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component com = oldRender.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (com instanceof JLabel) {
-                    JLabel label = (JLabel) com;
-                    if (column == 0) {
-                        label.setHorizontalAlignment(SwingConstants.LEADING);
-                    } else if (column == 3 || column == 4) {
-                        label.setHorizontalAlignment(SwingConstants.TRAILING);
-                    } else if (column == 2) {
-                        label.setHorizontalAlignment(SwingConstants.CENTER);
-                    }
-//                    if (header == false) {
-//                        if (column == 4) {
-//                            if (Double.parseDouble(value.toString()) > 0) {
-//                                com.setForeground(new Color(17, 182, 60));
-//                                label.setText("+" + value);
-//                            } else {
-//                                com.setForeground(new Color(202, 48, 48));
-//                            }
-//                        } else {
-//                            if (isSelected) {
-//                                com.setForeground(table.getSelectionForeground());
-//                            } else {
-//                                com.setForeground(table.getForeground());
-//                            }
-//                        }
-//                    }
-                }
-                return com;
-            }
-        };
     }
 
     /**
@@ -787,29 +739,19 @@ public class BAN_SACH extends javax.swing.JPanel {
     private void txt_timkiemCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_timkiemCaretUpdate
         timkiem();
     }//GEN-LAST:event_txt_timkiemCaretUpdate
-    int dem = 0;
 
     public void tinhthoilaii() {
         khachdua = Double.valueOf(txt_khachdua.getText());
         if (khachdua >= tongcong) {
             thoilai = khachdua - tongcong;
             txt_thoilai.setText(currencyVN.format(thoilai));
-            dem++;
         } else {
             JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
         }
     }
     private void txt_khachduaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_khachduaKeyPressed
-        boolean check = false;
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("") && dem == 0 && batloi_bansach()) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             tinhthoilaii();
-        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER && dem == 1) {
-            if (thoilai == 0) {
-                tinhthoilaii();
-            } else {
-                ThemHoaDon();
-            }
-            dem = 0;
         }
     }//GEN-LAST:event_txt_khachduaKeyPressed
 

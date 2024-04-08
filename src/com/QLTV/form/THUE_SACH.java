@@ -1173,7 +1173,7 @@ public class THUE_SACH extends javax.swing.JPanel {
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER && dem == 1) {
             if (thoilai == 0) {
                 tinhthoilai();
-            }else{
+            } else {
                 ThemDonThue();
             }
             dem = 0;
