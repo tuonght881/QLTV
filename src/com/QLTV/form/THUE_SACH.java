@@ -314,7 +314,7 @@ public class THUE_SACH extends javax.swing.JPanel {
         if (khachdua.equalsIgnoreCase("")) {
             loi += "Khách đưa\n";
         } else if (isPositiveNumberKD == false) {
-            loi += "Vui lòng chỉ nhập số dương(Khách đưa)\n";
+            loi += "Khách đưa\n";
         }
         if (thoilai.equalsIgnoreCase("")) {
             loi += "Thối lại\n";
@@ -391,18 +391,20 @@ public class THUE_SACH extends javax.swing.JPanel {
     }
 
     void tinhngaytradukien() throws ParseException {
-        Date ngaymuon = sdf.parse(txt_ngaythuesach.getText());
-        int songaymuon;
-        if (txt_songaymuon.getText().equalsIgnoreCase("")) {
-            songaymuon = 0;
-        } else {
-            songaymuon = Integer.parseInt(txt_songaymuon.getText());
+        if (!txt_ngaythuesach.getText().equalsIgnoreCase("")) {
+            Date ngaymuon = sdf.parse(txt_ngaythuesach.getText());
+            int songaymuon;
+            if (txt_songaymuon.getText().equalsIgnoreCase("")) {
+                songaymuon = 0;
+            } else {
+                songaymuon = Integer.parseInt(txt_songaymuon.getText());
+            }
+            Calendar calendarNgayMuon = Calendar.getInstance();
+            calendarNgayMuon.setTime(ngaymuon);
+            calendarNgayMuon.add(Calendar.DAY_OF_MONTH, songaymuon);
+            Date newNgayMuon = calendarNgayMuon.getTime();
+            txt_ngaytradukien.setText(sdf.format(newNgayMuon));
         }
-        Calendar calendarNgayMuon = Calendar.getInstance();
-        calendarNgayMuon.setTime(ngaymuon);
-        calendarNgayMuon.add(Calendar.DAY_OF_MONTH, songaymuon);
-        Date newNgayMuon = calendarNgayMuon.getTime();
-        txt_ngaytradukien.setText(sdf.format(newNgayMuon));
     }
 
     public void timKH() {
@@ -1157,7 +1159,7 @@ public class THUE_SACH extends javax.swing.JPanel {
                 dem++;
             } else {
                 JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
-                check = false;
+                dem = 0;
             }
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER && dem == 1) {
             ThemDonThue();
@@ -1182,7 +1184,7 @@ public class THUE_SACH extends javax.swing.JPanel {
     private void txt_songaymuonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_songaymuonKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_songaymuon.getText().equalsIgnoreCase("")) {
             if (tbl_thuesach.getRowCount() == 0) {
-                JOptionPane.showMessageDialog(this, "Chưa có quyển sách nào!","Thông báo", JOptionPane.OK_OPTION);;
+                JOptionPane.showMessageDialog(this, "Chưa có quyển sách nào!", "Thông báo", JOptionPane.OK_OPTION);;
             } else {
                 soNgayMuonTienDamBao();
             }
