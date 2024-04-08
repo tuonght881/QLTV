@@ -50,6 +50,7 @@ public class Application extends javax.swing.JFrame {
         setSelectedMenu(0, 0);
         app.mainForm.hideMenu();
         SwingUtilities.updateComponentTreeUI(app.mainForm);
+        Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Xin chào "+ XAuth.user.getHoten());
     }
 
     public static void logout() {

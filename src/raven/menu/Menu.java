@@ -37,9 +37,6 @@ public class Menu extends JPanel {
                 {"~Khác~"},
                 {"Thông tin tài khoản"},
                 {"Thống kê"},
-                //{"Charts", "Apex", "Flot", "Peity", "Sparkline"},
-                //{"Icons", "Feather Icons", "Flag Icons", "Mdi Icons"},
-                //{"Special Pages", "Blank page", "Faq", "Invoice", "Profile", "Pricing", "Timeline"},
                 {"Đăng xuất"}
             };
     private final String[][] menuItemsNV
@@ -53,9 +50,6 @@ public class Menu extends JPanel {
                 {"Quản lý", "Độc giả", "Sách", "Tác giả", "Thể loại", "Vị trí"},
                 {"~Khác~"},
                 {"Thông tin tài khoản"},
-                //{"Charts", "Apex", "Flot", "Peity", "Sparkline"},
-                //{"Icons", "Feather Icons", "Flag Icons", "Mdi Icons"},
-                //{"Special Pages", "Blank page", "Faq", "Invoice", "Profile", "Pricing", "Timeline"},
                 {"Đăng xuất"}
             };
 
