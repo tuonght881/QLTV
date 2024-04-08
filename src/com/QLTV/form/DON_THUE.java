@@ -212,10 +212,10 @@ public class DON_THUE extends javax.swing.JPanel {
                     kh.setDiemuytin(uytin);
                     khDAO.update(kh);
                 }
-            } else if(kh.getDiemuytin()==100){
+            } else if (kh.getDiemuytin() == 100) {
                 kh.setDiemuytin(100);
                 khDAO.update(kh);
-            }else{
+            } else {
                 uytin = uytin + 5;
                 kh.setDiemuytin(uytin);
                 khDAO.update(kh);
@@ -346,6 +346,27 @@ public class DON_THUE extends javax.swing.JPanel {
         return true;
     }
 
+    public void timkiemDonthue() {
+        String tukhoa = txt_timkiemdonthue.getText();
+        model_donthue = (DefaultTableModel) tbl_donthue.getModel();
+        model_donthue.setColumnIdentifiers(new Object[]{"ID Đơn Thuê", "Tên khách", "Số điện thoại", "Ngày thuê", "Trạng thái"});
+        model_donthue.setRowCount(0);
+        try {
+            List<DonThue> list = dthueDAO.timDthue(tukhoa);
+            for (DonThue dthue : list) {
+                KhachHang kh = khDAO.select_byID(dthue.getIdkhach());
+                Object[] row = {dthue.getIddonthue(), kh.getHotenkhach(), kh.getSdt(), dthue.getNgaythue(), dthue.getTrangthai() ? "Hoàn thành" : "Chưa hoàn thành"};
+                model_donthue.addRow(row);
+            }
+            if (model_donthue.getRowCount() == 0) {
+                Object[] row = {"", "Không có dữ liệu"};
+                model_donthue.addRow(row);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -361,7 +382,7 @@ public class DON_THUE extends javax.swing.JPanel {
         TAB = new javax.swing.JTabbedPane();
         HoadonPanel = new raven.crazypanel.CrazyPanel();
         crazyPanel2 = new raven.crazypanel.CrazyPanel();
-        jLabel11 = new javax.swing.JLabel();
+        txt_timkiemdonthue = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_donthue = new javax.swing.JTable();
@@ -369,6 +390,7 @@ public class DON_THUE extends javax.swing.JPanel {
         btn_reset1 = new javax.swing.JButton();
         HdctPanel = new raven.crazypanel.CrazyPanel();
         crazyPanel6 = new raven.crazypanel.CrazyPanel();
+        jLabel12 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbl_donthueCT = new javax.swing.JTable();
@@ -464,7 +486,19 @@ public class DON_THUE extends javax.swing.JPanel {
                 "width 200"
             }
         ));
-        crazyPanel2.add(jLabel11);
+
+        txt_timkiemdonthue.setForeground(new java.awt.Color(153, 153, 153));
+        txt_timkiemdonthue.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txt_timkiemdonthueCaretUpdate(evt);
+            }
+        });
+        txt_timkiemdonthue.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txt_timkiemdonthueMouseExited(evt);
+            }
+        });
+        crazyPanel2.add(txt_timkiemdonthue);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel4.setText("QUẢN LÝ ĐƠN THUÊ");
@@ -560,6 +594,7 @@ public class DON_THUE extends javax.swing.JPanel {
                 "width 200"
             }
         ));
+        crazyPanel6.add(jLabel12);
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel6.setText("ĐƠN THUÊ CHI TIẾT");
@@ -1036,7 +1071,6 @@ public class DON_THUE extends javax.swing.JPanel {
     private void btn_xoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_xoaActionPerformed
         int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
-            System.out.println("Người dùng đã chọn YES");
             xoaDonThue();
         } else if (choice == JOptionPane.NO_OPTION) {
             return;
@@ -1064,6 +1098,14 @@ public class DON_THUE extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btn_capnhatActionPerformed
 
+    private void txt_timkiemdonthueCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_timkiemdonthueCaretUpdate
+        timkiemDonthue();
+    }//GEN-LAST:event_txt_timkiemdonthueCaretUpdate
+
+    private void txt_timkiemdonthueMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_timkiemdonthueMouseExited
+        loaddataDonThue();
+    }//GEN-LAST:event_txt_timkiemdonthueMouseExited
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private raven.crazypanel.CrazyPanel HdctPanel;
@@ -1085,7 +1127,7 @@ public class DON_THUE extends javax.swing.JPanel {
     private raven.crazypanel.CrazyPanel crazyPanel9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
@@ -1118,6 +1160,7 @@ public class DON_THUE extends javax.swing.JPanel {
     private javax.swing.JTextField txt_thoilai;
     private javax.swing.JTextField txt_tiendambao;
     private javax.swing.JTextField txt_tienphat;
+    private javax.swing.JTextField txt_timkiemdonthue;
     private javax.swing.JTextField txt_tongtien;
     // End of variables declaration//GEN-END:variables
 }

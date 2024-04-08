@@ -98,8 +98,6 @@ public class THUE_SACH extends javax.swing.JPanel {
      */
     public THUE_SACH() {
         initComponents();
-        //applyTableStyle(tbl_sach);
-        //applyTableStyle(tbl_hoadon);
         txt_manv.setText(XAuth.user.getManv());
         POPUP.add(jPanel1);
         calendar1.addCalendarSelectedListener(new CalendarSelectedListener() {
@@ -145,9 +143,8 @@ public class THUE_SACH extends javax.swing.JPanel {
         return dthueNew;
     }
 
-
     public void ThemDonThue() {
-        if (batloi_tk()) {
+        if (batloi_thuesach()) {
             try {
                 DonThue dthueNew = getDonThueNew();
                 //System.out.println(dthueNew.getIddonthue());
@@ -270,7 +267,7 @@ public class THUE_SACH extends javax.swing.JPanel {
         }
     }
 
-    public boolean batloi_tk() {
+    public boolean batloi_thuesach() {
         String kh = txt_idkh.getText();
         String khachdua = txt_khachdua.getText();
         String thoilai = txt_thoilai.getText();
@@ -287,21 +284,37 @@ public class THUE_SACH extends javax.swing.JPanel {
         }
         if (sdtk.equalsIgnoreCase("")) {
             loi += "Số điện thoại khách\n";
-        }
-        if (isPositiveNumberSDT == false) {
-            loi += "Vui lòng chỉ nhập số dương\n";
+        } else if (isPositiveNumberSDT == false) {
+            loi += "Định dạng SDT khách\n";
         }
         if (songaymuon.equalsIgnoreCase("")) {
             loi += "Số ngày mượn\n";
-        }
-        if (isPositiveNumberNM == false) {
+        } else if (isPositiveNumberNM == false) {
             loi += "Vui lòng chỉ nhập số dương\n";
         }
+        Date ngaymuon, ngaytradkien;
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
+        String ngaythue = txt_ngaythuesach.getText();
+        String ngaytra = txt_ngaytradukien.getText();
+        if (ngaythue.equalsIgnoreCase("") || ngaytra.equalsIgnoreCase("")) {
+            loi += "";
+        } else {
+            try {
+                ngaymuon = sdf2.parse(txt_ngaythuesach.getText());
+                ngaytradkien = sdf2.parse(txt_ngaytradukien.getText());
+                if (!ngaymuon.before(ngaytradkien) && !ngaymuon.after(ngaytradkien)) {
+                    loi += "Kiểm tra lại ngày trả dự kiến, tiền đảm bảo\n";
+                    //JOptionPane.showMessageDialog(this, "The entered date is the same as the current date.");
+                }
+            } catch (ParseException ex) {
+                java.util.logging.Logger.getLogger(THUE_SACH.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            }
+        }
+
         if (khachdua.equalsIgnoreCase("")) {
             loi += "Khách đưa\n";
-        }
-        if (isPositiveNumberKD == false) {
-            loi += "Vui lòng chỉ nhập số dương\n";
+        } else if (isPositiveNumberKD == false) {
+            loi += "Vui lòng chỉ nhập số dương(Khách đưa)\n";
         }
         if (thoilai.equalsIgnoreCase("")) {
             loi += "Thối lại\n";
@@ -432,12 +445,11 @@ public class THUE_SACH extends javax.swing.JPanel {
             } catch (NullPointerException e) {
                 //JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
             }
-            int slc =0;
+            int slc = 0;
             slc = Integer.parseInt(tbl_sach.getValueAt(index, 3).toString());
-            if(sl==null){
+            if (sl == null) {
                 return;
-            }else
-            if (Integer.parseInt(sl) > slc) {
+            } else if (Integer.parseInt(sl) > slc) {
                 JOptionPane.showMessageDialog(this, "Số lượng trong kho không đủ!", "Thông báo", JOptionPane.OK_OPTION);
             } else if (sl != null) {
                 Object[] row = new Object[7];
@@ -588,6 +600,7 @@ public class THUE_SACH extends javax.swing.JPanel {
         txt_phantramdambao = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbl_thuesach = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
         crazyPanel8 = new raven.crazypanel.CrazyPanel();
         crazyPanel3 = new raven.crazypanel.CrazyPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -862,9 +875,22 @@ public class THUE_SACH extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tbl_thuesach.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_thuesachMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tbl_thuesach);
 
         crazyPanel6.add(jScrollPane2);
+
+        jButton1.setText("Làm mới bảng");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        crazyPanel6.add(jButton1);
 
         crazyPanel4.add(crazyPanel6);
 
@@ -1121,8 +1147,8 @@ public class THUE_SACH extends javax.swing.JPanel {
     int dem = 0;
     private void txt_khachduaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_khachduaKeyPressed
         boolean check = false;
-        
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("") && dem == 0) {
+
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("") && dem == 0 && batloi_thuesach()) {
             khachdua = Double.parseDouble(txt_khachdua.getText());
             if (khachdua >= tongcong) {
                 thoilai = khachdua - tongtien;
@@ -1133,8 +1159,7 @@ public class THUE_SACH extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
                 check = false;
             }
-        }else
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER && dem == 1) {
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER && dem == 1) {
             ThemDonThue();
             dem = 0;
         }
@@ -1156,7 +1181,11 @@ public class THUE_SACH extends javax.swing.JPanel {
 
     private void txt_songaymuonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_songaymuonKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_songaymuon.getText().equalsIgnoreCase("")) {
-            soNgayMuonTienDamBao();
+            if (tbl_thuesach.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "Chưa có quyển sách nào!","Thông báo", JOptionPane.OK_OPTION);;
+            } else {
+                soNgayMuonTienDamBao();
+            }
         }
     }//GEN-LAST:event_txt_songaymuonKeyPressed
 
@@ -1176,6 +1205,19 @@ public class THUE_SACH extends javax.swing.JPanel {
         checkinputSo(txt_khachdua);
     }//GEN-LAST:event_txt_khachduaCaretUpdate
 
+    private void tbl_thuesachMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_thuesachMouseClicked
+        if (evt.getClickCount() == 2) {
+            int dem = tbl_thuesach.getSelectedRow();
+            model_hd.removeRow(dem);
+            soNgayMuonTienDamBao();
+        }
+    }//GEN-LAST:event_tbl_thuesachMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        model_hd.setRowCount(0);
+        soNgayMuonTienDamBao();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPopupMenu POPUP;
@@ -1190,6 +1232,7 @@ public class THUE_SACH extends javax.swing.JPanel {
     private raven.crazypanel.CrazyPanel crazyPanel6;
     private raven.crazypanel.CrazyPanel crazyPanel7;
     private raven.crazypanel.CrazyPanel crazyPanel8;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

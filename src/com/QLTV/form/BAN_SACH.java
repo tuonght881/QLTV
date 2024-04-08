@@ -116,7 +116,7 @@ public class BAN_SACH extends javax.swing.JPanel {
     }
 
     public void ThemHoaDon() {
-        if (batloi_tk()) {
+        if (batloi_bansach()) {
             try {
                 HoaDon hdNew = getHoaDonNew();
                 hdDAO.insert(hdNew);
@@ -218,7 +218,7 @@ public class BAN_SACH extends javax.swing.JPanel {
         }
     }
 
-    public boolean batloi_tk() {
+    public boolean batloi_bansach() {
         String khachdua = txt_khachdua.getText();
         String thoilai = txt_thoilai.getText();
         //String regex = "^\\d*[1-9]\\d*$";
@@ -613,6 +613,11 @@ public class BAN_SACH extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tbl_hoadon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_hoadonMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tbl_hoadon);
 
         crazyPanel6.add(jScrollPane2);
@@ -781,7 +786,7 @@ public class BAN_SACH extends javax.swing.JPanel {
     int dem = 0;
     private void txt_khachduaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_khachduaKeyPressed
         boolean check = false;
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("") && dem == 0) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("") && dem == 0 && batloi_bansach()) {
             khachdua = Double.valueOf(txt_khachdua.getText());
             if (khachdua >= tongcong) {
                 thoilai = khachdua - tongcong;
@@ -817,6 +822,14 @@ public class BAN_SACH extends javax.swing.JPanel {
     private void tbl_sachMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_sachMouseClicked
         taoHoaDon(evt);
     }//GEN-LAST:event_tbl_sachMouseClicked
+
+    private void tbl_hoadonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_hoadonMouseClicked
+        if (evt.getClickCount() == 2) {
+            int dem = tbl_hoadon.getSelectedRow();
+            model_hd.removeRow(dem);
+            tinhtien();
+        }
+    }//GEN-LAST:event_tbl_hoadonMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

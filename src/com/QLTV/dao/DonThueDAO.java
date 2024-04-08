@@ -16,9 +16,9 @@ import java.util.List;
  * @author Tuong
  */
 public class DonThueDAO extends EntityDao<DonThue, String> {
-
+    
     String madonthue = "select top 1 * from donthue order by trangthai asc";
-    String selectAll = "select * from donthue";
+    String selectAll = "select * from donthue order by trangthai asc";
     String insert = "insert into DonThue values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
     String update = "UPDATE donthue SET idkhach = ?, manv = ?, ngaytao = ?, ngaythue = ?, ngaytradukien = ?, ngaytra = ?,trangthai=?,tienphat = ?,tongtiendambao = ?, khachdua= ? ,thoilai= ? ,thanhtien = ? WHERE iddonthue = ?;";
     String delete = "delete donthue where iddonthue=?";
@@ -26,6 +26,7 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
     String doanhthuthuengay = "SELECT ISNULL(SUM(dthue.thanhtien), 0) AS doanhthuthue FROM donthue dthue WHERE dthue.ngaytao like ?";
     String doanhthuthueTONG = "SELECT ISNULL(SUM(dthue.thanhtien+ dthue.tienphat), 0) AS doanhthuthue FROM donthue dthue WHERE dthue.ngaytao like ?";
     String doanhthuthuethang = "SELECT SUM(dt.thanhtien + dt.tienphat) AS doanhthu_thue_sach FROM donthue dt WHERE MONTH(CONVERT(date, dt.ngaytao, 105)) = ?";
+    String timkiem ="select * from donthue where idkhach in (select idkhach from khachhang where sdt like ? ) order by trangthai asc";
     @Override
     public void insert(DonThue entity) {
         JDBC.update(insert, entity.getIddonthue(), entity.getIdkhach(),entity.getManv(),entity.getNgaytao(),entity.getNgaythue(),entity.getNgaytradukien(),entity.getNgaytra(),entity.getTrangthai(),entity.getTienphat(),entity.getTongtiendambao(),entity.getKhachdua(),entity.getThoilai(), entity.getThanhtien());
@@ -45,7 +46,9 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
     public List<DonThue> selectAll() {
         return select_by_sql(selectAll);
     }
-
+    public List<DonThue> timDthue(String sdt){
+        return select_by_sql(timkiem, "%"+sdt+"%");
+    }
     @Override
     public DonThue select_byID(String key) {
         List<DonThue> list = this.select_by_sql(select_by_ID, key);

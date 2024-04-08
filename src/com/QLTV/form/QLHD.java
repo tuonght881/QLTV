@@ -413,7 +413,7 @@ private void showPopup() {
         btn_reset1 = new javax.swing.JButton();
         HdctPanel = new raven.crazypanel.CrazyPanel();
         crazyPanel6 = new raven.crazypanel.CrazyPanel();
-        txt_timkiemHDCT = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         crazyPanel7 = new raven.crazypanel.CrazyPanel();
@@ -584,7 +584,6 @@ private void showPopup() {
         crazyPanel6.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
             "background:$Table.background",
             new String[]{
-                "JTextField.placeholderText=Tìm kiếm;background:@background",
                 "background:lighten(@background,8%)",
                 "background:lighten(@background,8%)",
                 "background:lighten(@background,8%)"
@@ -598,14 +597,7 @@ private void showPopup() {
                 "width 200"
             }
         ));
-
-        txt_timkiemHDCT.setForeground(new java.awt.Color(153, 153, 153));
-        txt_timkiemHDCT.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                txt_timkiemHDCTCaretUpdate(evt);
-            }
-        });
-        crazyPanel6.add(txt_timkiemHDCT);
+        crazyPanel6.add(jLabel1);
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel6.setText("HOÁ ĐƠN CHI TIẾT");
@@ -869,10 +861,6 @@ private void showPopup() {
         loaddataHoaDon();
     }//GEN-LAST:event_btn_reset1ActionPerformed
 
-    private void txt_timkiemHDCTCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_timkiemHDCTCaretUpdate
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_timkiemHDCTCaretUpdate
-
     private void txt_ngaytaoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_ngaytaoMouseClicked
         showPopup();
     }//GEN-LAST:event_txt_ngaytaoMouseClicked
@@ -919,6 +907,7 @@ private void showPopup() {
     private raven.crazypanel.CrazyPanel crazyPanel5;
     private raven.crazypanel.CrazyPanel crazyPanel6;
     private raven.crazypanel.CrazyPanel crazyPanel7;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -940,6 +929,5 @@ private void showPopup() {
     private javax.swing.JTextField txt_thanhtien;
     private javax.swing.JTextField txt_thoilai;
     private javax.swing.JTextField txt_timkiemHD;
-    private javax.swing.JTextField txt_timkiemHDCT;
     // End of variables declaration//GEN-END:variables
 }
