@@ -140,6 +140,9 @@ public class BAN_SACH extends javax.swing.JPanel {
 
                 loaddataSach();
                 model_hd.setRowCount(0);
+                tongcong = 0.0;
+                khachdua = 0.0;
+                thoilai = 0.0;
                 JOptionPane.showMessageDialog(this, "Thêm thành công");
                 resetForm();
             } catch (Exception e) {
@@ -785,21 +788,27 @@ public class BAN_SACH extends javax.swing.JPanel {
         timkiem();
     }//GEN-LAST:event_txt_timkiemCaretUpdate
     int dem = 0;
+
+    public void tinhthoilaii() {
+        khachdua = Double.valueOf(txt_khachdua.getText());
+        if (khachdua >= tongcong) {
+            thoilai = khachdua - tongcong;
+            txt_thoilai.setText(currencyVN.format(thoilai));
+            dem++;
+        } else {
+            JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
+        }
+    }
     private void txt_khachduaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_khachduaKeyPressed
         boolean check = false;
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("") && dem == 0 && batloi_bansach()) {
-            khachdua = Double.valueOf(txt_khachdua.getText());
-            if (khachdua >= tongcong) {
-                thoilai = khachdua - tongcong;
-                txt_thoilai.setText(currencyVN.format(thoilai));
-                check = true;
-                dem++;
-            } else {
-                JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
-                check = false;
-            }
+            tinhthoilaii();
         } else if (evt.getKeyCode() == KeyEvent.VK_ENTER && dem == 1) {
-            ThemHoaDon();
+            if (thoilai == 0) {
+                tinhthoilaii();
+            } else {
+                ThemHoaDon();
+            }
             dem = 0;
         }
     }//GEN-LAST:event_txt_khachduaKeyPressed
