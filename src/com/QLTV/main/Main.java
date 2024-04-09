@@ -15,10 +15,6 @@ import raven.popup.GlassPanePopup;
 import raven.tabbed.WindowsTabbed;
 import raven.toast.Notifications;
 
-/**
- *
- * @author RAVEN
- */
 public class Main extends javax.swing.JFrame {
 
     public static Main main;
