@@ -18,9 +18,6 @@ public class Main extends javax.swing.JFrame {
     public static Main main;
     private LoginForm loginForm;
 
-    /**
-     * Creates new form Main
-     */
     public Main() {
         initComponents();
         init();
