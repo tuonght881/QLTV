@@ -34,7 +34,7 @@ public class Application extends javax.swing.JFrame {
         loginForm = new LoginForm();
         setContentPane(loginForm);
         Notifications.getInstance().setJFrame(this);
-        ImageIcon icon = new ImageIcon(getClass().getResource("/com/raven/icon/books.png"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("/com/QLTV/icon/books.png"));
         setIconImage(icon.getImage());
     }
 

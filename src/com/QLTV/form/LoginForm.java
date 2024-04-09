@@ -11,7 +11,7 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import com.QLTV.main.Application;
-import javax.swing.UIManager;
+import com.formdev.flatlaf.FlatClientProperties;
 
 /**
  *
@@ -28,6 +28,9 @@ public class LoginForm extends javax.swing.JPanel {
         //UIManager.put("PasswordField.showCapsLock", false);
         initComponents();
         setBackground(new Color(0, 0, 0, 0));
+        txtPassword.putClientProperty(FlatClientProperties.STYLE, ""
+                + "showRevealButton:true;"
+                + "showCapsLock:true");
     }
 
     public void dangnhap() {

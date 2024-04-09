@@ -19,16 +19,12 @@ import com.QLTV.entity.TacGia;
 import com.QLTV.entity.TheLoai;
 import com.QLTV.entity.ViTri;
 import com.QLTV.utils.XAuth;
-import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Component;
 import java.awt.HeadlessException;
-import static java.awt.Window.Type.POPUP;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -39,20 +35,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.BadLocationException;
@@ -111,6 +102,10 @@ public class THUE_SACH extends javax.swing.JPanel {
         });
         loaddataSach();
         loadDonThue();
+        layngay();
+    }
+
+    public void layngay() {
         ActionListener act = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -119,7 +114,7 @@ public class THUE_SACH extends javax.swing.JPanel {
                 txt_ngaythuesach.setText(time);
             }
         };
-        timer = new Timer(1000, act);
+        timer = new Timer(30000, act);
         timer.setInitialDelay(0);
         timer.start();
     }

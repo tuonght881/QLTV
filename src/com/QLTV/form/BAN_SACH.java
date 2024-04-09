@@ -18,7 +18,6 @@ import com.QLTV.entity.TacGia;
 import com.QLTV.entity.TheLoai;
 import com.QLTV.entity.ViTri;
 import com.QLTV.utils.XAuth;
-import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -32,25 +31,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import javax.swing.BorderFactory;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.NumberFormatter;
-import raven.toast.Notifications;
 
 /**
  *
@@ -90,6 +81,10 @@ public class BAN_SACH extends javax.swing.JPanel {
         txt_manv.setText(XAuth.user.getManv());
         loaddataSach();
         loadHoaDon();
+        layngay();
+    }
+
+    public void layngay() {
         ActionListener act = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -98,10 +93,9 @@ public class BAN_SACH extends javax.swing.JPanel {
                 txt_ngaybansach.setText(time);
             }
         };
-        timer = new Timer(1000, act);
+        timer = new Timer(30000, act);
         timer.setInitialDelay(0);
         timer.start();
-        //TableCustom.apply(jScrollPane1, TableCustom.TableType.MULTI_LINE);
     }
 
     public HoaDon getHoaDonNew() throws ParseException {
