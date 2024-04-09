@@ -11,7 +11,6 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
-import com.raven.properties.SystemProperties;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.MouseEvent;
@@ -45,7 +44,6 @@ public class QLTK extends javax.swing.JPanel {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     TaiKhoanDAO tkDAO = new TaiKhoanDAO();
     int index = -1;
-    SystemProperties pro = new SystemProperties();
 
     /**
      * Creates new form QLTK
@@ -67,31 +65,6 @@ public class QLTK extends javax.swing.JPanel {
                 System.out.println("=>" + ngayF);
             }
         });
-    }
-
-    private void init() {
-        try {
-            //FlatRobotoFont.install();
-            FlatLaf.registerCustomDefaultsSource("tableview");
-            //UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-            System.out.println(pro.isDarkMode());
-            if (pro.isDarkMode() == true) {
-                EventQueue.invokeLater(() -> {
-                    //FlatAnimatedLafChange.showSnapshot();
-                    FlatDarculaLaf.setup();
-                    FlatLaf.updateUI();
-                    //FlatAnimatedLafChange.hideSnapshotWithAnimation();
-                });
-            } else {
-                EventQueue.invokeLater(() -> {
-                    //FlatAnimatedLafChange.showSnapshot();
-                    FlatIntelliJLaf.setup();
-                    FlatLaf.updateUI();
-                    //FlatAnimatedLafChange.hideSnapshotWithAnimation();
-                });
-            }
-        } catch (Exception e) {
-        }
     }
 
     public void setFormTK(TaiKhoan tk) throws ParseException {
