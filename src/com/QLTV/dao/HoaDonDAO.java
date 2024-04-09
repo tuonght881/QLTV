@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * @author Tuong
  */
 public class HoaDonDAO extends EntityDao<HoaDon, String> {
-
+    String select_al = "select * from Hoadon order by idhoadon asc";
     String selectAll = "select * from HoaDon order by ngaytao desc";
     String insert = "insert into HoaDon values(?,?,?,?,?,?)";
     String mahoadon = "select top 1 * from hoadon order by idhoadon desc";
@@ -48,7 +48,9 @@ public class HoaDonDAO extends EntityDao<HoaDon, String> {
     public List<HoaDon> selectAll() {
         return select_by_sql(selectAll);
     }
-
+    public List<HoaDon> select_al() {
+        return select_by_sql(select_al);
+    }
     @Override
     public HoaDon select_byID(String key) {
         List<HoaDon> list = this.select_by_sql(select_by_ID, key);

@@ -148,7 +148,7 @@ public final class BAN_SACH extends TabbedForm {
 
     public void loadHoaDon() {
         try {
-            List<HoaDon> list = hdDAO.selectAll();
+            List<HoaDon> list = hdDAO.select_al();
             for (HoaDon hd : list) {
                 id = Integer.parseInt(hd.getIdhoadon());
             }
