@@ -12,16 +12,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import raven.tabbed.TabbedForm;
 
 /**
  *
  * @author Tuong
  */
-public class QLDG extends javax.swing.JPanel {
+public final class QLDG extends TabbedForm {
 
     KhachHangDAO khDAO = new KhachHangDAO();
     int index = -1;
-    int id;
 
     /**
      * Creates new form QLDG

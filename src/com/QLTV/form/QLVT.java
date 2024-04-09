@@ -12,12 +12,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import raven.tabbed.TabbedForm;
 
 /**
  *
  * @author Tuong
  */
-public class QLVT extends javax.swing.JPanel {
+public final class QLVT extends TabbedForm {
 
     ViTriDAO vitriDAO = new ViTriDAO();
     int index = -1;

@@ -8,11 +8,7 @@ import com.QLTV.dao.TaiKhoanDAO;
 import com.QLTV.entity.TaiKhoan;
 import com.QLTV.utils.XAuth;
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLaf;
 import java.awt.Component;
-import java.awt.EventQueue;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,16 +28,16 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import raven.calendar.model.ModelDate;
 import raven.calendar.utils.CalendarSelectedListener;
+import raven.tabbed.TabbedForm;
 
 /**
  *
  * @author Tuong
  */
-public class QLTK extends javax.swing.JPanel {
+public final class QLTK extends TabbedForm {
 
     Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     TaiKhoanDAO tkDAO = new TaiKhoanDAO();
     int index = -1;
 
@@ -55,15 +51,12 @@ public class QLTK extends javax.swing.JPanel {
         btn_sua.setEnabled(false);
         btn_xoa.setEnabled(false);
         POPUP.add(jPanel1);
-        calendar1.addCalendarSelectedListener(new CalendarSelectedListener() {
-            @Override
-            public void selected(MouseEvent evt, ModelDate date) {
-                ngay = date.toDate();
-                String ngayF = sdf.format(ngay);
-                txt_ngaysinh.setText(ngayF.toString());
-                POPUP.setVisible(false);
-                System.out.println("=>" + ngayF);
-            }
+        calendar1.addCalendarSelectedListener((MouseEvent evt, ModelDate date) -> {
+            ngay = date.toDate();
+            String ngayF = sdf.format(ngay);
+            txt_ngaysinh.setText(ngayF.toString());
+            POPUP.setVisible(false);
+            System.out.println("=>" + ngayF);
         });
     }
 
@@ -386,22 +379,6 @@ public class QLTK extends javax.swing.JPanel {
                     } else {
                         label.setHorizontalAlignment(SwingConstants.LEADING);
                     }
-//                    if (header == false) {
-//                        if (column == 4) {
-//                            if (Double.parseDouble(value.toString()) > 0) {
-//                                com.setForeground(new Color(17, 182, 60));
-//                                label.setText("+" + value);
-//                            } else {
-//                                com.setForeground(new Color(202, 48, 48));
-//                            }
-//                        } else {
-//                            if (isSelected) {
-//                                com.setForeground(table.getSelectionForeground());
-//                            } else {
-//                                com.setForeground(table.getForeground());
-//                            }
-//                        }
-//                    }
                 }
                 return com;
             }

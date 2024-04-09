@@ -9,17 +9,14 @@ import com.QLTV.dao.DonThueDAO;
 import com.QLTV.dao.KhachHangDAO;
 import com.QLTV.dao.SachDAO;
 import com.QLTV.dao.TacGiaDAO;
-import com.QLTV.dao.TheLoaiDAO;
 import com.QLTV.dao.ViTriDAO;
 import com.QLTV.entity.DonThue;
 import com.QLTV.entity.DonThueChiTiet;
 import com.QLTV.entity.KhachHang;
 import com.QLTV.entity.Sach;
 import com.QLTV.entity.TacGia;
-import com.QLTV.entity.TheLoai;
 import com.QLTV.entity.ViTri;
 import com.QLTV.utils.XAuth;
-import java.awt.Component;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,8 +33,6 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -45,24 +40,21 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import raven.calendar.model.ModelDate;
-import raven.calendar.utils.CalendarSelectedListener;
+import raven.tabbed.TabbedForm;
 
 /**
  *
  * @author Tuong
  */
-public class THUE_SACH extends javax.swing.JPanel {
+public final class THUE_SACH extends TabbedForm {
 
     Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     SachDAO sachDAO = new SachDAO();
-    TheLoaiDAO tlDAO = new TheLoaiDAO();
     TacGiaDAO tgDAO = new TacGiaDAO();
     ViTriDAO vtDAO = new ViTriDAO();
     KhachHangDAO khDAO = new KhachHangDAO();
@@ -78,7 +70,6 @@ public class THUE_SACH extends javax.swing.JPanel {
     Double tongcong = 0.0;
     Double khachdua = 0.0;
     Double thoilai = 0.0;
-    Double tienphat = 0.0;
     Double tongtiendambao = 0.0;
     Double tongtien = 0.0;
     Double phantram = 0.0;
@@ -91,14 +82,11 @@ public class THUE_SACH extends javax.swing.JPanel {
         initComponents();
         txt_manv.setText(XAuth.user.getManv());
         POPUP.add(jPanel1);
-        calendar1.addCalendarSelectedListener(new CalendarSelectedListener() {
-            @Override
-            public void selected(MouseEvent evt, ModelDate date) {
-                ngay = date.toDate();
-                String ngayF = sdf.format(ngay);
-                txt_ngaytradukien.setText(ngayF.toString());
-                System.out.println("=>" + ngayF);
-            }
+        calendar1.addCalendarSelectedListener((MouseEvent evt, ModelDate date) -> {
+            ngay = date.toDate();
+            String ngayF = sdf.format(ngay);
+            txt_ngaytradukien.setText(ngayF);
+            System.out.println("=>" + ngayF);
         });
         loaddataSach();
         loadDonThue();
@@ -106,13 +94,10 @@ public class THUE_SACH extends javax.swing.JPanel {
     }
 
     public void layngay() {
-        ActionListener act = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Date date = new Date();
-                String time = sdf.format(date);
-                txt_ngaythuesach.setText(time);
-            }
+        ActionListener act = (ActionEvent e) -> {
+            Date date = new Date();
+            String time = sdf.format(date);
+            txt_ngaythuesach.setText(time);
         };
         timer = new Timer(30000, act);
         timer.setInitialDelay(0);
@@ -142,20 +127,15 @@ public class THUE_SACH extends javax.swing.JPanel {
         if (batloi_thuesach()) {
             try {
                 DonThue dthueNew = getDonThueNew();
-                //System.out.println(dthueNew.getIddonthue());
-                //System.out.println(dthueNew.getIdkhach());
                 dthueDAO.insert(dthueNew);//thêm vào đơn thuê
-                //System.out.println("tới đây rồi");
-
                 DonThueChiTiet dthueCT = new DonThueChiTiet();
                 dthueCT.setIddonthue(txt_iddonthue.getText());
-                //System.out.println("tới đây rồi 2");
                 for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
                     dthueCT.setIddonthue(dthueDAO.getIDdonthue());
                     String idsach = sachDAO.getMasach(tbl_thuesach.getValueAt(i, 0).toString());
                     dthueCT.setIdsach(idsach);
                     dthueCT.setSoluong(Integer.parseInt(tbl_thuesach.getValueAt(i, 2).toString()));
-                    dthueCT.setTiendambao(Double.parseDouble(tbl_thuesach.getValueAt(i, 6).toString()));
+                    dthueCT.setTiendambao(Double.valueOf(tbl_thuesach.getValueAt(i, 6).toString()));
                     dthuectDAO.insert(dthueCT);//thêm vào đơn thuê chi tiết
                     Sach s = sachDAO.select_byID(idsach);
                     int sls = s.getSl();
@@ -163,13 +143,11 @@ public class THUE_SACH extends javax.swing.JPanel {
                     s.setSl(slsm);
                     sachDAO.update(s);
                 }
-                //System.out.println("tới đây rồi 3");
                 loaddataSach();
                 model_hd.setRowCount(0);
                 tongcong = 0.0;
                 khachdua = 0.0;
                 thoilai = 0.0;
-                tienphat = 0.0;
                 tongtiendambao = 0.0;
                 tongtien = 0.0;
                 phantram = 0.0;
@@ -188,7 +166,6 @@ public class THUE_SACH extends javax.swing.JPanel {
         tongcong = 0.0;
         khachdua = 0.0;
         thoilai = 0.0;
-        tienphat = 0.0;
         tongtiendambao = 0.0;
         tongtien = 0.0;
         phantram = 0.0;
@@ -222,7 +199,6 @@ public class THUE_SACH extends javax.swing.JPanel {
     }
 
     public void loaddataSach() {
-        Date ngay = new Date();
         //txt_ngaybansach.setText(dateFormat.format(ngay));
         //txt_manv.setText(XAuth.user.getHoten());
         model_sach = (DefaultTableModel) tbl_sach.getModel();
@@ -231,7 +207,6 @@ public class THUE_SACH extends javax.swing.JPanel {
         try {
             List<Sach> list = sachDAO.selectOnStock();
             for (Sach sach : list) {
-                TheLoai tl = tlDAO.select_byID(sach.getIdtheloai().toString());
                 TacGia tg = tgDAO.select_byID(sach.getIdtacgia());
                 ViTri vt = vtDAO.select_byID(sach.getIdvitri());
                 Object[] row = {sach.getTensach(), tg.getTentg(), vt.getTenvt(), sach.getSl(), D_format.format(sach.getGiathue1ngay())};
@@ -254,7 +229,6 @@ public class THUE_SACH extends javax.swing.JPanel {
         try {
             List<Sach> list = sachDAO.timkiemSach(tukhoa);
             for (Sach sach : list) {
-                TheLoai tl = tlDAO.select_byID(sach.getIdtheloai().toString());
                 TacGia tg = tgDAO.select_byID(sach.getIdtacgia());
                 ViTri vt = vtDAO.select_byID(sach.getIdvitri());
                 Object[] row = {sach.getTensach(), tg.getTentg(), vt.getTenvt(), sach.getSl(), D_format.format(sach.getGiathue1ngay())};
@@ -271,12 +245,12 @@ public class THUE_SACH extends javax.swing.JPanel {
 
     public boolean batloi_thuesach() {
         String kh = txt_idkh.getText();
-        String khachdua = txt_khachdua.getText();
-        String thoilai = txt_thoilai.getText();
+        String khachdua2 = txt_khachdua.getText();
+        String thoilai2 = txt_thoilai.getText();
         String sdtk = txt_sdtkhach.getText();
         String songaymuon = txt_songaymuon.getText();
         String regex = "^\\d*[1-9]\\d*$";
-        boolean isPositiveNumberKD = khachdua.matches(regex);
+        boolean isPositiveNumberKD = khachdua2.matches(regex);
         boolean isPositiveNumberSDT = sdtk.matches(regex);
         boolean isPositiveNumberNM = songaymuon.matches(regex);
 
@@ -313,12 +287,12 @@ public class THUE_SACH extends javax.swing.JPanel {
             }
         }
 
-        if (khachdua.equalsIgnoreCase("")) {
+        if (khachdua2.equalsIgnoreCase("")) {
             loi += "Khách đưa\n";
         } else if (isPositiveNumberKD == false) {
             loi += "Khách đưa\n";
         }
-        if (thoilai.equalsIgnoreCase("")) {
+        if (thoilai2.equalsIgnoreCase("")) {
             loi += "Thối lại\n";
         }
         if (kh.equalsIgnoreCase("")) {
@@ -429,7 +403,6 @@ public class THUE_SACH extends javax.swing.JPanel {
                     qlkh.setVisible(true);
                     qlkh.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                 } else {
-                    return;
                 }
             }
         } else {
@@ -452,7 +425,6 @@ public class THUE_SACH extends javax.swing.JPanel {
             int slc = 0;
             slc = Integer.parseInt(tbl_sach.getValueAt(index, 3).toString());
             if (sl == null) {
-                return;
             } else if (Integer.parseInt(sl) > slc) {
                 JOptionPane.showMessageDialog(this, "Số lượng trong kho không đủ!", "Thông báo", JOptionPane.OK_OPTION);
             } else if (sl != null) {
@@ -498,42 +470,13 @@ public class THUE_SACH extends javax.swing.JPanel {
                             int sl2 = Integer.parseInt(tbl_thuesach.getValueAt(hang, 2).toString()) + Integer.parseInt(sl);
                             tbl_thuesach.setValueAt(sl2, hang, 2);
                             Double thanhtien = (Double.parseDouble(sl) * Double.parseDouble(row[1].toString()));
-                            Double thanhtien2 = Double.parseDouble(tbl_thuesach.getValueAt(hang, 3).toString()) + thanhtien;
+                            Double thanhtien2 = Double.valueOf(tbl_thuesach.getValueAt(hang, 3).toString()) + thanhtien;
                             tbl_thuesach.setValueAt(D_format.format(thanhtien2), hang, 3);
                             tinhtonggiathue();
                         }
                     }
                 }
             }
-        }
-    }
-
-    private void showPopup() {
-        //int x = txt_ngaysinh.getLocationOnScreen().x;
-        //int y = txt_ngaysinh.getLocationOnScreen().y + txt_ngaysinh.getHeight();
-        POPUP.show(txt_ngaytradukien, 0, txt_ngaytradukien.getHeight());
-    }
-    // Renderer để tự động xuống hàng trong các ô của bảng
-
-    static class MultiLineTableCellRenderer extends JTextArea implements TableCellRenderer {
-
-        MultiLineTableCellRenderer() {
-            setLineWrap(true);
-            setWrapStyleWord(true);
-            setOpaque(true);
-        }
-
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            if (isSelected) {
-                setForeground(table.getSelectionForeground());
-                setBackground(table.getSelectionBackground());
-            } else {
-                setForeground(table.getForeground());
-                setBackground(table.getBackground());
-            }
-            setFont(table.getFont());
-            setText((value == null) ? "" : value.toString());
-            return this;
         }
     }
 

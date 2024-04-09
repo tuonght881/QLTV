@@ -7,12 +7,6 @@ package com.QLTV.form;
 import com.QLTV.dao.TaiKhoanDAO;
 import com.QLTV.entity.TaiKhoan;
 import com.QLTV.utils.XAuth;
-import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLaf;
-import java.awt.Component;
-import java.awt.EventQueue;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,33 +14,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import raven.calendar.model.ModelDate;
-import raven.calendar.utils.CalendarSelectedListener;
+import raven.tabbed.TabbedForm;
 
 /**
  *
  * @author Tuong
  */
-public class TTTK extends javax.swing.JPanel {
+public final class TTTK extends TabbedForm {
 
     Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     TaiKhoanDAO tkDAO = new TaiKhoanDAO();
-    int index = -1;
 
     /**
      * Creates new form QLTK
+     *
+     * @throws java.text.ParseException
      */
     public TTTK() throws ParseException {
         initComponents();
@@ -55,15 +41,12 @@ public class TTTK extends javax.swing.JPanel {
         btn_sua.setEnabled(false);
         //btn_xoa.setEnabled(false);
         POPUP.add(jPanel1);
-        calendar1.addCalendarSelectedListener(new CalendarSelectedListener() {
-            @Override
-            public void selected(MouseEvent evt, ModelDate date) {
-                ngay = date.toDate();
-                String ngayF = sdf.format(ngay);
-                txt_ngaysinh.setText(ngayF.toString());
-                POPUP.setVisible(false);
-                System.out.println("=>" + ngayF);
-            }
+        calendar1.addCalendarSelectedListener((MouseEvent evt, ModelDate date) -> {
+            ngay = date.toDate();
+            String ngayF = sdf.format(ngay);
+            txt_ngaysinh.setText(ngayF.toString());
+            POPUP.setVisible(false);
+            System.out.println("=>" + ngayF);
         });
         fillFormTK();
     }
@@ -211,7 +194,7 @@ public class TTTK extends javax.swing.JPanel {
         String sdt = txt_sdt.getText().trim();
         String ngaysinh = txt_ngaysinh.getText();
         String diachi = txt_diachi.getText();
-        boolean OnlyLetters = hoten.matches("^[a-zA-Z]*$"); 
+        boolean OnlyLetters = hoten.matches("^[a-zA-Z]*$");
         String loi = "";
 
         if (manv.equalsIgnoreCase("")) {
@@ -229,8 +212,8 @@ public class TTTK extends javax.swing.JPanel {
         if (hoten.equalsIgnoreCase("")) {
             loi += "Họ tên\n";
         }
-        if(OnlyLetters==false){
-            loi+="Họ tên không được nhập số\n";
+        if (OnlyLetters == false) {
+            loi += "Họ tên không được nhập số\n";
         }
         if (matkhau.equalsIgnoreCase("")) {
             loi += "Mật khẩu\n";
@@ -272,67 +255,8 @@ public class TTTK extends javax.swing.JPanel {
         return true;
     }
 
-
     private void showPopup() {
-        //int x = txt_ngaysinh.getLocationOnScreen().x;
-        //int y = txt_ngaysinh.getLocationOnScreen().y + txt_ngaysinh.getHeight();
         POPUP.show(txt_ngaysinh, 0, txt_ngaysinh.getHeight());
-    }
-
-    private void applyTableStyle(JTable table) {
-        //btn_them.setIcon(new FlatSVGIcon("/asda/asdasd", 0.35f));
-        //txt_timkiem.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_ICON, new FlatSVGIcon(""),0.35f);
-        //changeScrollStyle
-        JScrollPane scroll = (JScrollPane) table.getParent().getParent();
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-        scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
-                + "background:$Table.background;"
-                + "track:$Table.background;"
-                + "trackArc:999");
-        table.getTableHeader().putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        table.putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        //Table Alignment
-        table.getTableHeader().setDefaultRenderer(getAlignmentCellRender(table.getTableHeader().getDefaultRenderer(), true));
-        table.setDefaultRenderer(Object.class, getAlignmentCellRender(table.getDefaultRenderer(Object.class), false));
-        // Điều chỉnh chiều ngang của cột thứ 7
-        TableColumn column = table.getColumnModel().getColumn(6); // Cột thứ 7 (index bắt đầu từ 0)
-        column.setPreferredWidth(500);
-    }
-
-    private TableCellRenderer getAlignmentCellRender(TableCellRenderer oldRender, boolean header) {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component com = oldRender.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (com instanceof JLabel) {
-                    JLabel label = (JLabel) com;
-                    if (column == 0 || column == 4) {
-                        label.setHorizontalAlignment(SwingConstants.CENTER);
-                    } else if (column == 2 || column == 3) {
-                        label.setHorizontalAlignment(SwingConstants.TRAILING);
-                    } else {
-                        label.setHorizontalAlignment(SwingConstants.LEADING);
-                    }
-//                    if (header == false) {
-//                        if (column == 4) {
-//                            if (Double.parseDouble(value.toString()) > 0) {
-//                                com.setForeground(new Color(17, 182, 60));
-//                                label.setText("+" + value);
-//                            } else {
-//                                com.setForeground(new Color(202, 48, 48));
-//                            }
-//                        } else {
-//                            if (isSelected) {
-//                                com.setForeground(table.getSelectionForeground());
-//                            } else {
-//                                com.setForeground(table.getForeground());
-//                            }
-//                        }
-//                    }
-                }
-                return com;
-            }
-        };
     }
 
     /**
@@ -682,7 +606,7 @@ public class TTTK extends javax.swing.JPanel {
 
     private void tbl_tkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_tkMouseClicked
         if (evt.getClickCount() == 2) {
-            index = tbl_tk.getSelectedRow();
+            tbl_tk.getSelectedRow();
             try {
                 fillFormTK();
             } catch (Exception e) {

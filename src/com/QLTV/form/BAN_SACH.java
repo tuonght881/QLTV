@@ -6,7 +6,6 @@ package com.QLTV.form;
 
 import com.QLTV.dao.HoaDonChiTietDAO;
 import com.QLTV.dao.HoaDonDAO;
-import com.QLTV.dao.KhachHangDAO;
 import com.QLTV.dao.SachDAO;
 import com.QLTV.dao.TacGiaDAO;
 import com.QLTV.dao.TheLoaiDAO;
@@ -18,7 +17,6 @@ import com.QLTV.entity.TacGia;
 import com.QLTV.entity.TheLoai;
 import com.QLTV.entity.ViTri;
 import com.QLTV.utils.XAuth;
-import java.awt.Component;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,32 +30,26 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import raven.tabbed.TabbedForm;
 
 /**
  *
  * @author Tuong
  */
-public class BAN_SACH extends javax.swing.JPanel {
+public final class BAN_SACH extends TabbedForm {
 
-    Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     SachDAO sachDAO = new SachDAO();
-    TheLoaiDAO tlDAO = new TheLoaiDAO();
     TacGiaDAO tgDAO = new TacGiaDAO();
     ViTriDAO vtDAO = new ViTriDAO();
-    KhachHangDAO khDAO = new KhachHangDAO();
     HoaDonDAO hdDAO = new HoaDonDAO();
     HoaDonChiTietDAO hdctDAO = new HoaDonChiTietDAO();
 
@@ -85,13 +77,10 @@ public class BAN_SACH extends javax.swing.JPanel {
     }
 
     public void layngay() {
-        ActionListener act = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Date date = new Date();
-                String time = sdf.format(date);
-                txt_ngaybansach.setText(time);
-            }
+        ActionListener act = (ActionEvent e) -> {
+            Date date = new Date();
+            String time = sdf.format(date);
+            txt_ngaybansach.setText(time);
         };
         timer = new Timer(30000, act);
         timer.setInitialDelay(0);
@@ -172,7 +161,6 @@ public class BAN_SACH extends javax.swing.JPanel {
     }
 
     public void loaddataSach() {
-        Date ngay = new Date();
         //txt_ngaybansach.setText(dateFormat.format(ngay));
         //txt_manv.setText(XAuth.user.getHoten());
         model_sach = (DefaultTableModel) tbl_sach.getModel();
@@ -181,7 +169,6 @@ public class BAN_SACH extends javax.swing.JPanel {
         try {
             List<Sach> list = sachDAO.selectOnStock();
             for (Sach sach : list) {
-                TheLoai tl = tlDAO.select_byID(sach.getIdtheloai().toString());
                 TacGia tg = tgDAO.select_byID(sach.getIdtacgia());
                 ViTri vt = vtDAO.select_byID(sach.getIdvitri());
                 Object[] row = {sach.getTensach(), tg.getTentg(), vt.getTenvt(), sach.getSl(), D_format.format(sach.getGiaban())};
@@ -204,7 +191,6 @@ public class BAN_SACH extends javax.swing.JPanel {
         try {
             List<Sach> list = sachDAO.timkiemSach(tukhoa);
             for (Sach sach : list) {
-                TheLoai tl = tlDAO.select_byID(sach.getIdtheloai().toString());
                 TacGia tg = tgDAO.select_byID(sach.getIdtacgia());
                 ViTri vt = vtDAO.select_byID(sach.getIdvitri());
                 Object[] row = {sach.getTensach(), tg.getTentg(), vt.getTenvt(), sach.getSl(), D_format.format(sach.getGiaban())};
@@ -221,7 +207,7 @@ public class BAN_SACH extends javax.swing.JPanel {
 
     public boolean batloi_bansach() {
         String khachduaString = txt_khachdua.getText();
-        String thoilai = txt_thoilai.getText();
+        String thoilai2 = txt_thoilai.getText();
         //String regex = "^\\d*[1-9]\\d*$";
         boolean isPositiveNumber = khachduaString.matches("^\\d*[1-9]\\d*$");
         String loi = "";
@@ -235,7 +221,7 @@ public class BAN_SACH extends javax.swing.JPanel {
         } else if (khachdua < tongcong) {
             loi += "Khách đưa\n";
         }
-        if (thoilai.equalsIgnoreCase("")) {
+        if (thoilai2.equalsIgnoreCase("")) {
             loi += "Thối lại\n";
         }
 
@@ -313,7 +299,6 @@ public class BAN_SACH extends javax.swing.JPanel {
             int slc = 0;
             slc = Integer.parseInt(tbl_sach.getValueAt(index, 3).toString());
             if (sl == null) {
-                return;
             } else if (Integer.parseInt(sl) > slc) {
                 JOptionPane.showMessageDialog(this, "Số lượng trong kho không đủ!", "Thông báo", JOptionPane.OK_OPTION);
             } else if (sl != null) {
@@ -360,29 +345,6 @@ public class BAN_SACH extends javax.swing.JPanel {
                     }
                 }
             }
-        }
-    }
-    // Renderer để tự động xuống hàng trong các ô của bảng
-
-    static class MultiLineTableCellRenderer extends JTextArea implements TableCellRenderer {
-
-        MultiLineTableCellRenderer() {
-            setLineWrap(true);
-            setWrapStyleWord(true);
-            setOpaque(true);
-        }
-
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            if (isSelected) {
-                setForeground(table.getSelectionForeground());
-                setBackground(table.getSelectionBackground());
-            } else {
-                setForeground(table.getForeground());
-                setBackground(table.getBackground());
-            }
-            setFont(table.getFont());
-            setText((value == null) ? "" : value.toString());
-            return this;
         }
     }
 

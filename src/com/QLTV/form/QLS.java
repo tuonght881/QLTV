@@ -18,8 +18,6 @@ import java.awt.Image;
 import java.io.File;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import javax.swing.ImageIcon;
@@ -29,16 +27,14 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import raven.tabbed.TabbedForm;
 
 /**
  *
  * @author Tuong
  */
-public class QLS extends javax.swing.JPanel {
+public final class QLS extends TabbedForm {
 
-    Date ngay;
-    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     SachDAO sachDAO = new SachDAO();
     TheLoaiDAO tlDAO = new TheLoaiDAO();
     TacGiaDAO tgDAO = new TacGiaDAO();
@@ -278,7 +274,7 @@ public class QLS extends javax.swing.JPanel {
         try {
             List<Sach> list = sachDAO.selectAll();
             for (Sach sach : list) {
-                TheLoai tl = tlDAO.select_byID(sach.getIdtheloai().toString());
+                TheLoai tl = tlDAO.select_byID(sach.getIdtheloai());
                 TacGia tg = tgDAO.select_byID(sach.getIdtacgia());
                 ViTri vt = vtDAO.select_byID(sach.getIdvitri());
                 Object[] row = {sach.getIdsach(), sach.getTensach(), tl.getTentheloai(), tg.getTentg(), vt.getTenvt(), sach.getSl(), currencyVN.format(sach.getGiathue1ngay()), currencyVN.format(sach.getGiaban()), sach.getTrangthaisach() ? "Hoạt động" : "Ngưng hoạt động"};
@@ -301,7 +297,7 @@ public class QLS extends javax.swing.JPanel {
         try {
             List<Sach> list = sachDAO.timkiemSach(tukhoa);
             for (Sach sach : list) {
-                TheLoai tl = tlDAO.select_byID(sach.getIdtheloai().toString());
+                TheLoai tl = tlDAO.select_byID(sach.getIdtheloai());
                 TacGia tg = tgDAO.select_byID(sach.getIdtacgia());
                 ViTri vt = vtDAO.select_byID(sach.getIdvitri());
                 Object[] row = {sach.getIdsach(), sach.getTensach(), tl.getTentheloai(), tg.getTentg(), vt.getTenvt(), sach.getSl(), currencyVN.format(sach.getGiathue1ngay()), currencyVN.format(sach.getGiaban())};

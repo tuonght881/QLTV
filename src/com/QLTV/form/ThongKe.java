@@ -11,6 +11,7 @@ import com.QLTV.dao.HoaDonDAO;
 import com.QLTV.entity.slSachBan;
 import com.QLTV.entity.slSachThue;
 import com.QLTV.entity.tongdoanhthu;
+import com.QLTV.utils.XAuth;
 import com.raven.chart2.ModelChart;
 import java.awt.Color;
 import java.text.NumberFormat;
@@ -20,12 +21,13 @@ import java.util.List;
 import java.util.Locale;
 import javaswingdev.chart.ModelPieChart;
 import javaswingdev.chart.PieChart;
+import raven.tabbed.TabbedForm;
 
 /**
  *
  * @author Tuong
  */
-public class ThongKe extends javax.swing.JPanel {
+public final class ThongKe extends TabbedForm {
 
     HoaDonDAO hdDAO = new HoaDonDAO();
     DonThueDAO dthueDAO = new DonThueDAO();
@@ -55,6 +57,7 @@ public class ThongKe extends javax.swing.JPanel {
         jbl_tdoanhthu2.setVisible(false);
         lbl_doanhthu1.setVisible(false);
         lbl_doanhthu2.setVisible(false);
+        
     }
 
     public void initChartDT() {
@@ -149,7 +152,7 @@ public class ThongKe extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        crazyPanel13 = new raven.crazypanel.CrazyPanel();
+        main = new raven.crazypanel.CrazyPanel();
         crazyPanel4 = new raven.crazypanel.CrazyPanel();
         crazyPanel5 = new raven.crazypanel.CrazyPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -180,7 +183,7 @@ public class ThongKe extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         bieudothang = new com.raven.chart2.Chart();
 
-        crazyPanel13.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
+        main.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
             "fill,wrap 1",
             "",
             "",
@@ -311,7 +314,7 @@ public class ThongKe extends javax.swing.JPanel {
 
         crazyPanel4.add(crazyPanel7);
 
-        crazyPanel13.add(crazyPanel4);
+        main.add(crazyPanel4);
 
         crazyPanel3.setMigLayoutConstraints(new raven.crazypanel.MigLayoutConstraints(
             "fill",
@@ -356,7 +359,7 @@ public class ThongKe extends javax.swing.JPanel {
 
         crazyPanel3.add(crazyPanel2);
 
-        crazyPanel13.add(crazyPanel3);
+        main.add(crazyPanel3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -364,14 +367,14 @@ public class ThongKe extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(crazyPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(main, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(crazyPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(main, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -383,7 +386,6 @@ public class ThongKe extends javax.swing.JPanel {
     private javaswingdev.chart.PieChart chartslthue;
     private raven.crazypanel.CrazyPanel crazyPanel1;
     private raven.crazypanel.CrazyPanel crazyPanel10;
-    private raven.crazypanel.CrazyPanel crazyPanel13;
     private raven.crazypanel.CrazyPanel crazyPanel2;
     private raven.crazypanel.CrazyPanel crazyPanel3;
     private raven.crazypanel.CrazyPanel crazyPanel4;
@@ -407,6 +409,7 @@ public class ThongKe extends javax.swing.JPanel {
     private javax.swing.JLabel lbl_doanhthu;
     private javax.swing.JLabel lbl_doanhthu1;
     private javax.swing.JLabel lbl_doanhthu2;
+    private raven.crazypanel.CrazyPanel main;
     private javaswingdev.chart.PieChart pieChart;
     // End of variables declaration//GEN-END:variables
 }

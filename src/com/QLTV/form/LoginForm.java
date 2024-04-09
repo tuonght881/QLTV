@@ -10,8 +10,9 @@ import com.QLTV.utils.XAuth;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
-import com.QLTV.main.Application;
+//import com.QLTV.main.Application;
 import com.formdev.flatlaf.FlatClientProperties;
+import com.QLTV.main.Main;
 
 /**
  *
@@ -44,12 +45,9 @@ public class LoginForm extends javax.swing.JPanel {
         } else if (tk.getMatkhau().equals(matkhau) && tk.getTrangthai() == true) {
             XAuth.user = tk;
             System.out.println(XAuth.user.getManv());
-            Application.login();
             txtUser.setText("");
             txtPassword.setText("");
-            //Main m = new Main();
-            //m.setVisible(true);
-            //this.dispose();
+            Main.main.showMainForm();
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng kiểm tra lại thông tin đăng nhập!!");
         }
@@ -83,12 +81,12 @@ public class LoginForm extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        background2 = new login.Background();
+        background2 = new loginComponent.Background();
         panel2 = new javax.swing.JPanel();
-        txtUser = new swing.TextField();
+        txtUser = new loginComponent.TextField();
         jLabel1 = new javax.swing.JLabel();
-        cmdLogin = new swing.Button();
-        txtPassword = new swing.PasswordField();
+        cmdLogin = new loginComponent.Button();
+        txtPassword = new loginComponent.PasswordField();
 
         background2.setBlur(panel2);
 
@@ -202,11 +200,11 @@ public class LoginForm extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private login.Background background2;
-    private swing.Button cmdLogin;
+    private loginComponent.Background background2;
+    private loginComponent.Button cmdLogin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel panel2;
-    private swing.PasswordField txtPassword;
-    private swing.TextField txtUser;
+    private loginComponent.PasswordField txtPassword;
+    private loginComponent.TextField txtUser;
     // End of variables declaration//GEN-END:variables
 }

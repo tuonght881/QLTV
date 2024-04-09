@@ -11,7 +11,6 @@ import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
-import com.raven.properties.SystemProperties;
 import java.awt.Font;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -522,16 +521,6 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
         try {
             FlatRobotoFont.install();
             FlatLaf.registerCustomDefaultsSource("tableview");
-            UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-            SystemProperties pro = new SystemProperties();
-            pro.loadFromFile();
-            if (!pro.isDarkMode()) {
-                System.out.println("có chạy");
-                FlatIntelliJLaf.setup();
-            } else {
-                System.out.println("có chạy22");
-                FlatMacDarkLaf.setup();
-            }
         } catch (Exception e) {
         }
         /* Create and display the form */

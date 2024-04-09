@@ -7,12 +7,8 @@ package com.QLTV.form;
 import com.QLTV.dao.DonThueChiTietDAO;
 import com.QLTV.dao.DonThueDAO;
 import com.QLTV.dao.HoaDonChiTietDAO;
-import com.QLTV.dao.HoaDonDAO;
 import com.QLTV.dao.KhachHangDAO;
 import com.QLTV.dao.SachDAO;
-import com.QLTV.dao.TacGiaDAO;
-import com.QLTV.dao.TheLoaiDAO;
-import com.QLTV.dao.ViTriDAO;
 import com.QLTV.entity.DonThue;
 import com.QLTV.entity.DonThueChiTiet;
 import com.QLTV.entity.HoaDonChiTiet;
@@ -21,43 +17,33 @@ import com.QLTV.entity.Sach;
 import com.QLTV.utils.XAuth;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import raven.calendar.model.ModelDate;
-import raven.calendar.utils.CalendarSelectedListener;
+import raven.tabbed.TabbedForm;
 
 /**
  *
  * @author Tuong
  */
-public class DON_THUE extends javax.swing.JPanel {
+public final class DON_THUE extends TabbedForm {
 
     Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     DecimalFormat D_format = new DecimalFormat("0.#");
     SachDAO sachDAO = new SachDAO();
-    TheLoaiDAO tlDAO = new TheLoaiDAO();
-    TacGiaDAO tgDAO = new TacGiaDAO();
-    ViTriDAO vtDAO = new ViTriDAO();
-    HoaDonDAO hdDAO = new HoaDonDAO();
     HoaDonChiTietDAO hdctDAO = new HoaDonChiTietDAO();
     DonThueDAO dthueDAO = new DonThueDAO();
     DonThueChiTietDAO dthuectDAO = new DonThueChiTietDAO();
     KhachHangDAO khDAO = new KhachHangDAO();
     int index = -1;
     DefaultTableModel model_donthue, model_donthuect;
-    Double tienphat = 0.0;
-    Locale localeVN = new Locale("vi", "VN");
-    NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
 
     /**
      * Creates new form DON_THUE
@@ -68,18 +54,15 @@ public class DON_THUE extends javax.swing.JPanel {
         btn_xoa.setEnabled(false);
         TAB.setEnabledAt(1, false);
         POPUP.add(jPanel1);
-        calendar1.addCalendarSelectedListener(new CalendarSelectedListener() {
-            @Override
-            public void selected(MouseEvent evt, ModelDate date) {
-                ngay = date.toDate();
-                String ngayF = sdf.format(ngay);
-                txt_ngaytra.setText(ngayF.toString());
-                POPUP.setVisible(false);
-                try {
-                    tinhtienphat();
-                } catch (ParseException ex) {
-                    Logger.getLogger(DON_THUE.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        calendar1.addCalendarSelectedListener((MouseEvent evt, ModelDate date) -> {
+            ngay = date.toDate();
+            String ngayF = sdf.format(ngay);
+            txt_ngaytra.setText(ngayF);
+            POPUP.setVisible(false);
+            try {
+                tinhtienphat();
+            } catch (ParseException ex) {
+                Logger.getLogger(DON_THUE.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         if (XAuth.isManager() == true) {
@@ -90,8 +73,6 @@ public class DON_THUE extends javax.swing.JPanel {
     }
 
     private void showPopup() {
-        //int x = txt_ngaysinh.getLocationOnScreen().x;
-        //int y = txt_ngaysinh.getLocationOnScreen().y + txt_ngaysinh.getHeight();
         POPUP.show(txt_ngaytra, 0, txt_ngaytra.getHeight());
     }
 
@@ -138,14 +119,10 @@ public class DON_THUE extends javax.swing.JPanel {
             lbl_ngaytre.setText("Trễ " + diffInDays + " ngày " + diffInHours + " giờ " + diffInMinutes + " phút");
             txt_tienphat.setText(Long.toString(totalPrice));
         }
-//        System.out.println(diffInDays + " ngay " + diffInHours + " gio " + diffInMinutes + " phut");
-//        System.out.println("Giá tiền: " + totalPrice);
     }
 
     public void setFormHDCT(HoaDonChiTiet hdct) throws ParseException {
         txt_iddonthue2.setText(hdct.getIdhoadon());
-        Sach sach = sachDAO.select_byID(hdct.getIdsach());
-        String tensach = sach.getTensach();
     }
 
     public DonThue getFormDonThue() throws ParseException {
@@ -329,11 +306,11 @@ public class DON_THUE extends javax.swing.JPanel {
 
     public boolean batloi_tk() {
         String ngaytra = txt_tienphat.getText();
-        String tienphat = txt_ngaytra.getText();
+        String tienphat2 = txt_ngaytra.getText();
 
         String loi = "";
 
-        if (tienphat.equalsIgnoreCase("")) {
+        if (tienphat2.equalsIgnoreCase("")) {
             loi += "Tiền phạt\n";
         }
         if (ngaytra.equalsIgnoreCase("")) {

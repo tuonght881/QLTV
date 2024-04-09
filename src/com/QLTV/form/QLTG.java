@@ -10,16 +10,16 @@ import com.QLTV.utils.XAuth;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import raven.tabbed.TabbedForm;
 
 /**
  *
  * @author Tuong
  */
-public class QLTG extends javax.swing.JPanel {
+public final class QLTG extends TabbedForm {
 
     TacGiaDAO tgDAO = new TacGiaDAO();
     int index = -1;
-    int id;
 
     /**
      * Creates new form QLTG

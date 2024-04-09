@@ -7,55 +7,35 @@ package com.QLTV.form;
 import com.QLTV.dao.HoaDonChiTietDAO;
 import com.QLTV.dao.HoaDonDAO;
 import com.QLTV.dao.SachDAO;
-import com.QLTV.dao.TacGiaDAO;
-import com.QLTV.dao.TheLoaiDAO;
-import com.QLTV.dao.ViTriDAO;
 import com.QLTV.entity.HoaDon;
 import com.QLTV.entity.HoaDonChiTiet;
-import com.QLTV.entity.Sach;
 import com.QLTV.utils.XAuth;
-import com.formdev.flatlaf.FlatClientProperties;
-import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import raven.calendar.model.ModelDate;
-import raven.calendar.utils.CalendarSelectedListener;
+import raven.tabbed.TabbedForm;
 
 /**
  *
  * @author Tuong
  */
-public class QLHD extends javax.swing.JPanel {
+public final class QLHD extends TabbedForm {
+
     Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     DecimalFormat D_format = new DecimalFormat("0.#");
     SachDAO sachDAO = new SachDAO();
-    TheLoaiDAO tlDAO = new TheLoaiDAO();
-    TacGiaDAO tgDAO = new TacGiaDAO();
-    ViTriDAO vtDAO = new ViTriDAO();
     HoaDonDAO hdDAO = new HoaDonDAO();
     HoaDonChiTietDAO hdctDAO = new HoaDonChiTietDAO();
     int index = -1;
     DefaultTableModel model_hd, model_hdct;
-    Locale localeVN = new Locale("vi", "VN");
-    NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+
     /**
      * Creates new form QLHD
      */
@@ -65,24 +45,19 @@ public class QLHD extends javax.swing.JPanel {
         btn_xoa.setEnabled(false);
         TAB.setEnabledAt(1, false);
         POPUP.add(jPanel1);
-        calendar1.addCalendarSelectedListener(new CalendarSelectedListener() {
-            @Override
-            public void selected(MouseEvent evt, ModelDate date) {
-                ngay = date.toDate();
-                String ngayF = sdf.format(ngay);
-                txt_ngaytao.setText(ngayF.toString());
-                System.out.println("=>" + ngayF);
-            }
+        calendar1.addCalendarSelectedListener((MouseEvent evt, ModelDate date) -> {
+            ngay = date.toDate();
+            String ngayF = sdf.format(ngay);
+            txt_ngaytao.setText(ngayF);
         });
-        if(XAuth.isManager()==true){
+        if (XAuth.isManager() == true) {
             btn_xoa.setVisible(true);
-        }else{
+        } else {
             btn_xoa.setVisible(false);
         }
     }
-private void showPopup() {
-        //int x = txt_ngaysinh.getLocationOnScreen().x;
-        //int y = txt_ngaysinh.getLocationOnScreen().y + txt_ngaysinh.getHeight();
+
+    private void showPopup() {
         POPUP.show(txt_ngaytao, 0, txt_ngaytao.getHeight());
     }
 
@@ -100,8 +75,6 @@ private void showPopup() {
 
     public void setFormHDCT(HoaDonChiTiet hdct) throws ParseException {
         txt_idhd2.setText(hdct.getIdhoadon());
-        Sach sach = sachDAO.select_byID(hdct.getIdsach());
-        String tensach = sach.getTensach();
     }
 
     public HoaDon getFormHD() throws ParseException {
@@ -109,9 +82,9 @@ private void showPopup() {
         hdNEW.setIdhoadon(txt_idhd2.getText());
         hdNEW.setManv(txt_manv.getText());
         hdNEW.setNgaytao(txt_ngaytao.getText());
-        hdNEW.setKhachdua(Double.parseDouble(txt_khachdua.getText()));
-        hdNEW.setThoilai(Double.parseDouble(txt_thoilai.getText()));
-        hdNEW.setThanhtien(Double.parseDouble(txt_thanhtien.getText()));
+        hdNEW.setKhachdua(Double.valueOf(txt_khachdua.getText()));
+        hdNEW.setThoilai(Double.valueOf(txt_thoilai.getText()));
+        hdNEW.setThanhtien(Double.valueOf(txt_thanhtien.getText()));
 
         return hdNEW;
     }
@@ -119,8 +92,6 @@ private void showPopup() {
     public HoaDonChiTiet getFormHDCT() throws ParseException {
         HoaDonChiTiet hdctNEW = new HoaDonChiTiet();
         hdctNEW.setIdhoadon(txt_idhd2.getText());
-
-
 
         return hdctNEW;
     }
@@ -143,7 +114,6 @@ private void showPopup() {
     public void fillFormHDCT() throws ParseException {
         txt_idhd2.setEnabled(false);
         txt_idhd2.setEditable(false);
-
 
         int idhdct = (Integer) tbl_hoadonCT.getValueAt(index, 0);
         HoaDonChiTiet hdct = hdctDAO.select_byID_int(idhdct);
@@ -263,7 +233,7 @@ private void showPopup() {
                 String tensach = sachDAO.getTenSach(hdct.getIdsach());
                 String giaban = sachDAO.getGiaBan(hdct.getIdsach());
                 Double thanhtien = hdct.getSoluong() * Double.parseDouble(giaban);
-                Object[] row = {hdct.getIdhoadonct(), tensach, hdct.getSoluong(),giaban,thanhtien};
+                Object[] row = {hdct.getIdhoadonct(), tensach, hdct.getSoluong(), giaban, thanhtien};
                 model_hdct.addRow(row);
             }
             if (model_hdct.getRowCount() == 0) {
@@ -308,11 +278,6 @@ private void showPopup() {
         if (idsach.equalsIgnoreCase("")) {
             loi += "ID sách\n";
         }
-//        else {
-//            if (idsach.length() != 5) {
-//                loi += "ID tài khoản phải có 5 ký tự\n";
-//            }
-//        }
         if (theloai.equalsIgnoreCase("")) {
             loi += "Thể loại\n";
         }
@@ -335,61 +300,6 @@ private void showPopup() {
         return true;
     }
 
-    private void applyTableStyle(JTable table) {
-        //btn_them.setIcon(new FlatSVGIcon("/asda/asdasd", 0.35f));
-        //txt_timkiem.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_ICON, new FlatSVGIcon(""),0.35f);
-        //changeScrollStyle
-        JScrollPane scroll = (JScrollPane) table.getParent().getParent();
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-        scroll.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
-                + "background:$Table.background;"
-                + "track:$Table.background;"
-                + "trackArc:999");
-        table.getTableHeader().putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        table.putClientProperty(FlatClientProperties.STYLE_CLASS, "table_style");
-        //Table Alignment
-        table.getTableHeader().setDefaultRenderer(getAlignmentCellRender(table.getTableHeader().getDefaultRenderer(), true));
-        table.setDefaultRenderer(Object.class, getAlignmentCellRender(table.getDefaultRenderer(Object.class), false));
-        // Điều chỉnh chiều ngang của cột thứ 7
-        TableColumn column = table.getColumnModel().getColumn(6); // Cột thứ 7 (index bắt đầu từ 0)
-        column.setPreferredWidth(500);
-    }
-
-    private TableCellRenderer getAlignmentCellRender(TableCellRenderer oldRender, boolean header) {
-        return new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component com = oldRender.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (com instanceof JLabel) {
-                    JLabel label = (JLabel) com;
-                    if (column == 0 || column == 4) {
-                        label.setHorizontalAlignment(SwingConstants.CENTER);
-                    } else if (column == 2 || column == 3) {
-                        label.setHorizontalAlignment(SwingConstants.TRAILING);
-                    } else {
-                        label.setHorizontalAlignment(SwingConstants.LEADING);
-                    }
-//                    if (header == false) {
-//                        if (column == 4) {
-//                            if (Double.parseDouble(value.toString()) > 0) {
-//                                com.setForeground(new Color(17, 182, 60));
-//                                label.setText("+" + value);
-//                            } else {
-//                                com.setForeground(new Color(202, 48, 48));
-//                            }
-//                        } else {
-//                            if (isSelected) {
-//                                com.setForeground(table.getSelectionForeground());
-//                            } else {
-//                                com.setForeground(table.getForeground());
-//                            }
-//                        }
-//                    }
-                }
-                return com;
-            }
-        };
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -891,13 +801,13 @@ private void showPopup() {
 
     private void tbl_hoadonCTMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_hoadonCTMouseClicked
         //        if (evt.getClickCount() == 2) {
-            //            index = tbl_hoadonCT.getSelectedRow();
-            //            try {
-                //                fillFormHDCT();
-                //            } catch (Exception e) {
-                //                JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
-                //            }
-            //        }
+        //            index = tbl_hoadonCT.getSelectedRow();
+        //            try {
+        //                fillFormHDCT();
+        //            } catch (Exception e) {
+        //                JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());
+        //            }
+        //        }
     }//GEN-LAST:event_tbl_hoadonCTMouseClicked
 
     private void txt_timkiemHDMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_timkiemHDMouseExited

@@ -26,7 +26,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="login.Background" name="background2">
+    <Container class="loginComponent.Background" name="background2">
       <Properties>
         <Property name="blur" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="panel2"/>
@@ -93,7 +93,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="swing.TextField" name="txtUser">
+            <Component class="loginComponent.TextField" name="txtUser">
               <Properties>
                 <Property name="hint" type="java.lang.String" value="M&#xe3; nh&#xe2;n vi&#xea;n"/>
               </Properties>
@@ -113,7 +113,7 @@
                 <Property name="text" type="java.lang.String" value="&#x110;&#x102;NG NH&#x1eac;P"/>
               </Properties>
             </Component>
-            <Component class="swing.Button" name="cmdLogin">
+            <Component class="loginComponent.Button" name="cmdLogin">
               <Properties>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="e7" green="e7" red="e7" type="rgb"/>
@@ -127,7 +127,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdLoginActionPerformed"/>
               </Events>
             </Component>
-            <Component class="swing.PasswordField" name="txtPassword">
+            <Component class="loginComponent.PasswordField" name="txtPassword">
               <Properties>
                 <Property name="hint" type="java.lang.String" value="M&#x1ead;t kh&#x1ea9;u"/>
                 <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">

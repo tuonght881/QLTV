@@ -10,16 +10,16 @@ import com.QLTV.utils.XAuth;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import raven.tabbed.TabbedForm;
 
 /**
  *
  * @author Tuong
  */
-public class QLTL extends javax.swing.JPanel {
+public final class QLTL extends TabbedForm {
 
     TheLoaiDAO tlDAO = new TheLoaiDAO();
     int index = -1;
-    int id;
 
     public QLTL() {
         initComponents();
