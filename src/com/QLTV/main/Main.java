@@ -4,8 +4,6 @@ import com.QLTV.utils.XAuth;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
-import java.awt.ComponentOrientation;
-import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.UIManager;
 import raven.drawer.Drawer;
@@ -15,10 +13,6 @@ import raven.popup.GlassPanePopup;
 import raven.tabbed.WindowsTabbed;
 import raven.toast.Notifications;
 
-/**
- *
- * @author RAVEN
- */
 public class Main extends javax.swing.JFrame {
 
     public static Main main;
