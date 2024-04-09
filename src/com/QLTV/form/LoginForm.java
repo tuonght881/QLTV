@@ -115,6 +115,11 @@ public class LoginForm extends javax.swing.JPanel {
 
         txtPassword.setHint("Mật khẩu");
         txtPassword.setNextFocusableComponent(txtUser);
+        txtPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPasswordActionPerformed(evt);
+            }
+        });
         txtPassword.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtPasswordKeyPressed(evt);
@@ -197,6 +202,10 @@ public class LoginForm extends javax.swing.JPanel {
             dangnhap();
         }
     }//GEN-LAST:event_txtUserKeyPressed
+
+    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPasswordActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
