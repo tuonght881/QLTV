@@ -33,7 +33,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void init() {
-        setSize(new Dimension(1366, 768));
+        //setSize(new Dimension(1366, 768));
         GlassPanePopup.install(this);
         Notifications.getInstance().setJFrame(this);
         WindowsTabbed.getInstance().install(this, body);
@@ -83,11 +83,11 @@ public class Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 1188, Short.MAX_VALUE)
+            .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 1366, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
+            .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 768, Short.MAX_VALUE)
         );
 
         pack();
