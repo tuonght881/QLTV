@@ -1101,11 +1101,10 @@ public final class THUE_SACH extends TabbedForm {
         }
     }
     private void txt_khachduaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_khachduaKeyPressed
-
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("") && !txt_thoilai.getText().equalsIgnoreCase("")) {
             ThemDonThue();
 
-        } else if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             tinhthoilai();
         }
     }//GEN-LAST:event_txt_khachduaKeyPressed
