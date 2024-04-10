@@ -44,13 +44,14 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import raven.calendar.model.ModelDate;
 import raven.tabbed.TabbedForm;
+import raven.toast.Notifications;
 
 /**
  *
  * @author Tuong
  */
 public final class THUE_SACH extends TabbedForm {
-
+    
     Date ngay;
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
@@ -91,6 +92,8 @@ public final class THUE_SACH extends TabbedForm {
         loaddataSach();
         loadDonThue();
         layngay();
+        jLabel2.setVisible(false);
+        txt_iddonthue.setVisible(false);
     }
 
     public void layngay() {
@@ -106,7 +109,7 @@ public final class THUE_SACH extends TabbedForm {
 
     public DonThue getDonThueNew() throws ParseException {
         DonThue dthueNew = new DonThue();
-        dthueNew.setIddonthue(txt_iddonthue.getText());
+        //dthueNew.setIddonthue(Integer.parseInt(txt_iddonthue.getText()));
         dthueNew.setManv(txt_manv.getText());
         dthueNew.setIdkhach(txt_idkh.getText());
         dthueNew.setNgaytao(txt_ngaythuesach.getText());
@@ -129,14 +132,17 @@ public final class THUE_SACH extends TabbedForm {
                 DonThue dthueNew = getDonThueNew();
                 dthueDAO.insert(dthueNew);//thêm vào đơn thuê
                 DonThueChiTiet dthueCT = new DonThueChiTiet();
-                dthueCT.setIddonthue(txt_iddonthue.getText());
+                //dthueCT.setIddonthue(Integer.parseInt(txt_iddonthue.getText()));
+                
                 for (int i = 0; i < tbl_thuesach.getRowCount(); i++) {
                     dthueCT.setIddonthue(dthueDAO.getIDdonthue());
+                    
                     String idsach = sachDAO.getMasach(tbl_thuesach.getValueAt(i, 0).toString());
                     dthueCT.setIdsach(idsach);
                     dthueCT.setSoluong(Integer.parseInt(tbl_thuesach.getValueAt(i, 2).toString()));
                     dthueCT.setTiendambao(Double.valueOf(tbl_thuesach.getValueAt(i, 6).toString()));
                     dthuectDAO.insert(dthueCT);//thêm vào đơn thuê chi tiết
+                    
                     Sach s = sachDAO.select_byID(idsach);
                     int sls = s.getSl();
                     int slsm = sls - (Integer.parseInt(tbl_thuesach.getValueAt(i, 2).toString()));
@@ -151,7 +157,8 @@ public final class THUE_SACH extends TabbedForm {
                 tongtiendambao = 0.0;
                 tongtien = 0.0;
                 phantram = 0.0;
-                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Thêm đơn thuê mới thành công");
+                //JOptionPane.showMessageDialog(this, "Thêm thành công");
                 resetForm();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Thêm thất bại!\n" + e.getMessage());
@@ -188,9 +195,9 @@ public final class THUE_SACH extends TabbedForm {
 
     public void loadDonThue() {
         try {
-            List<DonThue> list = dthueDAO.selectAll();
+            List<DonThue> list = dthueDAO.selectal();
             for (DonThue dt : list) {
-                id = Integer.parseInt(dt.getIddonthue());
+                id = dt.getIddonthue();
             }
             int id2 = id + 1;
             txt_iddonthue.setText(Integer.toString(id2));
@@ -273,13 +280,13 @@ public final class THUE_SACH extends TabbedForm {
         String ngaythue = txt_ngaythuesach.getText();
         String ngaytra = txt_ngaytradukien.getText();
         if (ngaythue.equalsIgnoreCase("") || ngaytra.equalsIgnoreCase("")) {
-            loi += "";
+            loi += "Kiểm tra ngày thuê và ngày trả";
         } else {
             try {
                 ngaymuon = sdf2.parse(txt_ngaythuesach.getText());
                 ngaytradkien = sdf2.parse(txt_ngaytradukien.getText());
                 if (!ngaymuon.before(ngaytradkien) && !ngaymuon.after(ngaytradkien)) {
-                    loi += "Kiểm tra lại ngày trả dự kiến, tiền đảm bảo\n";
+                    loi += "Kiểm tra lại ngày trả dự kiến\n";
                     //JOptionPane.showMessageDialog(this, "The entered date is the same as the current date.");
                 }
             } catch (ParseException ex) {
@@ -291,6 +298,8 @@ public final class THUE_SACH extends TabbedForm {
             loi += "Khách đưa\n";
         } else if (isPositiveNumberKD == false) {
             loi += "Khách đưa\n";
+        } else if (khachdua < tongtien || khachdua == 0) {
+            loi += "Kiểm tra khách đưa\n";
         }
         if (thoilai2.equalsIgnoreCase("")) {
             loi += "Thối lại\n";
@@ -1092,29 +1101,21 @@ public final class THUE_SACH extends TabbedForm {
         }
     }//GEN-LAST:event_txt_sdtkhachKeyPressed
     public void tinhthoilai() {
-        khachdua = Double.parseDouble(txt_khachdua.getText());
-        if (khachdua >= tongcong) {
-            thoilai = khachdua - tongtien;
-            txt_thoilai.setText(currencyVN.format(thoilai));
-            dem++;
-        } else {
-            JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
-            dem = 0;
+        if (!txt_khachdua.getText().equalsIgnoreCase("")) {
+            khachdua = Double.parseDouble(txt_khachdua.getText());
+            if (khachdua >= tongcong) {
+                thoilai = khachdua - tongtien;
+                txt_thoilai.setText(currencyVN.format(thoilai));
+            } else {
+                JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
+            }
         }
     }
-    int dem = 0;
     private void txt_khachduaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_khachduaKeyPressed
-        boolean check = false;
-
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("") && dem == 0 && batloi_thuesach()) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !txt_khachdua.getText().equalsIgnoreCase("") && !txt_thoilai.getText().equalsIgnoreCase("")) {
+            ThemDonThue();
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             tinhthoilai();
-        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER && dem == 1) {
-            if (thoilai == 0) {
-                tinhthoilai();
-            } else {
-                ThemDonThue();
-            }
-            dem = 0;
         }
     }//GEN-LAST:event_txt_khachduaKeyPressed
 

@@ -16,6 +16,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import raven.toast.Notifications;
 
 public class QLTheLoai_FORM extends javax.swing.JFrame {
 
@@ -110,7 +111,8 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
                 TheLoai tlNew = getFormTL();
                 tlDAO.insert(tlNew);
                 loaddataTheLoai();
-                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Thêm thành công");
+                //JOptionPane.showMessageDialog(this, "Thêm thành công");
                 resetForm();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Thêm thất bại!\n" + e.getMessage());
@@ -124,7 +126,8 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
                 TheLoai tlNew = getFormTL();
                 tlDAO.update(tlNew);
                 loaddataTheLoai();
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+                Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Cập nhật thành công");
+                //JOptionPane.showMessageDialog(this, "Cập nhật thành công");
                 resetForm();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Cập nhật thất bại!\n" + e.getMessage());
@@ -137,7 +140,8 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
         try {
             tlDAO.delete(entity);
             loaddataTheLoai();
-            JOptionPane.showMessageDialog(this, "Xoá thành công");
+            Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Xoá thành công");
+            //JOptionPane.showMessageDialog(this, "Xoá thành công");
             resetForm();
         } catch (Exception e) {
             // Bắt các loại ngoại lệ, bao gồm SQLServerException

@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Tuong
  */
 public class HoaDon {
-    String idhoadon;
+    int idhoadon;
     String manv;
     String ngaytao;
     Double khachdua;
@@ -21,7 +21,7 @@ public class HoaDon {
     public HoaDon() {
     }
 
-    public HoaDon(String idhoadon, String manv, String ngaytao, Double khachdua, Double thoilai, Double thanhtien) {
+    public HoaDon(int idhoadon, String manv, String ngaytao, Double khachdua, Double thoilai, Double thanhtien) {
         this.idhoadon = idhoadon;
         this.manv = manv;
         this.ngaytao = ngaytao;
@@ -30,14 +30,13 @@ public class HoaDon {
         this.thanhtien = thanhtien;
     }
 
-    public String getIdhoadon() {
+    public int getIdhoadon() {
         return idhoadon;
     }
 
-    public void setIdhoadon(String idhoadon) {
+    public void setIdhoadon(int idhoadon) {
         this.idhoadon = idhoadon;
     }
-
 
     public String getManv() {
         return manv;
@@ -79,5 +78,5 @@ public class HoaDon {
         this.thanhtien = thanhtien;
     }
 
-   
+
 }

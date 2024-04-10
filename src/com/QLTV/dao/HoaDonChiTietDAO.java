@@ -63,7 +63,7 @@ public class HoaDonChiTietDAO extends EntityDao<HoaDonChiTiet, String> {
             while (r.next()) {
                 HoaDonChiTiet hdct = new HoaDonChiTiet();
                 hdct.setIdhoadonct(r.getInt("idhoadonct"));
-                hdct.setIdhoadon(r.getString("idhoadon"));
+                hdct.setIdhoadon(r.getInt("idhoadon"));
                 hdct.setIdsach(r.getString("idsach"));
                 hdct.setSoluong(r.getInt("soluong"));
                 list.add(hdct);

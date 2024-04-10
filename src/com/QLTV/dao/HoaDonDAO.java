@@ -17,9 +17,9 @@ import java.util.ArrayList;
  * @author Tuong
  */
 public class HoaDonDAO extends EntityDao<HoaDon, String> {
-
+    String select_al = "select * from Hoadon order by idhoadon asc";
     String selectAll = "select * from HoaDon order by ngaytao desc";
-    String insert = "insert into HoaDon values(?,?,?,?,?,?)";
+    String insert = "insert into HoaDon values(?,?,?,?,?)";
     String mahoadon = "select top 1 * from hoadon order by idhoadon desc";
     String select_by_ID = "select * from HoaDon where idhoadon=?";
     String delete = "delete HoaDon where idhoadon=?";
@@ -31,7 +31,7 @@ public class HoaDonDAO extends EntityDao<HoaDon, String> {
 
     @Override
     public void insert(HoaDon entity) {
-        JDBC.update(insert, entity.getIdhoadon(), entity.getManv(), entity.getNgaytao(), entity.getKhachdua(), entity.getThoilai(), entity.getThanhtien());
+        JDBC.update(insert, entity.getManv(), entity.getNgaytao(), entity.getKhachdua(), entity.getThoilai(), entity.getThanhtien());
     }
 
     @Override
@@ -48,7 +48,9 @@ public class HoaDonDAO extends EntityDao<HoaDon, String> {
     public List<HoaDon> selectAll() {
         return select_by_sql(selectAll);
     }
-
+    public List<HoaDon> select_al() {
+        return select_by_sql(select_al);
+    }
     @Override
     public HoaDon select_byID(String key) {
         List<HoaDon> list = this.select_by_sql(select_by_ID, key);
@@ -58,7 +60,14 @@ public class HoaDonDAO extends EntityDao<HoaDon, String> {
             return list.get(0);
         }
     }
-
+    public HoaDon select_byID_int(int key) {
+        List<HoaDon> list = this.select_by_sql(select_by_ID, key);
+        if (list.isEmpty()) {
+            return null;
+        } else {
+            return list.get(0);
+        }
+    }
     @Override
     protected List<HoaDon> select_by_sql(String sql, Object... args) {
         List<HoaDon> list = new ArrayList<>();
@@ -66,7 +75,7 @@ public class HoaDonDAO extends EntityDao<HoaDon, String> {
             ResultSet r = JDBC.query(sql, args);
             while (r.next()) {
                 HoaDon hd = new HoaDon();
-                hd.setIdhoadon(r.getString("idhoadon"));
+                hd.setIdhoadon(r.getInt("idhoadon"));
                 hd.setManv(r.getString("manv"));
                 hd.setNgaytao(r.getString("ngaytao"));
                 hd.setKhachdua(r.getDouble("khachdua"));
@@ -81,12 +90,12 @@ public class HoaDonDAO extends EntityDao<HoaDon, String> {
         return list;
     }
 
-    public String getmaHD() {
+    public int getmaHD() {
         ResultSet rs = JDBC.query(mahoadon);
-        String mahoadon = "";
+        int mahoadon = 0;
         try {
             while (rs.next()) {
-                mahoadon = rs.getString("idhoadon");
+                mahoadon = rs.getInt("idhoadon");
             }
             rs.getStatement().getConnection().close();
             return mahoadon;

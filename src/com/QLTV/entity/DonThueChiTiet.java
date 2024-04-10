@@ -10,14 +10,15 @@ package com.QLTV.entity;
  */
 public class DonThueChiTiet {
     int iddonthuect;
-    String iddonthue;
+    int iddonthue;
     String idsach;
     int soluong;
     Double tiendambao;
 
     public DonThueChiTiet() {
     }
-    public DonThueChiTiet(int iddonthuect, String iddonthue, String idsach, int soluong, Double tiendambao) {
+
+    public DonThueChiTiet(int iddonthuect, int iddonthue, String idsach, int soluong, Double tiendambao) {
         this.iddonthuect = iddonthuect;
         this.iddonthue = iddonthue;
         this.idsach = idsach;
@@ -33,11 +34,11 @@ public class DonThueChiTiet {
         this.iddonthuect = iddonthuect;
     }
 
-    public String getIddonthue() {
+    public int getIddonthue() {
         return iddonthue;
     }
 
-    public void setIddonthue(String iddonthue) {
+    public void setIddonthue(int iddonthue) {
         this.iddonthue = iddonthue;
     }
 
@@ -64,6 +65,5 @@ public class DonThueChiTiet {
     public void setTiendambao(Double tiendambao) {
         this.tiendambao = tiendambao;
     }
-
     
 }

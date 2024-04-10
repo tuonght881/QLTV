@@ -27,6 +27,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import raven.calendar.model.ModelDate;
 import raven.tabbed.TabbedForm;
+import raven.toast.Notifications;
 
 /**
  *
@@ -77,7 +78,7 @@ public final class DON_THUE extends TabbedForm {
     }
 
     public void setFormDonThue(DonThue dthue) throws ParseException {
-        txt_iddonthue2.setText(dthue.getIddonthue());
+        txt_iddonthue2.setText(Integer.toString(dthue.getIddonthue()));
         KhachHang kh = khDAO.select_byID(dthue.getIdkhach());
         txt_idKhach.setText(dthue.getIdkhach());
         txt_manv.setText(dthue.getManv());
@@ -122,12 +123,12 @@ public final class DON_THUE extends TabbedForm {
     }
 
     public void setFormHDCT(HoaDonChiTiet hdct) throws ParseException {
-        txt_iddonthue2.setText(hdct.getIdhoadon());
+        txt_iddonthue2.setText(Integer.toString(hdct.getIdhoadon()));
     }
 
     public DonThue getFormDonThue() throws ParseException {
         DonThue dthueNew = new DonThue();
-        dthueNew.setIddonthue(txt_iddonthue2.getText().trim());
+        dthueNew.setIddonthue(Integer.parseInt(txt_iddonthue2.getText().trim()));
         dthueNew.setIdkhach(txt_idKhach.getText().trim());
         dthueNew.setManv(txt_manv.getText().trim());
         dthueNew.setNgaytao(txt_ngaythue.getText());
@@ -151,8 +152,8 @@ public final class DON_THUE extends TabbedForm {
 
         btn_xoa.setEnabled(true);
 
-        String iddonthue = (String) tbl_donthue.getValueAt(index, 0);
-        DonThue dthue = dthueDAO.select_byID(iddonthue);
+        int iddonthue = (int) tbl_donthue.getValueAt(index, 0);
+        DonThue dthue = dthueDAO.select_byID_int(iddonthue);
         if (dthue == null) {
             JOptionPane.showMessageDialog(this, "Không có dữ liệu", "Lỗi", JOptionPane.INFORMATION_MESSAGE);
         } else {
@@ -208,7 +209,8 @@ public final class DON_THUE extends TabbedForm {
             }
             TAB.setSelectedIndex(0);
             loaddataDonThue();
-            JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+            Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Cập nhật thành công");
+            //JOptionPane.showMessageDialog(this, "Cập nhật thành công");
             resetForm();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Cập nhật thất bại!\n" + e.getMessage());
@@ -219,14 +221,15 @@ public final class DON_THUE extends TabbedForm {
 
     public void xoaDonThue() {
         try {
-            String iddonthue = txt_iddonthue2.getText();
+            int iddonthue = Integer.parseInt(txt_iddonthue2.getText());
             List<DonThueChiTiet> list = dthuectDAO.select_by_HD(iddonthue);
             for (DonThueChiTiet dthuect : list) {
                 dthuectDAO.delete(Integer.toString(dthuect.getIddonthuect()));
             }
-            dthueDAO.delete(iddonthue);
+            dthueDAO.delete_int(iddonthue);
             loaddataDonThue();
-            JOptionPane.showMessageDialog(this, "Xoá thành công");
+            Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Xoá thành công");
+            //JOptionPane.showMessageDialog(this, "Xoá thành công");
             resetForm();
             TAB.setSelectedIndex(0);
         } catch (Exception e) {
@@ -282,7 +285,7 @@ public final class DON_THUE extends TabbedForm {
         }
     }
 
-    public void loadDataDonThueCT(String iddonthue) {
+    public void loadDataDonThueCT(int iddonthue) {
         model_donthuect = (DefaultTableModel) tbl_donthueCT.getModel();
         model_donthuect.setColumnIdentifiers(new Object[]{"ID Đơn thuê CT", "Tên sách", "Số lượng", "Giá thuê", "Thành tiền"});
         model_donthuect.setRowCount(0);
@@ -1003,7 +1006,7 @@ public final class DON_THUE extends TabbedForm {
             index = tbl_donthue.getSelectedRow();
             try {
                 fillFormDonThue();
-                String idhoadon = txt_iddonthue2.getText();
+                int idhoadon = Integer.parseInt(txt_iddonthue2.getText());
                 loadDataDonThueCT(idhoadon);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Lỗi\n" + e.getMessage());

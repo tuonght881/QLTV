@@ -10,14 +10,14 @@ package com.QLTV.entity;
  */
 public class HoaDonChiTiet {
     int idhoadonct;
-    String idhoadon;
+    int idhoadon;
     String idsach;
     int soluong;
 
     public HoaDonChiTiet() {
     }
 
-    public HoaDonChiTiet(int idhoadonct, String idhoadon, String idsach, int soluong) {
+    public HoaDonChiTiet(int idhoadonct, int idhoadon, String idsach, int soluong) {
         this.idhoadonct = idhoadonct;
         this.idhoadon = idhoadon;
         this.idsach = idsach;
@@ -32,11 +32,11 @@ public class HoaDonChiTiet {
         this.idhoadonct = idhoadonct;
     }
 
-    public String getIdhoadon() {
+    public int getIdhoadon() {
         return idhoadon;
     }
 
-    public void setIdhoadon(String idhoadon) {
+    public void setIdhoadon(int idhoadon) {
         this.idhoadon = idhoadon;
     }
 

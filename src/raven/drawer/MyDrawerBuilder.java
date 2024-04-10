@@ -53,9 +53,10 @@ public class MyDrawerBuilder extends SimpleDrawerBuilder {
     @Override
     public SimpleMenuOption getSimpleMenuOption() {
         String NV[][] = {
-            {"~Chức năng chính~"},
+            {"~Chức năng bán sách~"},
             {"Bán sách"},
             {"Hoá đơn bán sách"},
+            {"~Chức năng cho thuê sách~"},
             {"Thuê sách"},
             {"Đơn thuê sách"},
             {"~Quản lý~"},
@@ -64,9 +65,10 @@ public class MyDrawerBuilder extends SimpleDrawerBuilder {
             {"Thông tin tài khoản"},
             {"Đăng xuất"}};
         String QL[][] = {
-            {"~Chức năng chính~"},
+            {"~Chức năng bán sách~"},
             {"Bán sách"},
             {"Hoá đơn bán sách"},
+            {"~Chức năng cho thuê sách~"},
             {"Thuê sách"},
             {"Đơn thuê sách"},
             {"~Quản lý~"},

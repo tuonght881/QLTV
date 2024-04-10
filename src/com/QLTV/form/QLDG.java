@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import raven.tabbed.TabbedForm;
+import raven.toast.Notifications;
 
 /**
  *
@@ -91,7 +92,8 @@ public final class QLDG extends TabbedForm {
                 KhachHang khNew = getFormTG();
                 khDAO.insert(khNew);
                 loaddataKhachHang();
-                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Thêm độc giả thành công");
+                //JOptionPane.showMessageDialog(this, "Thêm thành công");
                 resetForm();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Thêm thất bại!\n" + e.getMessage());
@@ -105,7 +107,8 @@ public final class QLDG extends TabbedForm {
                 KhachHang khNew = getFormTG();
                 khDAO.update(khNew);
                 loaddataKhachHang();
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+                Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Cập nhật độc giả thành công");
+                //JOptionPane.showMessageDialog(this, "Cập nhật thành công");
                 resetForm();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Cập nhật thất bại!\n" + e.getMessage());
@@ -118,7 +121,8 @@ public final class QLDG extends TabbedForm {
             String entity = txt_idkhachhang.getText();
             khDAO.delete(entity);
             loaddataKhachHang();
-            JOptionPane.showMessageDialog(this, "Xoá thành công");
+            Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Xoá thành công");
+            //JOptionPane.showMessageDialog(this, "Xoá thành công");
             resetForm();
         } catch (Exception e) {
             // Bắt các loại ngoại lệ, bao gồm SQLServerException
