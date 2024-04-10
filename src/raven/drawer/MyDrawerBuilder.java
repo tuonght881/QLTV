@@ -45,7 +45,7 @@ public class MyDrawerBuilder extends SimpleDrawerBuilder {
     @Override
     public SimpleHeaderData getSimpleHeaderData() {
         return new SimpleHeaderData()
-                .setIcon(new AvatarIcon(getClass().getResource("/raven/image/logo.png"), 60, 60, 999))
+                .setIcon(new AvatarIcon(getClass().getResource("/com/QLTV/image/logo.png"), 60, 60, 999))
                 .setTitle(XAuth.user.getHoten())
                 .setDescription(XAuth.isManager() ? "Quản lý" : "Nhân viên");
     }
