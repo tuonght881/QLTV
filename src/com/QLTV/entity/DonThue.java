@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Tuong
  */
 public class DonThue {
-    String iddonthue;
+    int iddonthue;
     String idkhach;
     String manv;
     String ngaytao;
@@ -28,7 +28,7 @@ public class DonThue {
     public DonThue() {
     }
 
-    public DonThue(String iddonthue, String idkhach, String manv, String ngaytao, String ngaythue, String ngaytradukien, String ngaytra, Boolean trangthai, Double tienphat, Double tongtiendambao, Double khachdua, Double thoilai, Double thanhtien) {
+    public DonThue(int iddonthue, String idkhach, String manv, String ngaytao, String ngaythue, String ngaytradukien, String ngaytra, Boolean trangthai, Double tienphat, Double tongtiendambao, Double khachdua, Double thoilai, Double thanhtien) {
         this.iddonthue = iddonthue;
         this.idkhach = idkhach;
         this.manv = manv;
@@ -44,11 +44,11 @@ public class DonThue {
         this.thanhtien = thanhtien;
     }
 
-    public String getIddonthue() {
+    public int getIddonthue() {
         return iddonthue;
     }
 
-    public void setIddonthue(String iddonthue) {
+    public void setIddonthue(int iddonthue) {
         this.iddonthue = iddonthue;
     }
 

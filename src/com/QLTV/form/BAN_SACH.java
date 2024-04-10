@@ -36,6 +36,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import raven.tabbed.TabbedForm;
+import raven.toast.Notifications;
 
 /**
  *
@@ -72,6 +73,8 @@ public final class BAN_SACH extends TabbedForm {
         loaddataSach();
         loadHoaDon();
         layngay();
+        jLabel2.setVisible(false);
+        txt_idhoadon.setVisible(false);
     }
 
     public void layngay() {
@@ -87,7 +90,7 @@ public final class BAN_SACH extends TabbedForm {
 
     public HoaDon getHoaDonNew() throws ParseException {
         HoaDon hdNEW = new HoaDon();
-        hdNEW.setIdhoadon(txt_idhoadon.getText());
+        //hdNEW.setIdhoadon(Integer.parseInt(txt_idhoadon.getText()));
         hdNEW.setManv(txt_manv.getText());
         hdNEW.setNgaytao(txt_ngaybansach.getText());
         hdNEW.setThanhtien(tongcong);
@@ -104,7 +107,7 @@ public final class BAN_SACH extends TabbedForm {
                 hdDAO.insert(hdNew);
 
                 HoaDonChiTiet hdctNew = new HoaDonChiTiet();
-                hdctNew.setIdhoadon(txt_idhoadon.getText());
+                //hdctNew.setIdhoadon(Integer.parseInt(txt_idhoadon.getText()));
 
                 for (int i = 0; i < tbl_hoadon.getRowCount(); i++) {
                     hdctNew.setIdhoadon(hdDAO.getmaHD());
@@ -124,7 +127,8 @@ public final class BAN_SACH extends TabbedForm {
                 tongcong = 0.0;
                 khachdua = 0.0;
                 thoilai = 0.0;
-                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Thêm hoá đơn mới thành công");
+                //JOptionPane.showMessageDialog(this, "Thêm thành công");
                 resetForm();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Thêm thất bại!\n" + e.getMessage());
@@ -150,7 +154,7 @@ public final class BAN_SACH extends TabbedForm {
         try {
             List<HoaDon> list = hdDAO.select_al();
             for (HoaDon hd : list) {
-                id = Integer.parseInt(hd.getIdhoadon());
+                id = hd.getIdhoadon();
             }
             int id2 = id + 1;
             txt_idhoadon.setText(Integer.toString(id2));
@@ -695,12 +699,14 @@ public final class BAN_SACH extends TabbedForm {
     }//GEN-LAST:event_txt_timkiemCaretUpdate
 
     public void tinhthoilaii() {
-        khachdua = Double.valueOf(txt_khachdua.getText());
-        if (khachdua >= tongcong) {
-            thoilai = khachdua - tongcong;
-            txt_thoilai.setText(currencyVN.format(thoilai));
-        } else {
-            JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
+        if (!txt_khachdua.getText().equalsIgnoreCase("")) {
+            khachdua = Double.valueOf(txt_khachdua.getText());
+            if (khachdua >= tongcong) {
+                thoilai = khachdua - tongcong;
+                txt_thoilai.setText(currencyVN.format(thoilai));
+            } else {
+                JOptionPane.showMessageDialog(this, "Kiểm tra lại khách đưa!");
+            }
         }
     }
     private void txt_khachduaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_khachduaKeyPressed

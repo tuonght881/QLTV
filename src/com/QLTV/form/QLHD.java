@@ -62,7 +62,7 @@ public final class QLHD extends TabbedForm {
     }
 
     public void setFormHD(HoaDon hd) throws ParseException {
-        txt_idhd2.setText(hd.getIdhoadon());
+        txt_idhd2.setText(Integer.toString(hd.getIdhoadon()));
         txt_manv.setText(hd.getManv());
         txt_ngaytao.setText(hd.getNgaytao());
         String khachdua = D_format.format(hd.getKhachdua());
@@ -74,12 +74,12 @@ public final class QLHD extends TabbedForm {
     }
 
     public void setFormHDCT(HoaDonChiTiet hdct) throws ParseException {
-        txt_idhd2.setText(hdct.getIdhoadon());
+        txt_idhd2.setText(Integer.toString(hdct.getIdhoadon()));
     }
 
     public HoaDon getFormHD() throws ParseException {
         HoaDon hdNEW = new HoaDon();
-        hdNEW.setIdhoadon(txt_idhd2.getText());
+        hdNEW.setIdhoadon(Integer.parseInt(txt_idhd2.getText()));
         hdNEW.setManv(txt_manv.getText());
         hdNEW.setNgaytao(txt_ngaytao.getText());
         hdNEW.setKhachdua(Double.valueOf(txt_khachdua.getText()));
@@ -91,8 +91,7 @@ public final class QLHD extends TabbedForm {
 
     public HoaDonChiTiet getFormHDCT() throws ParseException {
         HoaDonChiTiet hdctNEW = new HoaDonChiTiet();
-        hdctNEW.setIdhoadon(txt_idhd2.getText());
-
+        hdctNEW.setIdhoadon(Integer.parseInt(txt_idhd2.getText()));
         return hdctNEW;
     }
 
@@ -102,8 +101,8 @@ public final class QLHD extends TabbedForm {
 
         btn_xoa.setEnabled(true);
 
-        String idhd = (String) tbl_hoadon.getValueAt(index, 0);
-        HoaDon hd = hdDAO.select_byID(idhd);
+        int idhd = (int) tbl_hoadon.getValueAt(index, 0);
+        HoaDon hd = hdDAO.select_byID_int(idhd);
         if (hd == null) {
             JOptionPane.showMessageDialog(this, "Không có dữ liệu", "Lỗi", JOptionPane.INFORMATION_MESSAGE);
         } else {

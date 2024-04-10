@@ -62,7 +62,7 @@ public class DonThueChiTietDAO extends EntityDao<DonThueChiTiet, String> {
             while (r.next()) {
                 DonThueChiTiet hd = new DonThueChiTiet();
                 hd.setIddonthuect(r.getInt("iddonthuect"));
-                hd.setIddonthue(r.getString("iddonthue"));
+                hd.setIddonthue(r.getInt("iddonthue"));
                 hd.setIdsach(r.getString("idsach"));
                 hd.setSoluong(r.getInt("soluong"));
                 hd.setTiendambao(r.getDouble("tiendambao"));
@@ -75,7 +75,7 @@ public class DonThueChiTietDAO extends EntityDao<DonThueChiTiet, String> {
         return list;
     }
 
-    public List<DonThueChiTiet> select_by_HD(String key) {
+    public List<DonThueChiTiet> select_by_HD(int key) {
         return select_by_sql(select_by_hoadon, key);
     }
     public List<slSachThue> slSachthue() {
