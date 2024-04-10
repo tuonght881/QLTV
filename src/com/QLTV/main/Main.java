@@ -9,6 +9,7 @@ import javax.swing.UIManager;
 import raven.drawer.Drawer;
 import raven.drawer.MyDrawerBuilder;
 import com.QLTV.form.LoginForm;
+import javax.swing.ImageIcon;
 import raven.popup.GlassPanePopup;
 import raven.tabbed.WindowsTabbed;
 import raven.toast.Notifications;
@@ -33,6 +34,8 @@ public class Main extends javax.swing.JFrame {
         WindowsTabbed.getInstance().install(this, body);
         // applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         login();
+        ImageIcon icon = new ImageIcon(getClass().getResource("/com/QLTV/image/books.png"));
+        setIconImage(icon.getImage());
     }
 
     public void login() {
@@ -71,6 +74,7 @@ public class Main extends javax.swing.JFrame {
         body = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setIconImages(null);
 
         body.setLayout(new java.awt.BorderLayout());
 
