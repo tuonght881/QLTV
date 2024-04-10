@@ -44,7 +44,14 @@ public class WindowsTabbed {
         menuBar.add(createScroll(panelTabbed));
         frame.setJMenuBar(menuBar);
     }
-
+    public void removeAllTabbed(){
+        panelTabbed.removeAll();
+        panelTabbed.repaint();
+        panelTabbed.revalidate();
+        body.removeAll();
+        body.revalidate();
+        body.repaint();
+    }
     public void showTabbed(boolean show) {
         menuBar.setVisible(show);
         if(!show){

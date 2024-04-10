@@ -58,6 +58,7 @@ public class Main extends javax.swing.JFrame {
 
     public void logout() {
         XAuth.clear();
+        WindowsTabbed.getInstance().removeAllTabbed();
         WindowsTabbed.getInstance().showTabbed(false);
         loginForm.applyComponentOrientation(getComponentOrientation());
         setContentPane(loginForm);
