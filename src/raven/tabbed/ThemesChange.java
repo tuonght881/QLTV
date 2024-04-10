@@ -6,6 +6,7 @@ import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import com.raven.properties.SystemProperties;
 import java.awt.Color;
 import java.awt.EventQueue;
 import javax.swing.Icon;
@@ -18,6 +19,8 @@ import net.miginfocom.swing.MigLayout;
  * @author Raven
  */
 public class ThemesChange extends JPanel {
+
+    SystemProperties pro = new SystemProperties();
 
     public ThemesChange() {
         init();
@@ -73,6 +76,7 @@ public class ThemesChange extends JPanel {
                     FlatMacDarkLaf.setup();
                     FlatLaf.updateUI();
                     FlatAnimatedLafChange.hideSnapshotWithAnimation();
+                    pro.save("dark_mode", "true");
                 });
             } else {
                 EventQueue.invokeLater(() -> {
@@ -80,6 +84,7 @@ public class ThemesChange extends JPanel {
                     FlatMacLightLaf.setup();
                     FlatLaf.updateUI();
                     FlatAnimatedLafChange.hideSnapshotWithAnimation();
+                    pro.save("dark_mode", "false");
                 });
             }
         }
