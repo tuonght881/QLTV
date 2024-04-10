@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import raven.calendar.model.ModelDate;
 import raven.tabbed.TabbedForm;
+import raven.toast.Notifications;
 
 /**
  *
@@ -119,7 +120,8 @@ public final class TTTK extends TabbedForm {
                 TaiKhoan tkNew = getFormTK();
                 tkDAO.update(tkNew);
                 loaddataTaiKhoan();
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+                Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Cập nhật thành công");
+                //JOptionPane.showMessageDialog(this, "Cập nhật thành công");
                 resetForm();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Cập nhật thất bại!\n" + e.getMessage());

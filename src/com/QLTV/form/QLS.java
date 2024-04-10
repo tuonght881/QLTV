@@ -28,6 +28,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import raven.tabbed.TabbedForm;
+import raven.toast.Notifications;
 
 /**
  *
@@ -170,7 +171,8 @@ public final class QLS extends TabbedForm {
                 Sach sachNew = getFormSach();
                 sachDAO.insert(sachNew);
                 loaddataSach();
-                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Thêm thành công");
+                //JOptionPane.showMessageDialog(this, "Thêm thành công");
                 resetForm();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Thêm thất bại!\n" + e.getMessage());
@@ -184,7 +186,8 @@ public final class QLS extends TabbedForm {
                 Sach sachNew = getFormSach();
                 sachDAO.update(sachNew);
                 loaddataSach();
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+                Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Cập nhật thành công");
+                //JOptionPane.showMessageDialog(this, "Cập nhật thành công");
                 resetForm();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Cập nhật thất bại!\n" + e.getMessage());
@@ -197,7 +200,8 @@ public final class QLS extends TabbedForm {
         try {
             sachDAO.delete(entity);
             loaddataSach();
-            JOptionPane.showMessageDialog(this, "Xoá thành công");
+            Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Xoá thành công");
+            //JOptionPane.showMessageDialog(this, "Xoá thành công");
             resetForm();
         } catch (Exception e) {
             // Bắt các loại ngoại lệ, bao gồm SQLServerException

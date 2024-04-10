@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import raven.calendar.model.ModelDate;
 import raven.tabbed.TabbedForm;
+import raven.toast.Notifications;
 
 /**
  *
@@ -174,7 +175,8 @@ public final class QLHD extends TabbedForm {
             }
             hdDAO.delete(idhoadon);
             loaddataHoaDon();
-            JOptionPane.showMessageDialog(this, "Xoá thành công");
+            Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Xoá thành công");
+            //JOptionPane.showMessageDialog(this, "Xoá thành công");
             resetForm();
             TAB.setSelectedIndex(0);
         } catch (Exception e) {
