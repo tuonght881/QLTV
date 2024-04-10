@@ -19,9 +19,6 @@ public class Main extends javax.swing.JFrame {
     public static Main main;
     private LoginForm loginForm;
 
-    /**
-     * Creates new form Main
-     */
     public Main() {
         initComponents();
         init();
@@ -32,7 +29,6 @@ public class Main extends javax.swing.JFrame {
         GlassPanePopup.install(this);
         Notifications.getInstance().setJFrame(this);
         WindowsTabbed.getInstance().install(this, body);
-        // applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         login();
         ImageIcon icon = new ImageIcon(getClass().getResource("/com/QLTV/image/books.png"));
         setIconImage(icon.getImage());
