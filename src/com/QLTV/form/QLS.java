@@ -16,6 +16,7 @@ import com.QLTV.utils.XAuth;
 import com.QLTV.utils.Ximg;
 import java.awt.Image;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
@@ -43,6 +44,7 @@ public final class QLS extends TabbedForm {
     Locale localeVN = new Locale("vi", "VN");
     NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
     int index = -1;
+    DecimalFormat D_format = new DecimalFormat("0.#");
 
     /**
      * Creates new form QLS
@@ -106,8 +108,8 @@ public final class QLS extends TabbedForm {
         cbo_vt.setSelectedItem(vt.getTenvt());
 
         txt_soluong.setText(Integer.toString(sach.getSl()));
-        txt_giathue1ngay.setText(Double.toString(sach.getGiathue1ngay()));
-        txt_giaban.setText(Double.toString(sach.getGiaban()));
+        txt_giathue1ngay.setText(D_format.format(sach.getGiathue1ngay()));
+        txt_giaban.setText(D_format.format(sach.getGiaban()));
         if (sach.getTrangthaisach() == true) {
             rdo_hd.setSelected(true);
         } else {
@@ -349,20 +351,20 @@ public final class QLS extends TabbedForm {
         if (sl.equalsIgnoreCase("")) {
             loi += "Số lượng\n";
         }
-        if(!Onlynb){
+        if (!Onlynb) {
             loi += "Số lượng không được nhập chữ\n";
         }
         if (giaban.equalsIgnoreCase("")) {
             loi += "Giá bán\n";
         }
-        if(!giaban.matches("\\d+")){
-            loi+="Giá bán không được nhập chữ";
+        if (!giaban.matches("\\d+")) {
+            loi += "Giá bán không được nhập chữ";
         }
         if (giathue.equalsIgnoreCase("")) {
             loi += "Giá thuê\n";
         }
-        if(!giathue.matches("\\d+")){
-            loi+="Giá thuê không được nhập chữ";
+        if (!giathue.matches("\\d+")) {
+            loi += "Giá thuê không được nhập chữ";
         }
         if (rdo_hd.isSelected() == false && rdo_nhd.isSelected() == false) {
             loi += "Trạng thái";
