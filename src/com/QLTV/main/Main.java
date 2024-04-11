@@ -32,8 +32,8 @@ public class Main extends javax.swing.JFrame {
         Notifications.getInstance().setJFrame(this);
         WindowsTabbed.getInstance().install(this, body);
         login();
-        ImageIcon icon = new ImageIcon(getClass().getResource("/com/QLTV/image/books.png"));
-        setIconImage(icon.getImage());
+        //ImageIcon icon = new ImageIcon(getClass().getResource("/com/QLTV/image/books.png"));
+        //setIconImage(icon.getImage());
     }
 
     public void login() {
