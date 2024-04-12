@@ -29,6 +29,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import raven.tabbed.TabbedForm;
+import raven.tabbed.WindowsTabbed;
 import raven.toast.Notifications;
 
 /**
@@ -823,49 +824,37 @@ public final class QLS extends TabbedForm {
 
     private void cbo_TLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbo_TLMouseClicked
         if (evt.getClickCount() == 2) {
-            QLTheLoai_FORM qls = new QLTheLoai_FORM();
-            qls.setVisible(true);
-            qls.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            WindowsTabbed.getInstance().addTab("Thể loại", new QLTL());
         }
     }//GEN-LAST:event_cbo_TLMouseClicked
 
     private void cbo_tgMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbo_tgMouseClicked
         if (evt.getClickCount() == 2) {
-            QLTG_FORM qls = new QLTG_FORM();
-            qls.setVisible(true);
-            qls.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            WindowsTabbed.getInstance().addTab("Tác giả", new QLTG());
         }
     }//GEN-LAST:event_cbo_tgMouseClicked
 
     private void cbo_vtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbo_vtMouseClicked
         if (evt.getClickCount() == 2) {
-            QLViTri_FORM qls = new QLViTri_FORM();
-            qls.setVisible(true);
-            qls.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            WindowsTabbed.getInstance().addTab("Vị trí", new QLVT());
         }
     }//GEN-LAST:event_cbo_vtMouseClicked
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         if (evt.getClickCount() == 2) {
-            QLTheLoai_FORM qls = new QLTheLoai_FORM();
-            qls.setVisible(true);
-            qls.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            WindowsTabbed.getInstance().addTab("Thể loại", new QLTL());
         }
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
         if (evt.getClickCount() == 2) {
-            QLTG_FORM qls = new QLTG_FORM();
-            qls.setVisible(true);
-            qls.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            WindowsTabbed.getInstance().addTab("Tác giả", new QLTG());
         }
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked
         if (evt.getClickCount() == 2) {
-            QLViTri_FORM qls = new QLViTri_FORM();
-            qls.setVisible(true);
-            qls.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            WindowsTabbed.getInstance().addTab("Vị trí", new QLVT());
         }
     }//GEN-LAST:event_jLabel9MouseClicked
 
