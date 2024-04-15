@@ -20,7 +20,6 @@ public class Main extends javax.swing.JFrame {
 
     public static Main main;
     private LoginForm loginForm;
-
     public Main() {
         initComponents();
         init();
