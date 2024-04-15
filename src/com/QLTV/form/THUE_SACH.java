@@ -776,9 +776,9 @@ public final class THUE_SACH extends TabbedForm {
                 "",
                 "",
                 "",
+                "width 200",
                 "",
-                "",
-                "width 150"
+                ""
             }
         ));
 
