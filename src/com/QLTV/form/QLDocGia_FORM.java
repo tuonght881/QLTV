@@ -550,10 +550,6 @@ public class QLDocGia_FORM extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(QLDocGia_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        FlatRobotoFont.install();
-        FlatLaf.registerCustomDefaultsSource("tableview");
-        UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-        FlatMacDarkLaf.setup();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

@@ -9,6 +9,9 @@ import javax.swing.UIManager;
 import raven.drawer.Drawer;
 import raven.drawer.MyDrawerBuilder;
 import com.QLTV.form.LoginForm;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.raven.properties.SystemProperties;
+import javax.swing.ImageIcon;
 import raven.popup.GlassPanePopup;
 import raven.tabbed.WindowsTabbed;
 import raven.toast.Notifications;
@@ -27,8 +30,9 @@ public class Main extends javax.swing.JFrame {
         GlassPanePopup.install(this);
         Notifications.getInstance().setJFrame(this);
         WindowsTabbed.getInstance().install(this, body);
-        // applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         login();
+        //ImageIcon icon = new ImageIcon(getClass().getResource("/com/QLTV/image/books.png"));
+        //setIconImage(icon.getImage());
     }
 
     public void login() {
@@ -67,6 +71,7 @@ public class Main extends javax.swing.JFrame {
         body = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setIconImages(null);
 
         body.setLayout(new java.awt.BorderLayout());
 
@@ -89,7 +94,13 @@ public class Main extends javax.swing.JFrame {
         FlatRobotoFont.install();
         FlatLaf.registerCustomDefaultsSource("raven.themes");
         UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-        FlatMacDarkLaf.setup();
+        SystemProperties pro = new SystemProperties();
+        pro.loadFromFile();
+        if (!pro.isDarkMode()) {
+            FlatIntelliJLaf.setup();
+        } else {
+            FlatMacDarkLaf.setup();
+        }
         java.awt.EventQueue.invokeLater(() -> {
             main = new Main();
             main.setVisible(true);

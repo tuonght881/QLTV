@@ -250,6 +250,11 @@ public final class QLDG extends TabbedForm {
                 loi += "Không đúng định dang SDT\n (SDT không nhập chữ, SDT gồm có 10 số)\n";
             }
         }
+        
+        KhachHang docgia = khDAO.select_bysdt(sdt);
+        if(docgia!=null){
+           loi+="Số điện thoại đã được sử dụng\n"; 
+        }
         if (diemuytin.equalsIgnoreCase("")) {
             loi += "Điểm uy tín\n";
         } else {

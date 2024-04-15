@@ -522,11 +522,6 @@ public class QLTheLoai_FORM extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(QLTheLoai_FORM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        try {
-            FlatRobotoFont.install();
-            FlatLaf.registerCustomDefaultsSource("tableview");
-        } catch (Exception e) {
-        }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

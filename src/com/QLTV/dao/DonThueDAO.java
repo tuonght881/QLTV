@@ -19,7 +19,7 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
 
     String madonthue = "select top 1 * from donthue order by trangthai asc";
     String select_al = "select * from donthue order by iddonthue asc";
-    String selectAll = "select * from donthue order by trangthai asc";
+    String selectAll = "select * from donthue order by trangthai asc , ngaythue desc";
     String insert = "insert into DonThue values(?,?,?,?,?,?,?,?,?,?,?,?)";
     String update = "UPDATE donthue SET idkhach = ?, manv = ?, ngaytao = ?, ngaythue = ?, ngaytradukien = ?, ngaytra = ?,trangthai=?,tienphat = ?,tongtiendambao = ?, khachdua= ? ,thoilai= ? ,thanhtien = ? WHERE iddonthue = ?;";
     String delete = "delete donthue where iddonthue=?";

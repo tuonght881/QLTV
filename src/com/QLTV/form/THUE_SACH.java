@@ -44,6 +44,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import raven.calendar.model.ModelDate;
 import raven.tabbed.TabbedForm;
+import raven.tabbed.WindowsTabbed;
 import raven.toast.Notifications;
 
 /**
@@ -280,7 +281,7 @@ public final class THUE_SACH extends TabbedForm {
         String ngaythue = txt_ngaythuesach.getText();
         String ngaytra = txt_ngaytradukien.getText();
         if (ngaythue.equalsIgnoreCase("") || ngaytra.equalsIgnoreCase("")) {
-            loi += "Kiểm tra ngày thuê và ngày trả";
+            loi += "Kiểm tra ngày thuê và ngày trả\n";
         } else {
             try {
                 ngaymuon = sdf2.parse(txt_ngaythuesach.getText());
@@ -407,10 +408,8 @@ public final class THUE_SACH extends TabbedForm {
                 soNgayMuonTienDamBao();
             } catch (NullPointerException e) {
                 int choice = JOptionPane.showConfirmDialog(this, "Khách hàng không tồn tại!\n Thêm khách hàng mới?", "Thông báo", JOptionPane.OK_CANCEL_OPTION);
-                QLDocGia_FORM qlkh = new QLDocGia_FORM();
                 if (choice == JOptionPane.OK_OPTION) {
-                    qlkh.setVisible(true);
-                    qlkh.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                    WindowsTabbed.getInstance().addTab("Độc giả", new QLDG());
                 } else {
                 }
             }

@@ -85,9 +85,9 @@ public final class DON_THUE extends TabbedForm {
         txt_ngaythue.setText(dthue.getNgaytao());
         txt_ngaytradukien.setText(dthue.getNgaytradukien());
         txt_tenkhach.setText(kh.getHotenkhach());
-        txt_tiendambao.setText(Double.toString(dthue.getTongtiendambao()));
+        txt_tiendambao.setText(D_format.format(dthue.getTongtiendambao()));
         txt_ngaytra.setText(dthue.getNgaytra());
-        txt_tienphat.setText(Double.toString(dthue.getTienphat()));
+        txt_tienphat.setText(D_format.format(dthue.getTienphat()));
         String khachdua = D_format.format(dthue.getKhachdua());
         String thoilai = D_format.format(dthue.getThoilai());
         String thanhtien = D_format.format(dthue.getThanhtien());
@@ -295,7 +295,7 @@ public final class DON_THUE extends TabbedForm {
                 String tensach = sachDAO.getTenSach(dthueCT.getIdsach());
                 String giaban = sachDAO.getGiaBan(dthueCT.getIdsach());
                 Double thanhtien = dthueCT.getSoluong() * Double.parseDouble(giaban);
-                Object[] row = {dthueCT.getIddonthuect(), tensach, dthueCT.getSoluong(), giaban, thanhtien};
+                Object[] row = {dthueCT.getIddonthuect(), tensach, dthueCT.getSoluong(), D_format.parse(giaban.toString()),D_format. parse(thanhtien.toString())};
                 model_donthuect.addRow(row);
             }
             if (model_donthuect.getRowCount() == 0) {
