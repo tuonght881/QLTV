@@ -16,7 +16,7 @@ import java.util.List;
  * @author Tuong
  */
 public class DonThueDAO extends EntityDao<DonThue, String> {
-
+    String madonmoithem = "select top 1 * from donthue order by iddonthue desc";
     String madonthue = "select top 1 * from donthue order by trangthai asc";
     String select_al = "select * from donthue order by iddonthue asc";
     String selectAll = "select * from donthue order by trangthai asc , ngaythue desc";
@@ -54,7 +54,7 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
     public List<DonThue> selectal() {
         return select_by_sql(select_al);
     }
-
+    
     public List<DonThue> timDthue(String sdt) {
         return select_by_sql(timkiem, "%" + sdt + "%");
     }
@@ -106,7 +106,7 @@ public class DonThueDAO extends EntityDao<DonThue, String> {
     }
 
     public int getIDdonthue() {
-        ResultSet rs = JDBC.query(madonthue);
+        ResultSet rs = JDBC.query(madonmoithem);
         int mahoadon = 0;
         try {
             while (rs.next()) {
