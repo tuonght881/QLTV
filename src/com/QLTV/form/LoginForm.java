@@ -40,7 +40,8 @@ public class LoginForm extends javax.swing.JPanel {
 
         TaiKhoan tk = tkDAO.select_byID(manv);
         if (tk == null) {
-            JOptionPane.showMessageDialog(this, "Mã nhân viên không tồn tại!!");
+            //JOptionPane.showMessageDialog(this, "Mã nhân viên không tồn tại!!");
+            JOptionPane.showMessageDialog(this, "Vui lòng kiểm tra lại thông tin đăng nhập!!");
             return;
         } else if (tk.getMatkhau().equals(matkhau) && tk.getTrangthai() == true) {
             XAuth.user = tk;
