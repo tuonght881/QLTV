@@ -544,7 +544,7 @@ public final class DON_THUE extends TabbedForm {
 
         HoadonPanel.add(crazyPanel4);
 
-        TAB.addTab("Hoá đơn", HoadonPanel);
+        TAB.addTab("Đơn thuê", HoadonPanel);
 
         HdctPanel.setFlatLafStyleComponent(new raven.crazypanel.FlatLafStyleComponent(
             "background:$Table.background;[light]border:0,0,0,0,shade(@background,5%),,20;[dark]border:0,0,0,0,tint(@background,5%),,20",
@@ -967,7 +967,7 @@ public final class DON_THUE extends TabbedForm {
 
         HdctPanel.add(crazyPanel5);
 
-        TAB.addTab("Hoá đơn chi tiết", HdctPanel);
+        TAB.addTab("Đơn thuê chi tiết", HdctPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

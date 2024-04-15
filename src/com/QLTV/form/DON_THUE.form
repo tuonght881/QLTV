@@ -99,8 +99,8 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Ho&#xe1; &#x111;&#x1a1;n">
-                <Property name="tabTitle" type="java.lang.String" value="Ho&#xe1; &#x111;&#x1a1;n"/>
+              <JTabbedPaneConstraints tabName="&#x110;&#x1a1;n thu&#xea;">
+                <Property name="tabTitle" type="java.lang.String" value="&#x110;&#x1a1;n thu&#xea;"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -202,8 +202,8 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Ho&#xe1; &#x111;&#x1a1;n chi ti&#x1ebf;t">
-                <Property name="tabTitle" type="java.lang.String" value="Ho&#xe1; &#x111;&#x1a1;n chi ti&#x1ebf;t"/>
+              <JTabbedPaneConstraints tabName="&#x110;&#x1a1;n thu&#xea; chi ti&#x1ebf;t">
+                <Property name="tabTitle" type="java.lang.String" value="&#x110;&#x1a1;n thu&#xea; chi ti&#x1ebf;t"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
